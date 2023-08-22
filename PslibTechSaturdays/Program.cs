@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Constants;
@@ -38,6 +39,7 @@ builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(
         options.Password.RequiredLength = Convert.ToInt32(builder.Configuration["Password:Length"]);
     }
     )
+    .AddDefaultTokenProviders()
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
 builder.Services.AddAuthorization(options =>
@@ -45,7 +47,20 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy(Security.ADMIN_POLICY, policy => { policy.RequireClaim(Security.ADMIN_CLAIM, "1"); });
     options.AddPolicy(Security.LECTOR_POLICY, policy => { policy.RequireAssertion(x => x.User.HasClaim(Security.ADMIN_CLAIM, "1") || x.User.HasClaim(Security.LECTOR_CLAIM, "1")); });
 });
-builder.Services.AddRazorPages();
+builder.Services.AddRazorPages(options => {});
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = $"/Identity/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+    options.AccessDeniedPath = $"/AccessDenied";
+
+    options.Events.OnRedirectToAccessDenied = context =>
+    {
+        context.Response.Redirect("/AccessDenied&t=100");
+        return Task.CompletedTask;
+    };
+});
 
 var app = builder.Build();
 

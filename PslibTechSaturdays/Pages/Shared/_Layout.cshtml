@@ -1,9 +1,15 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@using PslibTechSaturdays.Constants
+@using PslibTechSaturdays.Models
+@inject SignInManager<ApplicationUser> SignInManager
+@inject IConfiguration conf
+@{ ClaimsPrincipal cp = this.User; }
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - PslibTechSaturdays</title>
+    <title>@ViewData["Title"] - @conf["Application:Name"]</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PslibTechSaturdays.styles.css" asp-append-version="true" />
@@ -12,19 +18,37 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-page="/Index">PslibTechSaturdays</a>
+                <a class="navbar-brand" asp-area="" asp-page="/Index">@conf["Application:Name"]</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="My" asp-page="/Enrollments">Přihlášky</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="My" asp-page="/Certificates">Certifikáty</a>
+                            </li>
+                        }
+                        @if (cp.IsInRole(Security.ADMIN_POLICY))
+                        {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Administrace
+                            </a>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <li><a class="nav-link text-dark" asp-area="Users" asp-page="/Index">Uživatelé</a></li>
+                                <li><a class="nav-link text-dark" asp-area="Actions" asp-page="/Index">Akce</a></li>
+                                <li><a class="nav-link text-dark" asp-area="Groups" asp-page="/Index">Skupiny</a></li>
+                                <li><a class="nav-link text-dark" asp-area="Enrollments" asp-page="/Index">Přihlášky</a></li>
+                                <li><a class="nav-link text-dark" asp-area="Certificates" asp-page="/Index">Certifikáty</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
-                        </li>
+                        }
                     </ul>
                     <partial name="_LoginPartial" />
                 </div>
@@ -33,13 +57,21 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+            }
+            @if (TempData["FailureMessage"] != null)
+            {
+                <div class="alert alert-danger">@TempData["FailureMessage"]</div>
+            }
             @RenderBody()
         </main>
     </div>
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2023 - PslibTechSaturdays - <a asp-area="" asp-page="/Privacy">Privacy</a>
+            &copy; 2023 - @conf["Application:Name"]
         </div>
     </footer>
 

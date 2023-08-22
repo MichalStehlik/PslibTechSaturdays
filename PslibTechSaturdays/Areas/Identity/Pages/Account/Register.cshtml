@@ -1,4 +1,5 @@
 ﻿@page
+@using PslibTechSaturdays.Models
 @model RegisterModel
 @{
     ViewData["Title"] = "Registrace";
@@ -9,7 +10,7 @@
 <div class="row">
     <div class="col-md-4">
         <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
-            <h2>Create a new account.</h2>
+            <h2>Vytvoření nového účtu</h2>
             <hr />
             <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
             <div class="form-floating mb-3">
@@ -33,6 +34,22 @@
                 <span asp-validation-for="Input.SchoolName" class="text-danger"></span>
             </div>
             <div class="form-floating mb-3">
+                <select class="form-control"
+                        asp-for="Input.Grade"
+                        asp-items="@Html.GetEnumSelectList<SchoolGrade>()">
+                </select>
+                <label asp-for="Input.Grade">Ročník</label>
+                <span asp-validation-for="Input.Grade" class="text-danger"></span>
+            </div>
+            <div class="mb-3 form-group form-check">
+                <label class="form-check-label" asp-for="Input.MailList"><input asp-for="Input.MailList" class="form-check-input" /> Odběratel zpráv přes email</label>
+                <span asp-validation-for="Input.MailList" class="text-danger"></span>
+            </div>
+            <div class="mb-3 form-group form-check">
+                <label class="form-check-label" asp-for="Input.Aspirant"><input asp-for="Input.Aspirant" class="form-check-input" /> Zájemce o studium</label>
+                <span asp-validation-for="Input.Aspirant" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
                 <input asp-for="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
                 <label asp-for="Input.Email">Email</label>
                 <span asp-validation-for="Input.Email" class="text-danger"></span>
@@ -52,15 +69,14 @@
     </div>
     <div class="col-md-6 col-md-offset-2">
         <section>
-            <h3>Use another service to register.</h3>
+            <h3>Pomocí jiné služby.</h3>
             <hr />
             @{
                 if ((Model.ExternalLogins?.Count ?? 0) == 0)
                 {
                     <div>
                         <p>
-                            There are no external authentication services configured. See this <a href="https://go.microsoft.com/fwlink/?LinkID=532715">article
-                            about setting up this ASP.NET application to support logging in via external services</a>.
+                            Žádná služba třetí strany není zkonfigurována.
                         </p>
                     </div>
                 }
