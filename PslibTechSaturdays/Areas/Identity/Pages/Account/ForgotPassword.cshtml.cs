@@ -13,7 +13,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using PslibTechSaturdays.Emails.PageModels;
 using PslibTechSaturdays.Models;
+using PslibTechSaturdays.Services;
 
 namespace PslibTechSaturdays.Areas.Identity.Pages.Account
 {
@@ -21,11 +23,20 @@ namespace PslibTechSaturdays.Areas.Identity.Pages.Account
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSender _emailSender;
+        private readonly RazorViewToStringRenderer _renderer;
+        private readonly ILogger<ForgotPasswordModel> _logger;
 
-        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSender emailSender)
+        public ForgotPasswordModel(
+            UserManager<ApplicationUser> userManager, 
+            IEmailSender emailSender, 
+            ILogger<ForgotPasswordModel> logger,
+            RazorViewToStringRenderer renderer
+            )
         {
             _userManager = userManager;
             _emailSender = emailSender;
+            _renderer = renderer;
+            _logger = logger;
         }
 
         /// <summary>
@@ -70,12 +81,16 @@ namespace PslibTechSaturdays.Areas.Identity.Pages.Account
                     pageHandler: null,
                     values: new { area = "Identity", code },
                     protocol: Request.Scheme);
-
-                await _emailSender.SendEmailAsync(
-                    Input.Email,
-                    "Reset Password",
-                    $"Please reset your password by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
-
+                string htmlBody = await _renderer.RenderViewToStringAsync("/Emails/Pages/ResetPassword.cshtml",
+                    new ResetPasswordVM
+                    {
+                         ConfirmationCode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code)),
+                         User = user,
+                         ConfirmEmailUrl = callbackUrl,
+                         AppUrl = callbackUrl
+                    });
+                //await _emailSender.SendEmailAsync(Input.Email, "Obnovení zapomenutého hesla", $"Resetovat své heslo můžete <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>zde</a>.");
+                await _emailSender.SendEmailAsync(Input.Email, "Obnovení zapomenutého hesla", htmlBody);
                 return RedirectToPage("./ForgotPasswordConfirmation");
             }
 

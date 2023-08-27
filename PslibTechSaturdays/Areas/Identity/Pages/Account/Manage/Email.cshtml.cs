@@ -12,7 +12,9 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using PslibTechSaturdays.Emails.PageModels;
 using PslibTechSaturdays.Models;
+using PslibTechSaturdays.Services;
 
 namespace PslibTechSaturdays.Areas.Identity.Pages.Account.Manage
 {
@@ -20,16 +22,22 @@ namespace PslibTechSaturdays.Areas.Identity.Pages.Account.Manage
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RazorViewToStringRenderer _renderer;
+        private readonly ILogger<EmailModel> _logger;
         private readonly IEmailSender _emailSender;
 
         public EmailModel(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
+            ILogger<EmailModel> logger,
+            RazorViewToStringRenderer renderer,
             IEmailSender emailSender)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
+            _logger = logger;
+            _renderer = renderer;
         }
 
         /// <summary>
@@ -70,7 +78,7 @@ namespace PslibTechSaturdays.Areas.Identity.Pages.Account.Manage
             /// </summary>
             [Required]
             [EmailAddress]
-            [Display(Name = "New email")]
+            [Display(Name = "Nová adresa")]
             public string NewEmail { get; set; }
         }
 
@@ -124,16 +132,22 @@ namespace PslibTechSaturdays.Areas.Identity.Pages.Account.Manage
                     pageHandler: null,
                     values: new { area = "Identity", userId = userId, email = Input.NewEmail, code = code },
                     protocol: Request.Scheme);
-                await _emailSender.SendEmailAsync(
-                    Input.NewEmail,
-                    "Confirm your email",
-                    $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                string htmlBody = await _renderer.RenderViewToStringAsync("/Emails/Pages/ConfirmAccount.cshtml",
+                    new ConfirmEmailVM
+                    {
+                        ConfirmationCode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code)),
+                        User = user,
+                        ConfirmEmailUrl = callbackUrl,
+                        AppUrl = callbackUrl
+                    });
+                //await _emailSender.SendEmailAsync(Input.NewEmail,"Potvrzení emailové adresy",$"Potvrďte svou adresu kliknutím <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>sem</a>.");
+                await _emailSender.SendEmailAsync(Input.NewEmail, "Potvrzení emailové adresy", htmlBody);
 
-                StatusMessage = "Confirmation link to change email sent. Please check your email.";
+                StatusMessage = "Potvrzovací email by se měl nacházet ve Vaší mailové schránce.";
                 return RedirectToPage();
             }
 
-            StatusMessage = "Your email is unchanged.";
+            StatusMessage = "K žádné změně nedošlo.";
             return RedirectToPage();
         }
 
@@ -160,12 +174,18 @@ namespace PslibTechSaturdays.Areas.Identity.Pages.Account.Manage
                 pageHandler: null,
                 values: new { area = "Identity", userId = userId, code = code },
                 protocol: Request.Scheme);
-            await _emailSender.SendEmailAsync(
-                email,
-                "Confirm your email",
-                $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+            string htmlBody = await _renderer.RenderViewToStringAsync("/Emails/Pages/ConfirmAccount.cshtml",
+                    new ConfirmEmailVM
+                    {
+                        ConfirmationCode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code)),
+                        User = user,
+                        ConfirmEmailUrl = callbackUrl,
+                        AppUrl = callbackUrl
+                    });
+            //await _emailSender.SendEmailAsync(Input.NewEmail,"Potvrzení emailové adresy",$"Potvrďte svou adresu kliknutím <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>sem</a>.");
+            await _emailSender.SendEmailAsync(Input.NewEmail, "Potvrzení emailové adresy", htmlBody);
 
-            StatusMessage = "Verification email sent. Please check your email.";
+            StatusMessage = "Potvrzovací mail byl odeslán do určené mailové schránky.";
             return RedirectToPage();
         }
     }

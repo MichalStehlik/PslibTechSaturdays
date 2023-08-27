@@ -21,7 +21,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Emails\PageModels\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

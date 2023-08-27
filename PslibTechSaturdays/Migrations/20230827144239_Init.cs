@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PslibTechSaturdays.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,6 +25,41 @@ namespace PslibTechSaturdays.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetRoles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AspNetUsers",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    SchoolName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Grade = table.Column<int>(type: "int", nullable: false),
+                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Updated = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Active = table.Column<bool>(type: "bit", nullable: false),
+                    MailList = table.Column<bool>(type: "bit", nullable: false),
+                    Aspirant = table.Column<bool>(type: "bit", nullable: false),
+                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -67,6 +102,12 @@ namespace PslibTechSaturdays.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Actions", x => x.ActionId);
+                    table.ForeignKey(
+                        name: "FK_Actions_AspNetUsers_CreatedById",
+                        column: x => x.CreatedById,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -82,6 +123,12 @@ namespace PslibTechSaturdays.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUserClaims", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserClaims_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -96,6 +143,12 @@ namespace PslibTechSaturdays.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUserLogins", x => new { x.LoginProvider, x.ProviderKey });
+                    table.ForeignKey(
+                        name: "FK_AspNetUserLogins_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -114,42 +167,12 @@ namespace PslibTechSaturdays.Migrations
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "AspNetUsers",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BirthDate = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    SchoolName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Grade = table.Column<int>(type: "int", nullable: false),
-                    Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Updated = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Active = table.Column<bool>(type: "bit", nullable: false),
-                    MailList = table.Column<bool>(type: "bit", nullable: false),
-                    Aspirant = table.Column<bool>(type: "bit", nullable: false),
-                    GroupId = table.Column<int>(type: "int", nullable: true),
-                    UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "bit", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "datetimeoffset", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "bit", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AspNetUserRoles_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -215,9 +238,9 @@ namespace PslibTechSaturdays.Migrations
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LectorsNote = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ApplicationCountVisible = table.Column<bool>(type: "bit", nullable: false),
-                    PlannedOpening = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    OpenedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ClosedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PlannedOpening = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    OpenedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    ClosedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false)
                 },
@@ -281,6 +304,28 @@ namespace PslibTechSaturdays.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "LectorAssignments",
+                columns: table => new
+                {
+                    GroupId = table.Column<int>(type: "int", nullable: false),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_LectorAssignments", x => new { x.GroupId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_LectorAssignments_AspNetUsers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_LectorAssignments_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "GroupId");
+                });
+
             migrationBuilder.InsertData(
                 table: "AspNetRoles",
                 columns: new[] { "Id", "ConcurrencyStamp", "Name", "NormalizedName" },
@@ -292,8 +337,13 @@ namespace PslibTechSaturdays.Migrations
 
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
-                columns: new[] { "Id", "AccessFailedCount", "Active", "Aspirant", "BirthDate", "ConcurrencyStamp", "Created", "Email", "EmailConfirmed", "FirstName", "Grade", "GroupId", "LastName", "LockoutEnabled", "LockoutEnd", "MailList", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SchoolName", "SecurityStamp", "TwoFactorEnabled", "Updated", "UserName" },
-                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 0, true, false, null, "613b414d-aafa-4526-8535-f8ea20f234b3", new DateTime(2023, 8, 3, 21, 38, 53, 113, DateTimeKind.Local).AddTicks(8892), "soboty@pslib.cz", true, "Soboty", 0, null, "s Technikou", false, null, false, "SOBOTY@PSLIB.CZ", "SOBOTY@PSLIB.CZ", "AQAAAAIAAYagAAAAEEEBvz99CMt59mMeZPMFrpVV3PBlHo9ZgetqenemIqtYJJNNmzKRu192Ha+jxI0Q9g==", null, false, null, "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI", false, new DateTime(2023, 8, 3, 21, 38, 53, 113, DateTimeKind.Local).AddTicks(8945), "soboty@pslib.cz" });
+                columns: new[] { "Id", "AccessFailedCount", "Active", "Aspirant", "BirthDate", "ConcurrencyStamp", "Created", "Email", "EmailConfirmed", "FirstName", "Grade", "LastName", "LockoutEnabled", "LockoutEnd", "MailList", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SchoolName", "SecurityStamp", "TwoFactorEnabled", "Updated", "UserName" },
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 0, true, false, null, "e28f9894-1d86-466c-b153-ca8dbb24badc", new DateTime(2023, 8, 27, 16, 42, 39, 226, DateTimeKind.Local).AddTicks(7719), "soboty@pslib.cz", true, "Soboty", 0, "s Technikou", false, null, false, "SOBOTY@PSLIB.CZ", "SOBOTY@PSLIB.CZ", "AQAAAAIAAYagAAAAEOp5ecxJ2BXKO/p9jjXry/2sjktXPt/ILIsUl684FMKMeaGZcO20jElk2UsjGx7VWg==", null, false, null, "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI", false, new DateTime(2023, 8, 27, 16, 42, 39, 226, DateTimeKind.Local).AddTicks(7767), "soboty@pslib.cz" });
+
+            migrationBuilder.InsertData(
+                table: "Actions",
+                columns: new[] { "ActionId", "Active", "Created", "CreatedById", "Description", "End", "Name", "Published", "Start", "Year" },
+                values: new object[] { 1, true, new DateTime(2023, 8, 27, 16, 42, 39, 261, DateTimeKind.Local).AddTicks(4557), new Guid("11111111-1111-1111-1111-111111111111"), "Tato akce slouží k testovacím účelům.", new DateTime(2024, 10, 10, 10, 30, 0, 0, DateTimeKind.Unspecified), "Testovací akce", true, new DateTime(2024, 10, 10, 10, 10, 0, 0, DateTimeKind.Unspecified), 2023 });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
@@ -308,6 +358,15 @@ namespace PslibTechSaturdays.Migrations
                 table: "AspNetUserRoles",
                 columns: new[] { "RoleId", "UserId" },
                 values: new object[] { new Guid("11111111-1111-1111-1111-111111110000"), new Guid("11111111-1111-1111-1111-111111111111") });
+
+            migrationBuilder.InsertData(
+                table: "Groups",
+                columns: new[] { "GroupId", "ActionId", "ApplicationCountVisible", "Capacity", "ClosedAt", "Created", "CreatedById", "Description", "LectorsNote", "MinGrade", "Name", "Note", "OpenedAt", "PlannedOpening" },
+                values: new object[,]
+                {
+                    { 1, 1, false, 5, null, new DateTime(2023, 8, 27, 16, 42, 39, 261, DateTimeKind.Local).AddTicks(4595), new Guid("11111111-1111-1111-1111-111111111111"), "Skupina pro drobné pokusy.", "", 0, "První skupina", "Poznámka", null, new DateTime(2023, 9, 9, 9, 9, 9, 0, DateTimeKind.Unspecified) },
+                    { 2, 1, false, 10, null, new DateTime(2023, 8, 27, 16, 42, 39, 261, DateTimeKind.Local).AddTicks(4602), new Guid("11111111-1111-1111-1111-111111111111"), "Skupina pro další drobné pokusy.", "Lektoři jsou velmi dobří.", 9, "Druhá skupina", "Poznámka", null, new DateTime(2023, 9, 9, 9, 9, 9, 0, DateTimeKind.Unspecified) }
+                });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Actions_CreatedById",
@@ -345,11 +404,6 @@ namespace PslibTechSaturdays.Migrations
                 name: "EmailIndex",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_GroupId",
-                table: "AspNetUsers",
-                column: "GroupId");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
@@ -398,57 +452,15 @@ namespace PslibTechSaturdays.Migrations
                 table: "Groups",
                 column: "CreatedById");
 
-            migrationBuilder.AddForeignKey(
-                name: "FK_Actions_AspNetUsers_CreatedById",
-                table: "Actions",
-                column: "CreatedById",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserClaims_AspNetUsers_UserId",
-                table: "AspNetUserClaims",
-                column: "UserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserLogins_AspNetUsers_UserId",
-                table: "AspNetUserLogins",
-                column: "UserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUserRoles_AspNetUsers_UserId",
-                table: "AspNetUserRoles",
-                column: "UserId",
-                principalTable: "AspNetUsers",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
-
-            migrationBuilder.AddForeignKey(
-                name: "FK_AspNetUsers_Groups_GroupId",
-                table: "AspNetUsers",
-                column: "GroupId",
-                principalTable: "Groups",
-                principalColumn: "GroupId");
+            migrationBuilder.CreateIndex(
+                name: "IX_LectorAssignments_UserId",
+                table: "LectorAssignments",
+                column: "UserId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropForeignKey(
-                name: "FK_Actions_AspNetUsers_CreatedById",
-                table: "Actions");
-
-            migrationBuilder.DropForeignKey(
-                name: "FK_Groups_AspNetUsers_CreatedById",
-                table: "Groups");
-
             migrationBuilder.DropTable(
                 name: "AspNetRoleClaims");
 
@@ -471,16 +483,19 @@ namespace PslibTechSaturdays.Migrations
                 name: "Enrollments");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "LectorAssignments");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "Groups");
 
             migrationBuilder.DropTable(
                 name: "Actions");
+
+            migrationBuilder.DropTable(
+                name: "AspNetUsers");
         }
     }
 }

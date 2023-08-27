@@ -18,7 +18,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using PslibTechSaturdays.Emails.PageModels;
 using PslibTechSaturdays.Models;
+using PslibTechSaturdays.Services;
 
 namespace PslibTechSaturdays.Areas.Identity.Pages.Account
 {
@@ -28,6 +30,7 @@ namespace PslibTechSaturdays.Areas.Identity.Pages.Account
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
+        private readonly RazorViewToStringRenderer _renderer;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
 
@@ -36,12 +39,14 @@ namespace PslibTechSaturdays.Areas.Identity.Pages.Account
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
+            RazorViewToStringRenderer renderer,
             IEmailSender emailSender)
         {
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
             _signInManager = signInManager;
+            _renderer = renderer;
             _logger = logger;
             _emailSender = emailSender;
         }
@@ -158,9 +163,16 @@ namespace PslibTechSaturdays.Areas.Identity.Pages.Account
                         pageHandler: null,
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
-
-                    await _emailSender.SendEmailAsync(Input.Email, "Potvrzení emailové adresy",
-                        $"Prosím, potvrďte vlastnictní <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>adresy</a>.");
+                    string htmlBody = await _renderer.RenderViewToStringAsync("/Emails/Pages/ConfirmAccount.cshtml",
+                    new ConfirmEmailVM
+                    {
+                        ConfirmationCode = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code)),
+                        User = user,
+                        ConfirmEmailUrl = callbackUrl,
+                        AppUrl = callbackUrl
+                    });
+                    //await _emailSender.SendEmailAsync(Input.Email, "Potvrzení emailové adresy", $"Prosím, potvrďte vlastnictní <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>adresy</a>.");
+                    await _emailSender.SendEmailAsync(Input.Email, "Potvrzení emailové adresy", htmlBody);
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {

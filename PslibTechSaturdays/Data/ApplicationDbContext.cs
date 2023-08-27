@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.Graph.Reports.GetGroupArchivedPrintJobsWithGroupIdWithStartDateTimeWithEndDateTime;
 using Microsoft.VisualBasic;
 using PslibTechSaturdays.Models;
 
@@ -32,6 +33,11 @@ namespace PslibTechSaturdays.Data
                 entity.HasMany(u => u.CancelledEnrollments).WithOne(e => e.CancelledBy).OnDelete(DeleteBehavior.Restrict);
                 entity.HasMany(u => u.CancelledEnrollments).WithOne(e => e.CancelledBy).OnDelete(DeleteBehavior.Restrict);
                 entity.HasMany(u => u.CreatedGroups).WithOne(e => e.CreatedBy).OnDelete(DeleteBehavior.Restrict);
+                entity.HasMany(u => u.Lectoring).WithMany(g => g.Lectors).UsingEntity<LectorAssignment>(
+                    la => la.HasOne(la => la.Group).WithMany().HasForeignKey("GroupId").OnDelete(DeleteBehavior.ClientCascade),
+                    la => la.HasOne(la => la.User).WithMany().HasForeignKey("UserId").OnDelete(DeleteBehavior.ClientCascade)
+                ).ToTable("LectorAssignments")
+                .HasKey(x => new { x.GroupId, x.UserId });
             });
             var hasher = new PasswordHasher<ApplicationUser>();
             modelBuilder.Entity<ApplicationRole>(entity =>
@@ -90,6 +96,53 @@ namespace PslibTechSaturdays.Data
                 {
                     UserId = Guid.Parse("11111111-1111-1111-1111-111111111111"),
                     RoleId = Guid.Parse("11111111-1111-1111-1111-111111110000")
+                });
+            });
+            modelBuilder.Entity<Models.Action>(entity =>
+            {
+                entity.HasData(new Models.Action
+                {
+                    ActionId = 1,
+                    Name = "Testovací akce",
+                    Description = "Tato akce slouží k testovacím účelům.",
+                    Year = 2023,
+                    Active = true,
+                    Published = true,
+                    Created = DateTime.Now,
+                    CreatedById = Guid.Parse("11111111-1111-1111-1111-111111111111"),
+                    Start = new DateTime(2024,10,10,10,10,0),
+                    End = new DateTime(2024, 10, 10, 10, 30, 0)
+                });
+            });
+            modelBuilder.Entity<Group>(entity =>
+            {
+                entity.HasData(new Group
+                {
+                    GroupId = 1,
+                    Name = "První skupina",
+                    Description = "Skupina pro drobné pokusy.",
+                    ActionId = 1,
+                    Capacity = 5,
+                    MinGrade = SchoolGrade.None,
+                    Note = "Poznámka",
+                    LectorsNote = "",
+                    PlannedOpening = new DateTime(2023,9,9,9,9,9),
+                    Created = DateTime.Now,
+                    CreatedById = Guid.Parse("11111111-1111-1111-1111-111111111111")
+                });
+                entity.HasData(new Group
+                {
+                    GroupId = 2,
+                    Name = "Druhá skupina",
+                    Description = "Skupina pro další drobné pokusy.",
+                    ActionId = 1,
+                    Capacity = 10,
+                    MinGrade = SchoolGrade.Ninth,
+                    Note = "Poznámka",
+                    LectorsNote = "Lektoři jsou velmi dobří.",
+                    PlannedOpening = new DateTime(2023, 9, 9, 9, 9, 9),
+                    Created = DateTime.Now,
+                    CreatedById = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 });
             });
         }

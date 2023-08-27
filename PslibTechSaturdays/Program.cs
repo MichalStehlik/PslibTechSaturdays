@@ -53,11 +53,11 @@ builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = $"/Identity/Account/Login";
     options.LogoutPath = $"/Identity/Account/Logout";
-    options.AccessDeniedPath = $"/AccessDenied";
+    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
 
     options.Events.OnRedirectToAccessDenied = context =>
     {
-        context.Response.Redirect("/AccessDenied&t=100");
+        context.Response.Redirect($"/Identity/Account/AccessDenied");
         return Task.CompletedTask;
     };
 });

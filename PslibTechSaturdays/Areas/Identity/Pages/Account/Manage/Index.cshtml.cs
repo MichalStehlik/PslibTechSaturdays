@@ -52,25 +52,40 @@ namespace PslibTechSaturdays.Areas.Identity.Pages.Account.Manage
         /// </summary>
         public class InputModel
         {
-            /// <summary>
-            ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
-            ///     directly from your code. This API may change or be removed in future releases.
-            /// </summary>
-            [Phone]
-            [Display(Name = "Phone number")]
-            public string PhoneNumber { get; set; }
+            [Required]
+            [Display(Name = "Jméno")]
+            public string FirstName { get; set; }
+            [Required]
+            [Display(Name = "Příjmení")]
+            public string LastName { get; set; }
+            [Display(Name = "Datum narození")]
+            public DateTime? BirthDate { get; set; }
+            [Display(Name = "Název školy")]
+            public string SchoolName { get; set; }
+            [Display(Name = "Třída")]
+            public SchoolGrade Grade { get; set; }
+            [Display(Name = "Zájemce o studium")]
+            public bool Aspirant { get; set; }
+            [Required]
+            [Display(Name = "Odběratel zpráv")]
+            public bool MailList { get; set; }
         }
 
         private async Task LoadAsync(ApplicationUser user)
         {
             var userName = await _userManager.GetUserNameAsync(user);
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
 
             Username = userName;
 
             Input = new InputModel
             {
-                PhoneNumber = phoneNumber
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                BirthDate = user.BirthDate,
+                SchoolName = user.SchoolName,
+                Grade = user.Grade,
+                Aspirant = user.Aspirant, 
+                MailList = user.MailList
             };
         }
 
@@ -100,19 +115,17 @@ namespace PslibTechSaturdays.Areas.Identity.Pages.Account.Manage
                 return Page();
             }
 
-            var phoneNumber = await _userManager.GetPhoneNumberAsync(user);
-            if (Input.PhoneNumber != phoneNumber)
-            {
-                var setPhoneResult = await _userManager.SetPhoneNumberAsync(user, Input.PhoneNumber);
-                if (!setPhoneResult.Succeeded)
-                {
-                    StatusMessage = "Unexpected error when trying to set phone number.";
-                    return RedirectToPage();
-                }
-            }
+            user.FirstName = Input.FirstName;
+            user.LastName = Input.LastName;
+            user.BirthDate = Input.BirthDate;
+            user.Aspirant = Input.Aspirant;
+            user.MailList = Input.MailList;
+            user.SchoolName = Input.SchoolName;
+            user.Grade = Input.Grade;
+            await _userManager.UpdateAsync(user);
 
             await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "Your profile has been updated";
+            StatusMessage = "Profil byl aktualizován.";
             return RedirectToPage();
         }
     }

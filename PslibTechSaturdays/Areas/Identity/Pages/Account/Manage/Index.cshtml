@@ -1,7 +1,7 @@
 ﻿@page
 @model IndexModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "Profil";
     ViewData["ActivePage"] = ManageNavPages.Index;
 }
 
@@ -16,11 +16,42 @@
                 <label asp-for="Username" class="form-label"></label>
             </div>
             <div class="form-floating mb-3">
-                <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Please enter your phone number."/>
-                <label asp-for="Input.PhoneNumber" class="form-label"></label>
-                <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                <input asp-for="Input.FirstName" class="form-control" autocomplete="given-name" aria-required="true" placeholder="Alois" />
+                <label asp-for="Input.FirstName">Jméno</label>
+                <span asp-validation-for="Input.FirstName" class="text-danger"></span>
             </div>
-            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.LastName" class="form-control" autocomplete="family-name" aria-required="true" placeholder="Novák" />
+                <label asp-for="Input.LastName">Příjmení</label>
+                <span asp-validation-for="Input.LastName" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.BirthDate" class="form-control" autocomplete="bdate" aria-required="false" type="date" />
+                <label asp-for="Input.BirthDate">Datum narození</label>
+                <span asp-validation-for="Input.BirthDate" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <input asp-for="Input.SchoolName" class="form-control" />
+                <label asp-for="Input.SchoolName">Název školy</label>
+                <span asp-validation-for="Input.SchoolName" class="text-danger"></span>
+            </div>
+            <div class="form-floating mb-3">
+                <select class="form-control"
+                        asp-for="Input.Grade"
+                        asp-items="@Html.GetEnumSelectList<SchoolGrade>()">
+                </select>
+                <label asp-for="Input.Grade">Ročník</label>
+                <span asp-validation-for="Input.Grade" class="text-danger"></span>
+            </div>
+            <div class="mb-3 form-group form-check">
+                <label class="form-check-label" asp-for="Input.MailList"><input asp-for="Input.MailList" class="form-check-input" /> Odběratel zpráv přes email</label>
+                <span asp-validation-for="Input.MailList" class="text-danger"></span>
+            </div>
+            <div class="mb-3 form-group form-check">
+                <label class="form-check-label" asp-for="Input.Aspirant"><input asp-for="Input.Aspirant" class="form-check-input" /> Zájemce o studium</label>
+                <span asp-validation-for="Input.Aspirant" class="text-danger"></span>
+            </div>
+            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-primary">Uložit</button>
         </form>
     </div>
 </div>

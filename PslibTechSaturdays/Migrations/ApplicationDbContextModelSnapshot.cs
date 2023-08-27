@@ -189,6 +189,21 @@ namespace PslibTechSaturdays.Migrations
                     b.HasIndex("CreatedById");
 
                     b.ToTable("Actions");
+
+                    b.HasData(
+                        new
+                        {
+                            ActionId = 1,
+                            Active = true,
+                            Created = new DateTime(2023, 8, 27, 16, 42, 39, 261, DateTimeKind.Local).AddTicks(4557),
+                            CreatedById = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Description = "Tato akce slouží k testovacím účelům.",
+                            End = new DateTime(2024, 10, 10, 10, 30, 0, 0, DateTimeKind.Unspecified),
+                            Name = "Testovací akce",
+                            Published = true,
+                            Start = new DateTime(2024, 10, 10, 10, 10, 0, 0, DateTimeKind.Unspecified),
+                            Year = 2023
+                        });
                 });
 
             modelBuilder.Entity("PslibTechSaturdays.Models.ApplicationRole", b =>
@@ -272,9 +287,6 @@ namespace PslibTechSaturdays.Migrations
                     b.Property<int>("Grade")
                         .HasColumnType("int");
 
-                    b.Property<int?>("GroupId")
-                        .HasColumnType("int");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -323,8 +335,6 @@ namespace PslibTechSaturdays.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("GroupId");
-
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -342,8 +352,8 @@ namespace PslibTechSaturdays.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             Aspirant = false,
-                            ConcurrencyStamp = "613b414d-aafa-4526-8535-f8ea20f234b3",
-                            Created = new DateTime(2023, 8, 3, 21, 38, 53, 113, DateTimeKind.Local).AddTicks(8892),
+                            ConcurrencyStamp = "e28f9894-1d86-466c-b153-ca8dbb24badc",
+                            Created = new DateTime(2023, 8, 27, 16, 42, 39, 226, DateTimeKind.Local).AddTicks(7719),
                             Email = "soboty@pslib.cz",
                             EmailConfirmed = true,
                             FirstName = "Soboty",
@@ -353,11 +363,11 @@ namespace PslibTechSaturdays.Migrations
                             MailList = false,
                             NormalizedEmail = "SOBOTY@PSLIB.CZ",
                             NormalizedUserName = "SOBOTY@PSLIB.CZ",
-                            PasswordHash = "AQAAAAIAAYagAAAAEEEBvz99CMt59mMeZPMFrpVV3PBlHo9ZgetqenemIqtYJJNNmzKRu192Ha+jxI0Q9g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEOp5ecxJ2BXKO/p9jjXry/2sjktXPt/ILIsUl684FMKMeaGZcO20jElk2UsjGx7VWg==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI",
                             TwoFactorEnabled = false,
-                            Updated = new DateTime(2023, 8, 3, 21, 38, 53, 113, DateTimeKind.Local).AddTicks(8945),
+                            Updated = new DateTime(2023, 8, 27, 16, 42, 39, 226, DateTimeKind.Local).AddTicks(7767),
                             UserName = "soboty@pslib.cz"
                         });
                 });
@@ -455,7 +465,7 @@ namespace PslibTechSaturdays.Migrations
                     b.Property<int>("Capacity")
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("ClosedAt")
+                    b.Property<DateTime?>("ClosedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("Created")
@@ -480,10 +490,10 @@ namespace PslibTechSaturdays.Migrations
                     b.Property<string>("Note")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("OpenedAt")
+                    b.Property<DateTime?>("OpenedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("PlannedOpening")
+                    b.Property<DateTime?>("PlannedOpening")
                         .HasColumnType("datetime2");
 
                     b.HasKey("GroupId");
@@ -493,6 +503,53 @@ namespace PslibTechSaturdays.Migrations
                     b.HasIndex("CreatedById");
 
                     b.ToTable("Groups");
+
+                    b.HasData(
+                        new
+                        {
+                            GroupId = 1,
+                            ActionId = 1,
+                            ApplicationCountVisible = false,
+                            Capacity = 5,
+                            Created = new DateTime(2023, 8, 27, 16, 42, 39, 261, DateTimeKind.Local).AddTicks(4595),
+                            CreatedById = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Description = "Skupina pro drobné pokusy.",
+                            LectorsNote = "",
+                            MinGrade = 0,
+                            Name = "První skupina",
+                            Note = "Poznámka",
+                            PlannedOpening = new DateTime(2023, 9, 9, 9, 9, 9, 0, DateTimeKind.Unspecified)
+                        },
+                        new
+                        {
+                            GroupId = 2,
+                            ActionId = 1,
+                            ApplicationCountVisible = false,
+                            Capacity = 10,
+                            Created = new DateTime(2023, 8, 27, 16, 42, 39, 261, DateTimeKind.Local).AddTicks(4602),
+                            CreatedById = new Guid("11111111-1111-1111-1111-111111111111"),
+                            Description = "Skupina pro další drobné pokusy.",
+                            LectorsNote = "Lektoři jsou velmi dobří.",
+                            MinGrade = 9,
+                            Name = "Druhá skupina",
+                            Note = "Poznámka",
+                            PlannedOpening = new DateTime(2023, 9, 9, 9, 9, 9, 0, DateTimeKind.Unspecified)
+                        });
+                });
+
+            modelBuilder.Entity("PslibTechSaturdays.Models.LectorAssignment", b =>
+                {
+                    b.Property<int>("GroupId")
+                        .HasColumnType("int");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("GroupId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("LectorAssignments", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>
@@ -555,13 +612,6 @@ namespace PslibTechSaturdays.Migrations
                         .IsRequired();
 
                     b.Navigation("CreatedBy");
-                });
-
-            modelBuilder.Entity("PslibTechSaturdays.Models.ApplicationUser", b =>
-                {
-                    b.HasOne("PslibTechSaturdays.Models.Group", null)
-                        .WithMany("Lectors")
-                        .HasForeignKey("GroupId");
                 });
 
             modelBuilder.Entity("PslibTechSaturdays.Models.Certificate", b =>
@@ -637,6 +687,25 @@ namespace PslibTechSaturdays.Migrations
                     b.Navigation("CreatedBy");
                 });
 
+            modelBuilder.Entity("PslibTechSaturdays.Models.LectorAssignment", b =>
+                {
+                    b.HasOne("PslibTechSaturdays.Models.Group", "Group")
+                        .WithMany()
+                        .HasForeignKey("GroupId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.HasOne("PslibTechSaturdays.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.ClientCascade)
+                        .IsRequired();
+
+                    b.Navigation("Group");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("PslibTechSaturdays.Models.Action", b =>
                 {
                     b.Navigation("Groups");
@@ -660,8 +729,6 @@ namespace PslibTechSaturdays.Migrations
             modelBuilder.Entity("PslibTechSaturdays.Models.Group", b =>
                 {
                     b.Navigation("Enrollments");
-
-                    b.Navigation("Lectors");
                 });
 #pragma warning restore 612, 618
         }

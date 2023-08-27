@@ -1,5 +1,4 @@
-﻿﻿
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
     <meta charset="utf-8">
@@ -62,11 +61,6 @@
             font-family: inherit !important;
             font-weight: inherit !important;
             line-height: inherit !important;
-        }
-
-        .a6S {
-            display: none !important;
-            opacity: 0.01 !important;
         }
 
         .im {
@@ -163,6 +157,17 @@
             color: #448ef6;
         }
 
+        .btn {
+            display: inline-block;
+            padding: .5em;
+            margin: .3em;
+        }
+
+        .btn.btn-success {
+            background-color: rgba(0,80,0,1);
+            color: white;
+        }
+
         .navigation {
             padding: 0;
         }
@@ -184,15 +189,15 @@
 </head>
 <body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color: #222222;">
     <center style="width: 100%; background-color: #f1f1f1;">
-        <div style="max-width: 600px; margin: 0 auto;" class="email-container">
+        <div style="max-width: 720px; margin: 0 auto;" class="email-container">
             <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: auto;">
                 <tr>
-                    <td valign="top" class="bg_white" style="padding: 1em 2.5em;">
+                    <td valign="top" class="bg_light" style="padding: 1em 2.5em; text-align: center">
                         <h1>Soboty s technikou</h1>
                     </td>
                 </tr>
                 <tr>
-                    <td>
+                    <td class="bg_white" style="padding: 1em">
                         @RenderBody()
                     </td>
                 </tr>

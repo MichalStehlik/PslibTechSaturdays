@@ -8,6 +8,7 @@ namespace PslibTechSaturdays.Models
 {
     public class Group
     {
+        [Key]
         public int GroupId { get; set; }
         [Required]
         [DisplayName("Název")]
@@ -16,7 +17,8 @@ namespace PslibTechSaturdays.Models
         public string? Description { get; set; } = String.Empty;
         [Required]
         [DisplayName("Akce")]
-        public Action Action { get; set; } = new Action();
+        [ForeignKey("ActionId")]
+        public Action? Action { get; set; }
         public int ActionId { get; set; }
         [DisplayName("Deklarovaná kapacita")]
         public int Capacity { get; set; }
@@ -32,14 +34,15 @@ namespace PslibTechSaturdays.Models
         public bool ApplicationCountVisible { get; set; } = false;
         [Column(TypeName = "datetime2")]
         [DisplayName("Plánované otevření pro zápis")]
-        public DateTime PlannedOpening { get; set; }
+        public DateTime? PlannedOpening { get; set; }
         [Column(TypeName = "datetime2")]
         [DisplayName("Skutečné otevření pro zápis")]
-        public DateTime OpenedAt { get; set; }
+        public DateTime? OpenedAt { get; set; }
         [Column(TypeName = "datetime2")]
         [DisplayName("Skutečné uzavření")]
-        public DateTime ClosedAt { get; set; }
+        public DateTime? ClosedAt { get; set; }
         [DisplayName("Založil")]
+        [ForeignKey("CreatedById")]
         public ApplicationUser? CreatedBy { get; set; }
         public Guid CreatedById { get; set; }
         [Column(TypeName = "datetime2")]

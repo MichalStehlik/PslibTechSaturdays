@@ -50,5 +50,7 @@ namespace PslibTechSaturdays.Models
         public ICollection<Enrollment>? CancelledEnrollments { get; set; }
         [JsonIgnore]
         public ICollection<Certificate>? Certificates { get; set; }
+        [JsonIgnore]
+        public ICollection<Group>? Lectoring { get; set; }
     }
 }
