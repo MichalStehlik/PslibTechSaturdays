@@ -34,15 +34,15 @@
                                 <a class="nav-link text-dark" asp-area="My" asp-page="/Certificates">Certifikáty</a>
                             </li>
                         }
-                        @if (cp.IsInRole(Security.ADMIN_POLICY))
+                        @if (cp.IsInRole(Security.ADMIN_ROLE))
                         {
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Administrace
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <li><a class="nav-link text-dark" asp-area="Users" asp-page="/Index">Uživatelé</a></li>
-                                <li><a class="nav-link text-dark" asp-area="Actions" asp-page="/Index">Akce</a></li>
+                                <li><a class="nav-link text-dark" asp-area="Admin" asp-page="/Users/Index">Uživatelé</a></li>
+                                <li><a class="nav-link text-dark" asp-area="Admin" asp-page="/Actions/Index">Akce</a></li>
                                 <li><a class="nav-link text-dark" asp-area="Groups" asp-page="/Index">Skupiny</a></li>
                                 <li><a class="nav-link text-dark" asp-area="Enrollments" asp-page="/Index">Přihlášky</a></li>
                                 <li><a class="nav-link text-dark" asp-area="Certificates" asp-page="/Index">Certifikáty</a></li>

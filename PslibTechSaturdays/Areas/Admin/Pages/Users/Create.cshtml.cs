@@ -8,13 +8,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
 
-namespace PslibTechSaturdays.Areas.Users.Pages
+namespace PslibTechSaturdays.Areas.Admin.Pages.Users
 {
     public class CreateModel : PageModel
     {
-        private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public CreateModel(PslibTechSaturdays.Data.ApplicationDbContext context)
+        public CreateModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -26,12 +26,12 @@ namespace PslibTechSaturdays.Areas.Users.Pages
 
         [BindProperty]
         public ApplicationUser ApplicationUser { get; set; } = default!;
-        
+
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Users == null || ApplicationUser == null)
+            if (!ModelState.IsValid || _context.Users == null || ApplicationUser == null)
             {
                 return Page();
             }

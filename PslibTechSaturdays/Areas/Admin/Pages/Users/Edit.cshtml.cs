@@ -9,13 +9,13 @@ using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
 
-namespace PslibTechSaturdays.Areas.Users.Pages
+namespace PslibTechSaturdays.Areas.Admin.Pages.Users
 {
     public class EditModel : PageModel
     {
-        private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public EditModel(PslibTechSaturdays.Data.ApplicationDbContext context)
+        public EditModel(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -30,7 +30,7 @@ namespace PslibTechSaturdays.Areas.Users.Pages
                 return NotFound();
             }
 
-            var applicationuser =  await _context.Users.FirstOrDefaultAsync(m => m.Id == id);
+            var applicationuser = await _context.Users.FirstOrDefaultAsync(m => m.Id == id);
             if (applicationuser == null)
             {
                 return NotFound();
@@ -71,7 +71,7 @@ namespace PslibTechSaturdays.Areas.Users.Pages
 
         private bool ApplicationUserExists(Guid id)
         {
-          return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
+            return (_context.Users?.Any(e => e.Id == id)).GetValueOrDefault();
         }
     }
 }

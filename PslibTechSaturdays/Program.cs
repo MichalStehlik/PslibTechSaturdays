@@ -47,7 +47,9 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy(Security.ADMIN_POLICY, policy => { policy.RequireClaim(Security.ADMIN_CLAIM, "1"); });
     options.AddPolicy(Security.LECTOR_POLICY, policy => { policy.RequireAssertion(x => x.User.HasClaim(Security.ADMIN_CLAIM, "1") || x.User.HasClaim(Security.LECTOR_CLAIM, "1")); });
 });
-builder.Services.AddRazorPages(options => {});
+builder.Services.AddRazorPages(options => {
+    options.Conventions.AuthorizeFolder("/Admin");
+});
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
@@ -81,6 +83,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapRazorPages();

@@ -8,18 +8,18 @@ using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
 
-namespace PslibTechSaturdays.Areas.Users.Pages
+namespace PslibTechSaturdays.Areas.Admin.Pages.Users
 {
     public class DetailsModel : PageModel
     {
-        private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
-        public DetailsModel(PslibTechSaturdays.Data.ApplicationDbContext context)
+        public DetailsModel(ApplicationDbContext context)
         {
             _context = context;
         }
 
-      public ApplicationUser ApplicationUser { get; set; } = default!; 
+        public ApplicationUser ApplicationUser { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
@@ -33,7 +33,7 @@ namespace PslibTechSaturdays.Areas.Users.Pages
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 ApplicationUser = applicationuser;
             }
