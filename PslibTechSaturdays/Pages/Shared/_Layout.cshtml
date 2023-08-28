@@ -34,7 +34,7 @@
                                 <a class="nav-link text-dark" asp-area="My" asp-page="/Certificates">Certifikáty</a>
                             </li>
                         }
-                        @if (cp.IsInRole(Security.ADMIN_ROLE))
+                        @if (cp.HasClaim(Security.ADMIN_CLAIM,"1"))
                         {
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
