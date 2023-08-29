@@ -12,7 +12,7 @@ using PslibTechSaturdays.Data;
 namespace PslibTechSaturdays.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20230827144239_Init")]
+    [Migration("20230829221039_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -174,6 +174,9 @@ namespace PslibTechSaturdays.Migrations
                     b.Property<DateTime?>("End")
                         .HasColumnType("datetime2");
 
+                    b.Property<bool>("ExclusiveEnrollment")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -198,10 +201,11 @@ namespace PslibTechSaturdays.Migrations
                         {
                             ActionId = 1,
                             Active = true,
-                            Created = new DateTime(2023, 8, 27, 16, 42, 39, 261, DateTimeKind.Local).AddTicks(4557),
+                            Created = new DateTime(2023, 8, 30, 0, 10, 38, 991, DateTimeKind.Local).AddTicks(6696),
                             CreatedById = new Guid("11111111-1111-1111-1111-111111111111"),
                             Description = "Tato akce slouží k testovacím účelům.",
                             End = new DateTime(2024, 10, 10, 10, 30, 0, 0, DateTimeKind.Unspecified),
+                            ExclusiveEnrollment = true,
                             Name = "Testovací akce",
                             Published = true,
                             Start = new DateTime(2024, 10, 10, 10, 10, 0, 0, DateTimeKind.Unspecified),
@@ -355,8 +359,8 @@ namespace PslibTechSaturdays.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             Aspirant = false,
-                            ConcurrencyStamp = "e28f9894-1d86-466c-b153-ca8dbb24badc",
-                            Created = new DateTime(2023, 8, 27, 16, 42, 39, 226, DateTimeKind.Local).AddTicks(7719),
+                            ConcurrencyStamp = "a75b176f-0676-4f55-82a5-648713f2b651",
+                            Created = new DateTime(2023, 8, 30, 0, 10, 38, 957, DateTimeKind.Local).AddTicks(7150),
                             Email = "soboty@pslib.cz",
                             EmailConfirmed = true,
                             FirstName = "Soboty",
@@ -366,11 +370,11 @@ namespace PslibTechSaturdays.Migrations
                             MailList = false,
                             NormalizedEmail = "SOBOTY@PSLIB.CZ",
                             NormalizedUserName = "SOBOTY@PSLIB.CZ",
-                            PasswordHash = "AQAAAAIAAYagAAAAEOp5ecxJ2BXKO/p9jjXry/2sjktXPt/ILIsUl684FMKMeaGZcO20jElk2UsjGx7VWg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDqgUqtR4qWQawxK8JiNFroi4uwGl65o4lU+2fPnQIz4ArEwaw9Ko+SLauZDKT7l0g==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI",
                             TwoFactorEnabled = false,
-                            Updated = new DateTime(2023, 8, 27, 16, 42, 39, 226, DateTimeKind.Local).AddTicks(7767),
+                            Updated = new DateTime(2023, 8, 30, 0, 10, 38, 957, DateTimeKind.Local).AddTicks(7199),
                             UserName = "soboty@pslib.cz"
                         });
                 });
@@ -514,7 +518,7 @@ namespace PslibTechSaturdays.Migrations
                             ActionId = 1,
                             ApplicationCountVisible = false,
                             Capacity = 5,
-                            Created = new DateTime(2023, 8, 27, 16, 42, 39, 261, DateTimeKind.Local).AddTicks(4595),
+                            Created = new DateTime(2023, 8, 30, 0, 10, 38, 991, DateTimeKind.Local).AddTicks(6729),
                             CreatedById = new Guid("11111111-1111-1111-1111-111111111111"),
                             Description = "Skupina pro drobné pokusy.",
                             LectorsNote = "",
@@ -529,7 +533,7 @@ namespace PslibTechSaturdays.Migrations
                             ActionId = 1,
                             ApplicationCountVisible = false,
                             Capacity = 10,
-                            Created = new DateTime(2023, 8, 27, 16, 42, 39, 261, DateTimeKind.Local).AddTicks(4602),
+                            Created = new DateTime(2023, 8, 30, 0, 10, 38, 991, DateTimeKind.Local).AddTicks(6736),
                             CreatedById = new Guid("11111111-1111-1111-1111-111111111111"),
                             Description = "Skupina pro další drobné pokusy.",
                             LectorsNote = "Lektoři jsou velmi dobří.",
@@ -553,6 +557,23 @@ namespace PslibTechSaturdays.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("LectorAssignments", (string)null);
+                });
+
+            modelBuilder.Entity("PslibTechSaturdays.Models.Text", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Texts");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<System.Guid>", b =>

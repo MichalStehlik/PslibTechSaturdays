@@ -15,6 +15,7 @@ namespace PslibTechSaturdays.Data
         public DbSet<Group> Groups { get; set; }
         public DbSet<Enrollment> Enrollments { get; set; }
         public DbSet<Certificate> Certificates { get; set; }
+        public DbSet<Text> Texts { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ILogger<ApplicationDbContext> logger)
             : base(options)
         {
