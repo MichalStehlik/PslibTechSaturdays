@@ -2,10 +2,10 @@
 @model IndexModel
 
 @{
-    ViewData["Title"] = "Seznam uživatelů";
+    ViewData["Title"] = "Uživatelé";
 }
 
-<h1>Seznam</h1>
+<h1>Seznam uživatelů</h1>
 
 <p>
     <a asp-page="Create">Nový</a>
@@ -14,10 +14,14 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Users[0].FirstName)
+                <a asp-page="./Index" asp-route-order="@(Model.Sort == UsersOrder.FirstName ? UsersOrder.FirstNameDesc : UsersOrder.FirstName)">
+                    @Html.DisplayNameFor(model => model.Users[0].FirstName)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Users[0].LastName)
+                <a asp-page="./Index" asp-route-order="@(Model.Sort == UsersOrder.LastName ? UsersOrder.LastNameDesc : UsersOrder.LastName)">
+                    @Html.DisplayNameFor(model => model.Users[0].LastName)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Users[0].SchoolName)
@@ -26,13 +30,19 @@
                 @Html.DisplayNameFor(model => model.Users[0].Grade)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Users[0].Created)
+                <a asp-page="./Index" asp-route-order="@(Model.Sort == UsersOrder.Created ? UsersOrder.CreatedDesc : UsersOrder.Created)">
+                    @Html.DisplayNameFor(model => model.Users[0].Created)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Users[0].Email)
+                <a asp-page="./Index" asp-route-order="@(Model.Sort == UsersOrder.Email ? UsersOrder.EmailDesc : UsersOrder.Email)">
+                    @Html.DisplayNameFor(model => model.Users[0].Email)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Users[0].EnrollmentsCount)
+                <a asp-page="./Index" asp-route-order="@(Model.Sort == UsersOrder.Enrollments ? UsersOrder.EnrollmentsDesc : UsersOrder.Enrollments)">
+                    @Html.DisplayNameFor(model => model.Users[0].EnrollmentsCount)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Users[0].CertificatesCount)
@@ -61,7 +71,7 @@
                 @Html.DisplayFor(modelItem => item.Created)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Email)
+                    <a href="mailto:@Html.DisplayFor(modelItem => item.Email)">@Html.DisplayFor(modelItem => item.Email)</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.EnrollmentsCount)
@@ -76,9 +86,11 @@
                 @Html.DisplayFor(modelItem => item.Lector)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                <div class="btn-group">
+                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Detail</a>
+                    <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Editace</a>
+                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Smazání</a>
+                </div>
             </td>
         </tr>
 }
