@@ -30,7 +30,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
             return Page();
         }
         [BindProperty]
-        public InputModel Input { get; set; } = default!;
+        public CreateInputModel Input { get; set; } = default!;
         [TempData]
         public string? SuccessMessage { get; set; }
         [TempData]
@@ -55,7 +55,8 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
                 Aspirant = Input.Aspirant,
                 MailList = Input.MailList,
                 Created = DateTime.Now,
-                Updated = DateTime.Now
+                Updated = DateTime.Now,
+                Active = true
         };
             var result = await _userManager.CreateAsync(user, Input.Password);
             if (result.Succeeded)
@@ -81,7 +82,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
         }
     }
 
-    public class InputModel
+    public class CreateInputModel
     {
         [Required]
         [Display(Name = "Jméno")]

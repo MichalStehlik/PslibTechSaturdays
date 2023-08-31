@@ -198,7 +198,7 @@ namespace PslibTechSaturdays.Migrations
                         {
                             ActionId = 1,
                             Active = true,
-                            Created = new DateTime(2023, 8, 30, 0, 10, 38, 991, DateTimeKind.Local).AddTicks(6696),
+                            Created = new DateTime(2023, 9, 1, 0, 22, 0, 861, DateTimeKind.Local).AddTicks(9021),
                             CreatedById = new Guid("11111111-1111-1111-1111-111111111111"),
                             Description = "Tato akce slouží k testovacím účelům.",
                             End = new DateTime(2024, 10, 10, 10, 30, 0, 0, DateTimeKind.Unspecified),
@@ -356,8 +356,8 @@ namespace PslibTechSaturdays.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             Aspirant = false,
-                            ConcurrencyStamp = "a75b176f-0676-4f55-82a5-648713f2b651",
-                            Created = new DateTime(2023, 8, 30, 0, 10, 38, 957, DateTimeKind.Local).AddTicks(7150),
+                            ConcurrencyStamp = "f8098904-e2d6-467d-a4a8-b86e456afa63",
+                            Created = new DateTime(2023, 9, 1, 0, 22, 0, 827, DateTimeKind.Local).AddTicks(2747),
                             Email = "soboty@pslib.cz",
                             EmailConfirmed = true,
                             FirstName = "Soboty",
@@ -367,22 +367,20 @@ namespace PslibTechSaturdays.Migrations
                             MailList = false,
                             NormalizedEmail = "SOBOTY@PSLIB.CZ",
                             NormalizedUserName = "SOBOTY@PSLIB.CZ",
-                            PasswordHash = "AQAAAAIAAYagAAAAEDqgUqtR4qWQawxK8JiNFroi4uwGl65o4lU+2fPnQIz4ArEwaw9Ko+SLauZDKT7l0g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEJ9QdGZZ3TCenUIjqjFtsgZ7tvwniYehWODSYaljUdHIqS+eQ+MZ95+AxZWJlT317w==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI",
                             TwoFactorEnabled = false,
-                            Updated = new DateTime(2023, 8, 30, 0, 10, 38, 957, DateTimeKind.Local).AddTicks(7199),
+                            Updated = new DateTime(2023, 9, 1, 0, 22, 0, 827, DateTimeKind.Local).AddTicks(2855),
                             UserName = "soboty@pslib.cz"
                         });
                 });
 
             modelBuilder.Entity("PslibTechSaturdays.Models.Certificate", b =>
                 {
-                    b.Property<int>("CertificateId")
+                    b.Property<Guid>("CertificateId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CertificateId"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("CreatedById")
                         .HasColumnType("uniqueidentifier");
@@ -427,6 +425,9 @@ namespace PslibTechSaturdays.Migrations
                     b.Property<Guid>("CancelledById")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("CertificateId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
@@ -444,6 +445,10 @@ namespace PslibTechSaturdays.Migrations
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("CancelledById");
+
+                    b.HasIndex("CertificateId")
+                        .IsUnique()
+                        .HasFilter("[CertificateId] IS NOT NULL");
 
                     b.HasIndex("CreatedById");
 
@@ -515,7 +520,7 @@ namespace PslibTechSaturdays.Migrations
                             ActionId = 1,
                             ApplicationCountVisible = false,
                             Capacity = 5,
-                            Created = new DateTime(2023, 8, 30, 0, 10, 38, 991, DateTimeKind.Local).AddTicks(6729),
+                            Created = new DateTime(2023, 9, 1, 0, 22, 0, 861, DateTimeKind.Local).AddTicks(9061),
                             CreatedById = new Guid("11111111-1111-1111-1111-111111111111"),
                             Description = "Skupina pro drobné pokusy.",
                             LectorsNote = "",
@@ -530,7 +535,7 @@ namespace PslibTechSaturdays.Migrations
                             ActionId = 1,
                             ApplicationCountVisible = false,
                             Capacity = 10,
-                            Created = new DateTime(2023, 8, 30, 0, 10, 38, 991, DateTimeKind.Local).AddTicks(6736),
+                            Created = new DateTime(2023, 9, 1, 0, 22, 0, 861, DateTimeKind.Local).AddTicks(9068),
                             CreatedById = new Guid("11111111-1111-1111-1111-111111111111"),
                             Description = "Skupina pro další drobné pokusy.",
                             LectorsNote = "Lektoři jsou velmi dobří.",
@@ -668,6 +673,10 @@ namespace PslibTechSaturdays.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("PslibTechSaturdays.Models.Certificate", "Certificate")
+                        .WithOne("Enrollment")
+                        .HasForeignKey("PslibTechSaturdays.Models.Enrollment", "CertificateId");
+
                     b.HasOne("PslibTechSaturdays.Models.ApplicationUser", "CreatedBy")
                         .WithMany("CreatedEnrollments")
                         .HasForeignKey("CreatedById")
@@ -681,6 +690,8 @@ namespace PslibTechSaturdays.Migrations
                         .IsRequired();
 
                     b.Navigation("CancelledBy");
+
+                    b.Navigation("Certificate");
 
                     b.Navigation("CreatedBy");
 
@@ -745,6 +756,11 @@ namespace PslibTechSaturdays.Migrations
                     b.Navigation("CreatedGroups");
 
                     b.Navigation("Enrollments");
+                });
+
+            modelBuilder.Entity("PslibTechSaturdays.Models.Certificate", b =>
+                {
+                    b.Navigation("Enrollment");
                 });
 
             modelBuilder.Entity("PslibTechSaturdays.Models.Group", b =>

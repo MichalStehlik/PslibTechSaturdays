@@ -30,6 +30,7 @@ namespace PslibTechSaturdays.Models
         public DateTime? Cancelled { get; set; }
         [DisplayName("Prezence potvrzena")]
         public bool? Present { get; set; }
-
+        public Guid? CertificateId { get; set; } = null;
+        public Certificate? Certificate { get; set; }
     }
 }
