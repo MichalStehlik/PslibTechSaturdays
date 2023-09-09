@@ -32,26 +32,25 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
         }
 
         public PaginatedList<UserListVM> Users { get; set; } = default!;
+        [BindProperty(SupportsGet = true)]
         public UsersOrder Sort { get; set; } = UsersOrder.Id;
+        [BindProperty(SupportsGet = true)]
         public int? PageIndex { get; set; }
+        [BindProperty(SupportsGet = true)]
         public int? PageSize { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string? FirstName { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string? LastName { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string? Email { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public bool? Admin { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public bool? Lector { get; set; }
 
-        public async Task OnGetAsync(
-            string? search,
-            string? email,
-            string? userName,
-            string? firstName,
-            string? lastName,
-            bool? admin,
-            bool? lector,
-            int? enrollments,
-            UsersOrder? order,
-            int? pageIndex,
-            int pageSize = 10
-            )
+        public async Task OnGetAsync()
         {
-            Sort = order ?? UsersOrder.Id;
-            PageIndex = pageIndex;
             if (_context.Users != null)
             {
                 IQueryable<ApplicationUser> users = _context.Users
@@ -59,21 +58,16 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
                 .Include(x => x.Roles)
                     .Include(x => x.Certificates)
                     .AsQueryable();
-                if (!String.IsNullOrEmpty(search))
-                    users = users.Where(i => (i.UserName!.Contains(search)));
-                if (!String.IsNullOrEmpty(email))
-                    users = users.Where(i => (i.Email!.Contains(email)));
-                if (!String.IsNullOrEmpty(userName))
-                    users = users.Where(i => (i.UserName!.Contains(userName)));
-                if (!String.IsNullOrEmpty(firstName))
-                    users = users.Where(i => (i.FirstName.Contains(firstName)));
-                if (enrollments is not null)
-                    users = users.Where(i => (i.Enrollments!.Count > enrollments));
-                if (!String.IsNullOrEmpty(lastName))
-                    users = users.Where(i => (i.LastName.Contains(lastName)));
-                if (admin is not null)
+
+                if (!String.IsNullOrEmpty(Email))
+                    users = users.Where(i => (i.Email!.Contains(Email)));
+                if (!String.IsNullOrEmpty(FirstName))
+                    users = users.Where(i => (i.FirstName.Contains(FirstName)));
+                if (!String.IsNullOrEmpty(LastName))
+                    users = users.Where(i => (i.LastName.Contains(LastName)));
+                if (Admin is not null)
                 {
-                    if (admin == true)
+                    if (Admin == true)
                     {
                         users = users.Where(u => (u.Roles!.Any(x => x.NormalizedName == Constants.Security.ADMIN_ROLE.ToUpper())));
                     }
@@ -82,9 +76,9 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
                         users = users.Where(u => (u.Roles!.All(x => x.NormalizedName != Constants.Security.ADMIN_ROLE.ToUpper())));
                     }
                 };
-                if (lector is not null)
+                if (Lector is not null)
                 {
-                    if (lector == true)
+                    if (Lector == true)
                     {
                         users = users.Where(u => (u.Roles!.Any(x => x.NormalizedName == Constants.Security.LECTOR_ROLE.ToUpper())));
                     }
@@ -94,7 +88,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
                     }
                 };
 
-                users = order switch
+                users = Sort switch
                 {
                     UsersOrder.Id => users.OrderBy(c => c.Id),
                     UsersOrder.IdDesc => users.OrderByDescending(c => c.Id),
@@ -131,7 +125,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
                         EnrollmentsCount = x.Enrollments!.Count(),
                         CertificatesCount = x.Certificates!.Count(),
                     }),
-                    pageIndex ?? 1, pageSize
+                    PageIndex ?? 1, PageSize ?? 100
                 ); 
             }
         }

@@ -8,8 +8,39 @@
 <h1>Seznam uživatelů</h1>
 
 <p>
-    <a asp-page="Create">Nový</a>
+    <a asp-page="Create" class="btn btn-success">Nový</a>
 </p>
+<form method="get">
+    <input type="hidden" asp-for="Sort" />
+    <div class="row g-3">
+        <div class="col">
+            <input type="text" class="form-control mb-2 mr-sm-2" asp-for="FirstName" placeholder="@Html.DisplayNameFor(model => model.Users[0].FirstName)">
+        </div>   
+        <div class="col">
+            <input type="text" class="form-control mb-2 mr-sm-2" asp-for="LastName" placeholder="@Html.DisplayNameFor(model => model.Users[0].LastName)">
+        </div>
+        <div class="col">
+            <input type="text" class="form-control mb-2 mr-sm-2" asp-for="Email" placeholder="@Html.DisplayNameFor(model => model.Users[0].Email)">
+        </div>
+        <div class="col">
+            <select class="form-control" asp-for="Admin" placeholder="@Html.DisplayNameFor(model => model.Users[0].Admin)">
+                <option value="">-- Admin --</option>
+                <option value="true">Ano</option>
+                <option value="false">Ne</option>
+            </select>
+        </div>
+        <div class="col">
+            <select class="form-control" asp-for="Lector" placeholder="@Html.DisplayNameFor(model => model.Users[0].Lector)">
+                <option value="">-- Lektor --</option>
+                <option value="true">Ano</option>
+                <option value="false">Ne</option>
+            </select>
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary mb-2">Filtrovat</button>
+        </div>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
@@ -105,14 +136,26 @@
                 <a asp-page="./Index"
                    asp-route-sortOrder="@Model.Sort"
                    asp-route-pageIndex="@(Model.Users.PageIndex - 1)"
+                   asp-route-firstName="@(Model.FirstName)"
+                   asp-route-lastName="@(Model.LastName)"
+                   asp-route-email="@(Model.Email)"
+                   asp-route-admin="@(Model.Admin)"
+                   asp-route-lector="@(Model.Lector)"
+                   asp-route-sort="@(Model.Sort)"
                    class="btn btn-primary @prevDisabled">
-                    Previous
+                    Předchozí
                 </a>
                 <a asp-page="./Index"
                    asp-route-sortOrder="@Model.Sort"
                    asp-route-pageIndex="@(Model.Users.PageIndex + 1)"
+                   asp-route-firstName="@(Model.FirstName)"
+                   asp-route-lastName="@(Model.LastName)"
+                   asp-route-email="@(Model.Email)"
+                   asp-route-admin="@(Model.Admin)"
+                   asp-route-lector="@(Model.Lector)"
+                   asp-route-sort="@(Model.Sort)"
                    class="btn btn-primary @nextDisabled">
-                    Next
+                    Další
                 </a>
             </td>
         </tr>
