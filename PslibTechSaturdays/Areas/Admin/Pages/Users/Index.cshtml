@@ -95,4 +95,26 @@
         </tr>
 }
     </tbody>
+    @{
+        var prevDisabled = !Model.Users.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.Users.HasNextPage ? "disabled" : "";
+    }
+    <tfoot>
+        <tr>
+            <td colspan="1000">
+                <a asp-page="./Index"
+                   asp-route-sortOrder="@Model.Sort"
+                   asp-route-pageIndex="@(Model.Users.PageIndex - 1)"
+                   class="btn btn-primary @prevDisabled">
+                    Previous
+                </a>
+                <a asp-page="./Index"
+                   asp-route-sortOrder="@Model.Sort"
+                   asp-route-pageIndex="@(Model.Users.PageIndex + 1)"
+                   class="btn btn-primary @nextDisabled">
+                    Next
+                </a>
+            </td>
+        </tr>
+    </tfoot>
 </table>

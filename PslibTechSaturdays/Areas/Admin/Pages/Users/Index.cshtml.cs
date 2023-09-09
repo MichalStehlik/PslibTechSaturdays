@@ -14,6 +14,7 @@ using PslibTechSaturdays.Emails.PageModels;
 using PslibTechSaturdays.Models;
 using PslibTechSaturdays.ViewModels;
 using Microsoft.Data.SqlClient;
+using PslibTechSaturdays.Components;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Users
 {
@@ -30,10 +31,10 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
             _context = context;
         }
 
-        public IList<UserListVM> Users { get; set; } = default!;
+        public PaginatedList<UserListVM> Users { get; set; } = default!;
         public UsersOrder Sort { get; set; } = UsersOrder.Id;
-        public int Position { get; set; }
-        public int PageSize { get; set; }
+        public int? PageIndex { get; set; }
+        public int? PageSize { get; set; }
 
         public async Task OnGetAsync(
             string? search,
@@ -45,12 +46,12 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
             bool? lector,
             int? enrollments,
             UsersOrder? order,
-            int page = 0,
-            int pagesize = 0
+            int? pageIndex,
+            int pageSize = 10
             )
         {
             Sort = order ?? UsersOrder.Id;
-            Position = page;
+            PageIndex = pageIndex;
             if (_context.Users != null)
             {
                 IQueryable<ApplicationUser> users = _context.Users
@@ -109,25 +110,29 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
                     UsersOrder.EnrollmentsDesc => users.OrderByDescending(c => c.Enrollments!.Count),
                     _ => users
                 };
-                Users = await users.Select(x => new UserListVM
-                {
-                    Id = x.Id,
-                    FirstName = x.FirstName,
-                    LastName = x.LastName,
-                    SchoolName = x.SchoolName,
-                    Grade = x.Grade,
-                    Email = x.Email,
-                    BirthDate = x.BirthDate,
-                    Created = x.Created,
-                    Active = x.Active,
-                    MailList = x.MailList,
-                    Aspirant = x.Aspirant,
-                    Roles = x.Roles,
-                    Admin = x.Roles!.Any(x => x.NormalizedName == Constants.Security.ADMIN_ROLE.ToUpper()),
-                    Lector = x.Roles!.Any(x => x.NormalizedName == Constants.Security.LECTOR_ROLE.ToUpper()),
-                    EnrollmentsCount = x.Enrollments!.Count(),
-                    CertificatesCount = x.Certificates!.Count(),
-                }).ToListAsync();
+
+                Users = await PaginatedList<UserListVM>.CreateAsync(
+                    users.Select(x => new UserListVM
+                    {
+                        Id = x.Id,
+                        FirstName = x.FirstName,
+                        LastName = x.LastName,
+                        SchoolName = x.SchoolName,
+                        Grade = x.Grade,
+                        Email = x.Email,
+                        BirthDate = x.BirthDate,
+                        Created = x.Created,
+                        Active = x.Active,
+                        MailList = x.MailList,
+                        Aspirant = x.Aspirant,
+                        Roles = x.Roles,
+                        Admin = x.Roles!.Any(x => x.NormalizedName == Constants.Security.ADMIN_ROLE.ToUpper()),
+                        Lector = x.Roles!.Any(x => x.NormalizedName == Constants.Security.LECTOR_ROLE.ToUpper()),
+                        EnrollmentsCount = x.Enrollments!.Count(),
+                        CertificatesCount = x.Certificates!.Count(),
+                    }),
+                    pageIndex ?? 1, pageSize
+                ); 
             }
         }
     }
