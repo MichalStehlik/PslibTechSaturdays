@@ -10,14 +10,46 @@
 <p>
     <a asp-page="Create" class="btn btn-success">Nový</a>
 </p>
+<form method="get">
+    <input type="hidden" asp-for="Sort" />
+    <div class="row g-3">
+        <div class="col">
+            <input type="text" class="form-control mb-2 mr-sm-2" asp-for="Name" placeholder="@Html.DisplayNameFor(model => model.Actions[0].Name)">
+        </div>
+        <div class="col">
+            <input type="text" class="form-control mb-2 mr-sm-2" asp-for="Year" placeholder="@Html.DisplayNameFor(model => model.Actions[0].Year)">
+        </div>
+        <div class="col">
+            <select class="form-control" asp-for="Active" placeholder="@Html.DisplayNameFor(model => model.Actions[0].Active)">
+                <option value="">-- Aktivní --</option>
+                <option value="true">Ano</option>
+                <option value="false">Ne</option>
+            </select>
+        </div>
+        <div class="col">
+            <select class="form-control" asp-for="Published" placeholder="@Html.DisplayNameFor(model => model.Actions[0].Published)">
+                <option value="">-- Zveřejněná --</option>
+                <option value="true">Ano</option>
+                <option value="false">Ne</option>
+            </select>
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary mb-2">Filtrovat</button>
+        </div>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Actions[0].Name)
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == ActionsOrder.Name ? ActionsOrder.NameDesc : ActionsOrder.Name)">
+                    @Html.DisplayNameFor(model => model.Actions[0].Name)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Actions[0].Year)
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == ActionsOrder.Year ? ActionsOrder.YearDesc : ActionsOrder.Year)">
+                    @Html.DisplayNameFor(model => model.Actions[0].Year)
+                </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Actions[0].Active)
@@ -26,7 +58,9 @@
                 @Html.DisplayNameFor(model => model.Actions[0].Published)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Actions[0].Created)
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == ActionsOrder.Created ? ActionsOrder.CreatedDesc : ActionsOrder.Created)">
+                    @Html.DisplayNameFor(model => model.Actions[0].Created)
+                </a>
             </th>
             <th></th>
         </tr>
@@ -59,4 +93,36 @@
         </tr>
 }
     </tbody>
+    @{
+        var prevDisabled = !Model.Actions.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.Actions.HasNextPage ? "disabled" : "";
+    }
+    <tfoot>
+        <tr>
+            <td colspan="1000">
+                <a asp-page="./Index"
+                   asp-route-sortOrder="@Model.Sort"
+                   asp-route-pageIndex="@(Model.Actions.PageIndex - 1)"
+                   asp-route-name="@(Model.Name)"
+                   asp-route-year="@(Model.Year)"
+                   asp-route-active="@(Model.Active)"
+                   asp-route-published="@(Model.Published)"
+                   asp-route-sort="@(Model.Sort)"
+                   class="btn btn-primary @prevDisabled">
+                    Předchozí
+                </a>
+                <a asp-page="./Index"
+                   asp-route-sortOrder="@Model.Sort"
+                   asp-route-pageIndex="@(Model.Actions.PageIndex - 1)"
+                   asp-route-name="@(Model.Name)"
+                   asp-route-year="@(Model.Year)"
+                   asp-route-active="@(Model.Active)"
+                   asp-route-published="@(Model.Published)"
+                   asp-route-sort="@(Model.Sort)"
+                   class="btn btn-primary @nextDisabled">
+                    Další
+                </a>
+            </td>
+        </tr>
+    </tfoot>
 </table>

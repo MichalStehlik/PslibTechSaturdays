@@ -37,6 +37,13 @@
             </select>
         </div>
         <div class="col">
+            <select class="form-control" asp-for="Active" placeholder="@Html.DisplayNameFor(model => model.Users[0].Active)">
+                <option value="">-- Aktivní --</option>
+                <option value="true">Ano</option>
+                <option value="false">Ne</option>
+            </select>
+        </div>
+        <div class="col">
             <button type="submit" class="btn btn-primary mb-2">Filtrovat</button>
         </div>
     </div>
@@ -45,12 +52,12 @@
     <thead>
         <tr>
             <th>
-                <a asp-page="./Index" asp-route-order="@(Model.Sort == UsersOrder.FirstName ? UsersOrder.FirstNameDesc : UsersOrder.FirstName)">
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == UsersOrder.FirstName ? UsersOrder.FirstNameDesc : UsersOrder.FirstName)">
                     @Html.DisplayNameFor(model => model.Users[0].FirstName)
                 </a>
             </th>
             <th>
-                <a asp-page="./Index" asp-route-order="@(Model.Sort == UsersOrder.LastName ? UsersOrder.LastNameDesc : UsersOrder.LastName)">
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == UsersOrder.LastName ? UsersOrder.LastNameDesc : UsersOrder.LastName)">
                     @Html.DisplayNameFor(model => model.Users[0].LastName)
                 </a>
             </th>
@@ -61,22 +68,25 @@
                 @Html.DisplayNameFor(model => model.Users[0].Grade)
             </th>
             <th>
-                <a asp-page="./Index" asp-route-order="@(Model.Sort == UsersOrder.Created ? UsersOrder.CreatedDesc : UsersOrder.Created)">
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == UsersOrder.Created ? UsersOrder.CreatedDesc : UsersOrder.Created)">
                     @Html.DisplayNameFor(model => model.Users[0].Created)
                 </a>
             </th>
             <th>
-                <a asp-page="./Index" asp-route-order="@(Model.Sort == UsersOrder.Email ? UsersOrder.EmailDesc : UsersOrder.Email)">
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == UsersOrder.Email ? UsersOrder.EmailDesc : UsersOrder.Email)">
                     @Html.DisplayNameFor(model => model.Users[0].Email)
                 </a>
             </th>
             <th>
-                <a asp-page="./Index" asp-route-order="@(Model.Sort == UsersOrder.Enrollments ? UsersOrder.EnrollmentsDesc : UsersOrder.Enrollments)">
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == UsersOrder.Enrollments ? UsersOrder.EnrollmentsDesc : UsersOrder.Enrollments)">
                     @Html.DisplayNameFor(model => model.Users[0].EnrollmentsCount)
                 </a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Users[0].CertificatesCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Users[0].Active)
             </th>
             <th>Administrátor</th>
             <th>Lektor</th>
@@ -109,6 +119,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CertificatesCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Active)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Admin)

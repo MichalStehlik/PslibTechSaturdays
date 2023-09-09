@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph.Models;
+using PslibTechSaturdays.Areas.Admin.Pages.Users;
 using PslibTechSaturdays.Components;
 using PslibTechSaturdays.ViewModels;
 
@@ -42,11 +43,8 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
         {
             if (_context.Actions != null)
             {
-                Action = await _context.Actions
-                .Include(a => a.CreatedBy).ToListAsync();
                 IQueryable<Models.Action> actions = _context.Actions
                     .Include(x => x.Groups)
-                    .ThenInclude(g => g.Enrollments)
                     .AsQueryable();
                 if (!String.IsNullOrEmpty(Name))
                     actions = actions.Where(i => (i.Name!.Contains(Name)));
@@ -60,6 +58,19 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
                 {
                     actions = actions.Where(u => u.Published == Published);
                 }
+
+                actions = Sort switch
+                {
+                    ActionsOrder.Id => actions.OrderBy(c => c.ActionId),
+                    ActionsOrder.IdDesc => actions.OrderByDescending(c => c.ActionId),
+                    ActionsOrder.Name => actions.OrderBy(c => c.Name),
+                    ActionsOrder.NameDesc => actions.OrderByDescending(c => c.Name),
+                    ActionsOrder.Year => actions.OrderBy(c => c.Year),
+                    ActionsOrder.YearDesc => actions.OrderByDescending(c => c.Year),
+                    ActionsOrder.Created => actions.OrderBy(c => c.Created),
+                    ActionsOrder.CreatedDesc => actions.OrderByDescending(c => c.Created),
+                    _ => actions
+                };
 
                 Actions = await PaginatedList<ActionListVM>.CreateAsync(
                     actions.Select(x => new ActionListVM

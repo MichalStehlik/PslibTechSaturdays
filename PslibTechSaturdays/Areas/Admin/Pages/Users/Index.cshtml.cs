@@ -15,6 +15,7 @@ using PslibTechSaturdays.Models;
 using PslibTechSaturdays.ViewModels;
 using Microsoft.Data.SqlClient;
 using PslibTechSaturdays.Components;
+using Microsoft.Extensions.Options;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Users
 {
@@ -48,6 +49,8 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
         public bool? Admin { get; set; }
         [BindProperty(SupportsGet = true)]
         public bool? Lector { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public bool? Active { get; set; }
 
         public async Task OnGetAsync()
         {
@@ -65,6 +68,10 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
                     users = users.Where(i => (i.FirstName.Contains(FirstName)));
                 if (!String.IsNullOrEmpty(LastName))
                     users = users.Where(i => (i.LastName.Contains(LastName)));
+                if (Active is not null)
+                {
+                    users = users.Where(u => u.Active == Active);
+                }
                 if (Admin is not null)
                 {
                     if (Admin == true)
