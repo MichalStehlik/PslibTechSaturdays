@@ -2,77 +2,80 @@
 @model PslibTechSaturdays.Areas.Admin.Pages.Actions.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Vytvoření akce";
 }
 
-<h1>Create</h1>
+<h1>Založení</h1>
 
-<h4>Action</h4>
+<h4>Akce</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Action.Name" class="control-label"></label>
-                <input asp-for="Action.Name" class="form-control" />
-                <span asp-validation-for="Action.Name" class="text-danger"></span>
+                <label asp-for="Input.Name" class="control-label"></label>
+                <input asp-for="Input.Name" class="form-control" />
+                <span asp-validation-for="Input.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Action.Description" class="control-label"></label>
-                <input asp-for="Action.Description" class="form-control" />
-                <span asp-validation-for="Action.Description" class="text-danger"></span>
+                <label asp-for="Input.Description" class="control-label"></label>
+                <textarea asp-for="Input.Description" class="form-control" ></textarea>
+                <span asp-validation-for="Input.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Action.Year" class="control-label"></label>
-                <input asp-for="Action.Year" class="form-control" />
-                <span asp-validation-for="Action.Year" class="text-danger"></span>
+                <label asp-for="Input.Year" class="control-label"></label>
+                <input asp-for="Input.Year" class="form-control" />
+                <span asp-validation-for="Input.Year" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Action.Active" /> @Html.DisplayNameFor(model => model.Action.Active)
+                    <input class="form-check-input" asp-for="Input.Active" /> @Html.DisplayNameFor(model => model.Input.Active)
                 </label>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Action.Published" /> @Html.DisplayNameFor(model => model.Action.Published)
+                    <input class="form-check-input" asp-for="Input.Published" /> @Html.DisplayNameFor(model => model.Input.Published)
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="Action.Created" class="control-label"></label>
-                <input asp-for="Action.Created" class="form-control" />
-                <span asp-validation-for="Action.Created" class="text-danger"></span>
+                <label asp-for="Input.Start" class="control-label"></label>
+                <input asp-for="Input.Start" class="form-control" />
+                <span asp-validation-for="Input.Start" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Action.CreatedById" class="control-label"></label>
-                <select asp-for="Action.CreatedById" class ="form-control" asp-items="ViewBag.CreatedById"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Action.Start" class="control-label"></label>
-                <input asp-for="Action.Start" class="form-control" />
-                <span asp-validation-for="Action.Start" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Action.End" class="control-label"></label>
-                <input asp-for="Action.End" class="form-control" />
-                <span asp-validation-for="Action.End" class="text-danger"></span>
+                <label asp-for="Input.End" class="control-label"></label>
+                <input asp-for="Input.End" class="form-control" />
+                <span asp-validation-for="Input.End" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Action.ExclusiveEnrollment" /> @Html.DisplayNameFor(model => model.Action.ExclusiveEnrollment)
+                    <input class="form-check-input" asp-for="Input.ExclusiveEnrollment" /> @Html.DisplayNameFor(model => model.Input.ExclusiveEnrollment)
                 </label>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Vytvořit" class="btn btn-primary" /> <a asp-page="Index" class="btn btn-secondary">Zpět</a>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-page="Index">Back to List</a>
-</div>
-
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
+    <script>
+        var txtinput = document.querySelector('#Input_Description');
+        ClassicEditor
+            .create(txtinput, { 
+                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'], 
+            })
+            .then(editor => {
+                editor.model.document.on('change', () => {
+                    console.log('Description has changed!');
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
 }

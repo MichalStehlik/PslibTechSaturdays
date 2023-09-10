@@ -34,6 +34,7 @@ namespace PslibTechSaturdays.Models
         [Column(TypeName = "datetime2")]
         [DisplayName("Čas konce")]
         public DateTime? End { get; set; }
+        [DisplayName("Zápis jen do jedné skupiny")]
         public bool ExclusiveEnrollment { get; set; } = true;
         [JsonIgnore]
         public ICollection<Group>? Groups { get; set; }

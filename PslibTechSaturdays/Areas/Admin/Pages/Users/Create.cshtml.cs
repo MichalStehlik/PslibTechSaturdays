@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -57,7 +58,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
                 Created = DateTime.Now,
                 Updated = DateTime.Now,
                 Active = true
-        };
+            };
             var result = await _userManager.CreateAsync(user, Input.Password);
             if (result.Succeeded)
             {

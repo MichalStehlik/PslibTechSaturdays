@@ -24,21 +24,21 @@
         </div>
         <div class="col">
             <select class="form-control" asp-for="Admin" placeholder="@Html.DisplayNameFor(model => model.Users[0].Admin)">
-                <option value="">-- Admin --</option>
+                <option value="">-- @Html.DisplayNameFor(model => model.Users[0].Admin) --</option>
                 <option value="true">Ano</option>
                 <option value="false">Ne</option>
             </select>
         </div>
         <div class="col">
             <select class="form-control" asp-for="Lector" placeholder="@Html.DisplayNameFor(model => model.Users[0].Lector)">
-                <option value="">-- Lektor --</option>
+                <option value="">-- @Html.DisplayNameFor(model => model.Users[0].Lector) --</option>
                 <option value="true">Ano</option>
                 <option value="false">Ne</option>
             </select>
         </div>
         <div class="col">
             <select class="form-control" asp-for="Active" placeholder="@Html.DisplayNameFor(model => model.Users[0].Active)">
-                <option value="">-- Aktivní --</option>
+                <option value="">-- @Html.DisplayNameFor(model => model.Users[0].Active) --</option>
                 <option value="true">Ano</option>
                 <option value="false">Ne</option>
             </select>
@@ -94,50 +94,60 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Users) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LastName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.SchoolName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Grade)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                    <a href="mailto:@Html.DisplayFor(modelItem => item.Email)">@Html.DisplayFor(modelItem => item.Email)</a>
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EnrollmentsCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CertificatesCount)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Active)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Admin)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Lector)
-            </td>
-            <td>
-                <div class="btn-group">
-                    <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Detail</a>
-                    <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Editace</a>
-                    <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Smazání</a>
-                </div>
-            </td>
-        </tr>
-}
+        @if (Model.Users.Count() == 0) 
+        {
+            <tr>
+                <td colspan="100" class="table-info">Zadaným kritériím neodpovídají žádné údaje.</td>
+            </tr>
+        } 
+        else
+        {
+            @foreach (var item in Model.Users)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.FirstName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.SchoolName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Grade)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Created)
+                    </td>
+                    <td>
+                        <a href="mailto:@Html.DisplayFor(modelItem => item.Email)">@Html.DisplayFor(modelItem => item.Email)</a>
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.EnrollmentsCount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CertificatesCount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Active)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Admin)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Lector)
+                    </td>
+                    <td>
+                        <div class="btn-group">
+                            <a asp-page="./Details" asp-route-id="@item.Id" class="btn btn-primary btn-sm">Detail</a>
+                            <a asp-page="./Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm">Editace</a>
+                            <a asp-page="./Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm">Smazání</a>
+                        </div>
+                    </td>
+                </tr>
+            }
+        }       
     </tbody>
     @{
         var prevDisabled = !Model.Users.HasPreviousPage ? "disabled" : "";

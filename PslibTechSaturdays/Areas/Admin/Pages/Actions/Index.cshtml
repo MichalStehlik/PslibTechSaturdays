@@ -8,7 +8,7 @@
 <h1>Seznam akcí</h1>
 
 <p>
-    <a asp-page="Create" class="btn btn-success">Nový</a>
+    <a asp-page="Create" class="btn btn-success">Nová</a>
 </p>
 <form method="get">
     <input type="hidden" asp-for="Sort" />
@@ -52,6 +52,9 @@
                 </a>
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Actions[0].GroupsCount)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Actions[0].Active)
             </th>
             <th>
@@ -66,32 +69,46 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Actions) {
+    @if (Model.Actions.Count() == 0) 
+    {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Year)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Active)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Published)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                <div class="btn-group">
-                    <a asp-page="./Details" asp-route-id="@item.ActionId" class="btn btn-primary btn-sm">Detail</a>
-                    <a asp-page="./Edit" asp-route-id="@item.ActionId" class="btn btn-secondary btn-sm">Editace</a>
-                    <a asp-page="./Delete" asp-route-id="@item.ActionId" class="btn btn-danger btn-sm">Smazání</a>
-                </div>
-            </td>
+            <td colspan="100" class="table-info">Zadaným kritériím neodpovídají žádné údaje.</td>
         </tr>
-}
+    } 
+    else
+    {
+        @foreach (var item in Model.Actions)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Year)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GroupsCount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Active)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Published)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a asp-page="./Details" asp-route-id="@item.ActionId" class="btn btn-primary btn-sm">Detail</a>
+                        <a asp-page="./Edit" asp-route-id="@item.ActionId" class="btn btn-secondary btn-sm">Editace</a>
+                        <a asp-page="./Delete" asp-route-id="@item.ActionId" class="btn btn-danger btn-sm">Smazání</a>
+                    </div>
+                </td>
+            </tr>
+        }
+        
+    }
     </tbody>
     @{
         var prevDisabled = !Model.Actions.HasPreviousPage ? "disabled" : "";

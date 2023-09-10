@@ -17,3 +17,32 @@
         </div>
     </div>
 </div>
+<section>
+    <h1>Dostupné akce</h1>
+    @if (Model.PublishedActions.Count() > 0)
+    {
+        <div class="row row-cols-1 row-cols-lg-2 g-4">
+        @foreach (var action in Model.PublishedActions)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h2 class="card-title">@action.Name</h2>
+                        @Html.Raw(action.Description)
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Trvání: <strong>@action.Start - @action.End</strong></li>
+                    </ul>
+                    <footer class="card-footer">
+                        <a asp-page="Action" asp-route-id="@action.ActionId" class="btn btn-secondary">Skupiny (@action.Groups.Count())</a>
+                    </footer>
+                </div>
+            </div>
+        }
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-info">Nyní zde žádné akce nejsou. Zkuste to později.</div>
+    }
+</section>

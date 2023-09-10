@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -14,11 +17,20 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
     public class EditModel : PageModel
     {
         private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
+        private readonly ILogger<EditModel> _logger;
 
-        public EditModel(PslibTechSaturdays.Data.ApplicationDbContext context)
+        public EditModel(PslibTechSaturdays.Data.ApplicationDbContext context, ILogger<EditModel> logger)
         {
             _context = context;
+            _logger = logger;
         }
+
+        [BindProperty]
+        public EditInputModel Input { get; set; } = default!;
+        [TempData]
+        public string? SuccessMessage { get; set; }
+        [TempData]
+        public string? FailureMessage { get; set; }
 
         [BindProperty]
         public Models.Action Action { get; set; } = default!;
@@ -35,7 +47,21 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
             {
                 return NotFound();
             }
+
+            Input = new EditInputModel
+            {
+                ActionId = action.ActionId,
+                Name = action.Name,
+                Description = action.Description,
+                Year = action.Year,
+                Active = action.Active,
+                Published = action.Published,
+                Start = action.Start,
+                End = action.End,
+                ExclusiveEnrollment = action.ExclusiveEnrollment
+            };
             Action = action;
+
            ViewData["CreatedById"] = new SelectList(_context.Users, "Id", "FirstName");
             return Page();
         }
@@ -49,11 +75,24 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
                 return Page();
             }
 
-            _context.Attach(Action).State = EntityState.Modified;
+            var action = await _context.Actions.FindAsync(Input.ActionId);
+            if (action == null)
+            {
+                return NotFound(ModelState);
+            }
+
+            action.Name = Input.Name;
+            action.Description = Input.Description;
+            action.Year = Input.Year;
+            action.Active = Input.Active;
+            action.Published = Input.Published;
+            action.Start = Input.Start;
+            action.End = Input.End;
 
             try
             {
                 await _context.SaveChangesAsync();
+                SuccessMessage = "Akce byla aktualizována";
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -63,10 +102,9 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
                 }
                 else
                 {
-                    throw;
-                }
+                    FailureMessage = "Aktualizace akce se nepodařila.";
+                } 
             }
-
             return RedirectToPage("./Index");
         }
 
@@ -74,5 +112,32 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
         {
           return (_context.Actions?.Any(e => e.ActionId == id)).GetValueOrDefault();
         }
+    }
+
+    public class EditInputModel
+    {
+        public int ActionId { get; set; }
+        [Required]
+        [Display(Name = "Název")]
+        public string Name { get; set; } = String.Empty;
+        [Required]
+        [Display(Name = "Popis")]
+        public string? Description { get; set; } = String.Empty;
+
+        [DisplayName("Školní rok")]
+        public int Year { get; set; }
+        [DisplayName("Aktivní")]
+        public bool Active { get; set; } = true;
+        [DisplayName("Zveřejněná")]
+        public bool Published { get; set; } = false;
+
+        [Column(TypeName = "datetime2")]
+        [DisplayName("Čas začátku")]
+        public DateTime? Start { get; set; }
+        [Column(TypeName = "datetime2")]
+        [DisplayName("Čas konce")]
+        public DateTime? End { get; set; }
+        [DisplayName("Lze se zapsat jen do jedné skupiny")]
+        public bool ExclusiveEnrollment { get; set; } = true;
     }
 }

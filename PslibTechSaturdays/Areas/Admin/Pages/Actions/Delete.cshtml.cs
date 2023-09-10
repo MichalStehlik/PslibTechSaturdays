@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Graph.Models;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
 
@@ -37,6 +38,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
             }
             else 
             {
+                _context.Entry(action).Reference(p => p.CreatedBy).Load();
                 Action = action;
             }
             return Page();
