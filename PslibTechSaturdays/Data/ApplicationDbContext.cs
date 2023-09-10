@@ -63,14 +63,14 @@ namespace PslibTechSaturdays.Data
                 {
                     Id = 1,
                     RoleId = Guid.Parse("11111111-1111-1111-1111-111111110000"),
-                    ClaimType = "admin",
+                    ClaimType = Constants.Security.ADMIN_CLAIM,
                     ClaimValue = "1"
                 });
                 entity.HasData(new IdentityRoleClaim<Guid>
                 {
                     Id = 2,
                     RoleId = Guid.Parse("22222222-2222-2222-2222-222222220000"),
-                    ClaimType = "lektor",
+                    ClaimType = Constants.Security.LECTOR_CLAIM,
                     ClaimValue = "1"
                 });
             });

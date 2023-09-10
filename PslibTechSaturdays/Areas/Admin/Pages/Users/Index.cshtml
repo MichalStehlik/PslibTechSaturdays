@@ -121,7 +121,7 @@
                         @Html.DisplayFor(modelItem => item.Created)
                     </td>
                     <td>
-                        <a href="mailto:@Html.DisplayFor(modelItem => item.Email)">@Html.DisplayFor(modelItem => item.Email)</a>
+                        <a asp-page="Mail" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Email)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.EnrollmentsCount)

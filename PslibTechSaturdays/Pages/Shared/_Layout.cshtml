@@ -47,11 +47,17 @@
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
                                 <li><a class="nav-link text-dark" asp-area="Admin" asp-page="/Users/Index">Uživatelé</a></li>
                                 <li><a class="nav-link text-dark" asp-area="Admin" asp-page="/Actions/Index">Akce</a></li>
-                                <li><a class="nav-link text-dark" asp-area="Groups" asp-page="/Index">Skupiny</a></li>
-                                <li><a class="nav-link text-dark" asp-area="Enrollments" asp-page="/Index">Přihlášky</a></li>
-                                <li><a class="nav-link text-dark" asp-area="Certificates" asp-page="/Index">Certifikáty</a></li>
+                                <li><a class="nav-link text-dark" asp-area="Admin" asp-page="/Groups/Index">Skupiny</a></li>
+                                <li><a class="nav-link text-dark" asp-area="Admin" asp-page="/Enrollments/Index">Přihlášky</a></li>
+                                <li><a class="nav-link text-dark" asp-area="Admin" asp-page="/Certificates/Index">Certifikáty</a></li>
                             </ul>
                         </li>
+                        }
+                        @if (cp.HasClaim(Security.LECTOR_CLAIM, "1"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Lectoring" asp-page="/Groups/Index">Kurzy</a>
+                            </li>
                         }
                     </ul>
                     <partial name="_LoginPartial" />

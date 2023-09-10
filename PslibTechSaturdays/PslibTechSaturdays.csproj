@@ -24,7 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Areas\Admin\Pages\Groups\" />
     <Folder Include="Migrations\" />
   </ItemGroup>
 

@@ -7,17 +7,18 @@
     <meta name="x-apple-disable-message-reformatting">
     <title></title>
 
-    <link href="https://fonts.googleapis.com/css?family=Work+Sans:200,300,400,500,600,700" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
 
     <style>
-
+        /* -- HTML for mail specific -- */
         html,
         body {
             margin: 0 auto !important;
             padding: 0 !important;
             height: 100% !important;
             width: 100% !important;
-            background: #f1f1f1;
         }
 
         * {
@@ -39,7 +40,6 @@
             border-spacing: 0 !important;
             border-collapse: collapse !important;
             table-layout: fixed !important;
-            margin: 0 auto !important;
         }
 
         img {
@@ -90,6 +90,48 @@
             }
         }
 
+        /* -- Common definitions -- */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Instrument Sans', sans-serif;
+            color: #000000;
+            margin: 0;
+            padding: 0;
+            font-weight: bold;
+        }
+
+        body {
+            font-family: 'Instrument Sans', sans-serif;
+            font-weight: normal;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        table {
+            background: #fefaf1;
+            border: 1px #b0b0b0 solid;
+            border-radius: .5rem;
+            margin: 2em auto !important;
+        }
+
+        .message-heading {
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .message-body {
+            padding: 2rem;
+            color: #222222;
+        }
+
+        .accented {
+            background-color: #d45500;
+            color: white;
+        }
+        .title h1 {
+            font-weight: bold;
+            color: white;
+        }
+
         .primary {
             background: #448ef6;
         }
@@ -138,21 +180,6 @@
                 color: #fff;
             }
 
-        h1, h2, h3, h4, h5, h6 {
-            font-family: 'Work Sans', sans-serif;
-            color: #000000;
-            margin-top: 0;
-            font-weight: 400;
-        }
-
-        body {
-            font-family: 'Work Sans', sans-serif;
-            font-weight: 400;
-            font-size: 15px;
-            line-height: 1.8;
-            color: rgba(0,0,0,.4);
-        }
-
         a {
             color: #448ef6;
         }
@@ -187,18 +214,29 @@
 
     </style>
 </head>
-<body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly; background-color: #222222;">
-    <center style="width: 100%; background-color: #f1f1f1;">
+<body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly;">
+    <center style="width: 100%;">
         <div style="max-width: 720px; margin: 0 auto;" class="email-container">
             <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: auto;">
                 <tr>
-                    <td valign="top" class="bg_light" style="padding: 1em 2.5em; text-align: center">
+                    <td>
+                        Logo
+                    </td>
+                    <td class="accented message-heading">
                         <h1>Soboty s technikou</h1>
                     </td>
                 </tr>
                 <tr>
-                    <td class="bg_white" style="padding: 1em">
+                    <td class="message-body" colspan="2">
                         @RenderBody()
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+
+                    </td>
+                    <td>
+                        <a href="https://www.pslib.cz">pslib.cz</a>
                     </td>
                 </tr>
             </table>

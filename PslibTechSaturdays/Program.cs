@@ -48,8 +48,10 @@ builder.Services.AddAuthorization(options =>
     options.AddPolicy(Security.LECTOR_POLICY, policy => { policy.RequireAssertion(x => x.User.HasClaim(Security.ADMIN_CLAIM, "1") || x.User.HasClaim(Security.LECTOR_CLAIM, "1")); });
 });
 builder.Services.AddRazorPages(options => {
+    options.Conventions.AuthorizeAreaFolder("My", "/");
     options.Conventions.AuthorizeAreaFolder("Admin", "/Users", Security.ADMIN_POLICY);
     options.Conventions.AuthorizeAreaFolder("Admin", "/Actions", Security.ADMIN_POLICY);
+    options.Conventions.AuthorizeAreaFolder("Lectoring", "/Groups", Security.LECTOR_POLICY);
 });
 
 builder.Services.ConfigureApplicationCookie(options =>

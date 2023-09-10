@@ -1,0 +1,55 @@
+﻿@page
+@model MailModel
+
+@{
+    ViewData["Title"] = "Zpráva uživateli";
+}
+
+<h1>Zpráva</h1>
+
+<h4>Uživatel</h4>
+<p><a href="mailto:@Model.Input.To">@Model.Input.To</a></p>
+<hr />
+<div class="row">
+    <div class="col">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Input.UserId" />
+            <div class="form-group">
+                <label asp-for="Input.Subject" class="control-label"></label>
+                <input asp-for="Input.Subject" class="form-control" />
+                <span asp-validation-for="Input.Subject" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.HtmlBody" class="control-label"></label>
+                <textarea rows="10" asp-for="Input.HtmlBody" class="form-control"></textarea>
+                <span asp-validation-for="Input.HtmlBody" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
+                <input type="submit" value="Odeslat" class="btn btn-primary" /> <a asp-page="Index" class="btn btn-secondary">Zpět na seznam</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
+    <script>
+        var txtinput = document.querySelector('#Input_HtmlBody');
+        ClassicEditor
+            .create(txtinput, {
+                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+            })
+            .then(editor => {
+                editor.model.document.on('change', () => {
+                    console.log('Description has changed!');
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+}
