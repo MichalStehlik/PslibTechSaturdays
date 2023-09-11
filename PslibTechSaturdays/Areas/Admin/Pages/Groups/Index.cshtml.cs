@@ -5,13 +5,21 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using PslibTechSaturdays.Data;
+using Microsoft.Graph.Drives.Item.Items.Item.SearchWithQ;
+using Microsoft.Graph.Models;
+using PslibTechSaturdays.Areas.Admin.Pages.Users;
+using PslibTechSaturdays.Components;
 using PslibTechSaturdays.Models;
+using PslibTechSaturdays.ViewModels;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
 {
     public class IndexModel : PageModel
     {
+        [TempData]
+        public string? SuccessMessage { get; set; }
+        [TempData]
+        public string? FailureMessage { get; set; }
         private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
 
         public IndexModel(PslibTechSaturdays.Data.ApplicationDbContext context)
@@ -19,16 +27,89 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             _context = context;
         }
 
-        public IList<Group> Group { get;set; } = default!;
+        public IList<Models.Group> Group { get;set; } = default!;
+        public PaginatedList<GroupListVM> Groups { get; set; } = default!;
+        [BindProperty(SupportsGet = true)]
+        public GroupsOrder Sort { get; set; } = GroupsOrder.Id;
+        [BindProperty(SupportsGet = true)]
+        public int? PageIndex { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int? PageSize { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public string? Name { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int? ActionId { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public GroupState? State { get; set; }
+        [BindProperty(SupportsGet = true)]
+        public int? Year { get; set; }
 
         public async Task OnGetAsync()
         {
             if (_context.Groups != null)
             {
-                Group = await _context.Groups
-                .Include(x => x.Action)
-                .Include(x => x.CreatedBy).ToListAsync();
+                IQueryable<Models.Group> groups = _context.Groups
+                    .Include(x => x.Enrollments)
+                    .Include(x => x.Action)
+                    .Include(x => x.Lectors)
+                    .AsQueryable();
+                if (!String.IsNullOrEmpty(Name))
+                    groups = groups.Where(i => (i.Name!.Contains(Name)));
+                if (ActionId is not null)
+                    groups = groups.Where(i => (i.ActionId == ActionId));
+                if (Year is not null)
+                    groups = groups.Where(i => (i.Action!.Year == Year));
+                if (State is not null)
+                {
+                    switch (State)
+                    {
+                        case GroupState.Fresh: groups = groups = groups.Where(i => (i.PlannedOpening < DateTime.Now)); break;
+                        case GroupState.Waiting: groups = groups = groups.Where(i => ((i.PlannedOpening > DateTime.Now) && (i.OpenedAt == null))); break;
+                        case GroupState.Opened: groups = groups = groups.Where(i => ((i.OpenedAt < DateTime.Now) && (i.ClosedAt == null))); break;
+                        case GroupState.Closed: groups = groups = groups.Where(i => ((i.ClosedAt != null))); break;
+                        default: break;
+                    }
+                }
+
+                groups = Sort switch
+                {
+                    GroupsOrder.Id => groups.OrderBy(c => c.GroupId),
+                    GroupsOrder.IdDesc => groups.OrderByDescending(c => c.GroupId),
+                    GroupsOrder.Name => groups.OrderBy(c => c.Name),
+                    GroupsOrder.NameDesc => groups.OrderByDescending(c => c.Name),
+                    GroupsOrder.ActionName => groups.OrderBy(c => c.Action!.Name),
+                    GroupsOrder.ActionNameDesc => groups.OrderByDescending(c => c.Action!.Name),
+                    GroupsOrder.Year => groups.OrderBy(c => c.Action!.Year),
+                    GroupsOrder.YearDesc => groups.OrderByDescending(c => c.Action!.Year),
+                    _ => groups
+                };
+
+                Groups = await PaginatedList<GroupListVM>.CreateAsync(
+                    groups.Select(x => new GroupListVM 
+                    {
+                        GroupId = x.GroupId,
+                        Name = x.Name,
+                        Action = x.Action,
+                        Capacity = x.Capacity,
+                        LectorsCount = x.Lectors!.Count(),
+                        EnrollmentsCount = x.Enrollments!.Count(),
+                        ParticipantsCount = 0,
+                        State = GroupState.Errorneouns
+                    }), PageIndex ?? 1, PageSize ?? 100
+                );
             }
         }
+    }
+
+    public enum GroupsOrder
+    {
+        Id,
+        IdDesc,
+        Name,
+        NameDesc,
+        ActionName,
+        ActionNameDesc,
+        Year,
+        YearDesc
     }
 }

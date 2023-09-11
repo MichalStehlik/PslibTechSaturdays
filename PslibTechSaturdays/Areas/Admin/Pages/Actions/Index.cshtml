@@ -87,7 +87,7 @@
                     @Html.DisplayFor(modelItem => item.Year)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.GroupsCount)
+                     <a asp-page="../Groups/Index" asp-route-ActionId="@item.ActionId">@Html.DisplayFor(modelItem => item.GroupsCount)</a>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Active)
