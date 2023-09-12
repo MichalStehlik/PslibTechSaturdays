@@ -13,6 +13,10 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
     public class DetailsModel : PageModel
     {
         private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
+        [TempData]
+        public string? SuccessMessage { get; set; }
+        [TempData]
+        public string? FailureMessage { get; set; }
 
         public DetailsModel(PslibTechSaturdays.Data.ApplicationDbContext context)
         {
@@ -35,6 +39,8 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             }
             else 
             {
+                _context.Entry(group).Reference(p => p.Action).Load();
+                _context.Entry(group).Reference(p => p.CreatedBy).Load();
                 Group = group;
             }
             return Page();

@@ -1,11 +1,22 @@
-﻿<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+﻿@inject IConfiguration conf
+@inject IHttpContextAccessor hca
+@using Microsoft.Extensions.Options
+@inject IOptions<ApplicationOptions> optionsAccessor
+@using System.Web
+@using PslibTechSaturdays.Services
+@{
+    ApplicationOptions options = optionsAccessor.Value;
+    string rootUrl = (hca!.HttpContext!.Request.IsHttps ? "https" : "http") + "://" + (hca.HttpContext.Request.Host.Host) + ":" + (hca.HttpContext.Request.Host.Port);
+}
+
+<!DOCTYPE html>
+<html lang="cs" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="x-apple-disable-message-reformatting">
-    <title></title>
+    <title>@options.Name</title>
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -40,6 +51,10 @@
             border-spacing: 0 !important;
             border-collapse: collapse !important;
             table-layout: fixed !important;
+        }
+
+        td {
+            padding: 0;
         }
 
         img {
@@ -100,21 +115,19 @@
         }
 
         body {
-            font-family: 'Instrument Sans', sans-serif;
+            font-family: sans-serif;
             font-weight: normal;
             font-size: 15px;
             line-height: 1.5;
         }
 
-        table {
-
-        }
-
         .email-container {
-            background: #fefaf1;
+            background: @options.AccentBackground;
             border: 1px #b0b0b0 solid;
             border-radius: .5rem;
-            margin: 2em auto !important;
+            margin: 1em auto !important;
+            padding: .5rem 0;
+            max-width: 640px;
         }
 
         .message-heading {
@@ -123,21 +136,42 @@
         }
 
         .message-body {
-            padding: 2rem;
+            padding: .5rem;
             color: #222222;
+            background-color: #fefaf1;
         }
 
         .cell-logo {
             text-align: center;
             vertical-align: middle;
-            width: 200px;
+            width: 150px;
         }
+        .cell-logo img {
+            width: 100px;
+        }
+
         .accented {
-            background-color: #d45500;
+            color: @options.AccentColor;
+        }
+
+        .accented h1 {
+            font-weight: bold;
             color: white;
         }
-        .title h1 {
-            font-weight: bold;
+
+        table.layout-table {
+            border: none;
+            width: 100%;
+            margin: auto;
+        }
+
+        table.layout-table tfoot tr td {
+            font-size: .8rem;
+            padding: .5rem;
+            text-align: center;
+        }
+
+        table.layout-table tfoot tr td a {
             color: white;
         }
 
@@ -170,24 +204,24 @@
             display: inline-block;
         }
 
-            .btn.btn-primary {
-                border-radius: 30px;
-                background: #448ef6;
-                color: #ffffff;
-            }
+        .btn.btn-primary {
+            border-radius: 30px;
+            background: #448ef6;
+            color: #ffffff;
+        }
 
-            .btn.btn-white {
-                border-radius: 30px;
-                background: #ffffff;
-                color: #000000;
-            }
+        .btn.btn-white {
+            border-radius: 30px;
+            background: #ffffff;
+            color: #000000;
+        }
 
-            .btn.btn-white-outline {
-                border-radius: 30px;
-                background: transparent;
-                border: 1px solid #fff;
-                color: #fff;
-            }
+        .btn.btn-white-outline {
+            border-radius: 30px;
+            background: transparent;
+            border: 1px solid #fff;
+            color: #fff;
+        }
 
         a {
             color: #448ef6;
@@ -204,50 +238,37 @@
             color: white;
         }
 
-        .navigation {
-            padding: 0;
-        }
-
-            .navigation li {
-                list-style: none;
-                display: inline-block;
-                ;
-                margin-left: 5px;
-                font-size: 13px;
-                font-weight: 500;
-            }
-
-                .navigation li a {
-                    color: rgba(0,0,0,.4);
-                }
-
     </style>
 </head>
 <body width="100%" style="margin: 0; padding: 0 !important; mso-line-height-rule: exactly;">
     <center style="width: 100%;">
-        <div style="max-width: 720px; margin: 0 auto;" class="email-container">
-            <table align="center" role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%" style="margin: auto;">
-                <tr>
-                    <td class="accented message-heading cell-logo">
-                        Logo
-                    </td>
-                    <td class="accented message-heading">
-                        <h1>Soboty s technikou</h1>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="message-body" colspan="2">
-                        @RenderBody()
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-
-                    </td>
-                    <td>
-                        <a href="https://www.pslib.cz">pslib.cz</a>
-                    </td>
-                </tr>
+        <div style="max-width: 640px; margin: 0 auto;" class="email-container">
+            <table align="center" role="presentation" class="layout-table" cellspacing="0" cellpadding="0">
+                <thead>
+                    <tr>
+                        <td class="accented message-heading cell-logo">
+                            <img src="@(rootUrl)/logo/pslib_shape_white.png" alt="logo" />
+                        </td>
+                        <td class="accented message-heading">
+                            <h1>@options.Name</h1>
+                        </td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="message-body" colspan="2">
+                            @RenderBody()
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2">
+                            <a href="@rootUrl">@options.Name</a> |
+                            <a href="https://www.pslib.cz">Střední průmyslová škola Liberec</a>
+                        </td>
+                    </tr>
+                </tfoot>
             </table>
         </div>
     </center>

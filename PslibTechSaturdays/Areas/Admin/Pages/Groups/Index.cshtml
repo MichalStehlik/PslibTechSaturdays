@@ -54,6 +54,9 @@
                 @Html.DisplayNameFor(model => model.Groups[0].Capacity)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Groups[0].EnrollmentsCount)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Groups[0].State)
             </th>
             <th></th>
@@ -73,6 +76,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Capacity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EnrollmentsCount)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.State)
