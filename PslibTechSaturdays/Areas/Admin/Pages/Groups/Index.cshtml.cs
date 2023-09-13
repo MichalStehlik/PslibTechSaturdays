@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph.Drives.Item.Items.Item.SearchWithQ;
 using Microsoft.Graph.Models;
@@ -27,7 +28,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             _context = context;
         }
 
-        public IList<Models.Group> Group { get;set; } = default!;
+        public List<SelectListItem> Actions { get; set; } = default!;
         public PaginatedList<GroupListVM> Groups { get; set; } = default!;
         [BindProperty(SupportsGet = true)]
         public GroupsOrder Sort { get; set; } = GroupsOrder.Id;
@@ -44,8 +45,18 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
         [BindProperty(SupportsGet = true)]
         public int? Year { get; set; }
 
-        public async Task OnGetAsync()
+        public async Task<IActionResult> OnGetAsync()
         {
+            if (_context.Actions == null)
+            {
+                return NotFound();
+            }
+            List<Models.Action> actions = _context.Actions.OrderByDescending(x => x.Start).ToList();
+            Actions = new List<SelectListItem>();
+            foreach(var actItem in actions)
+            {
+                Actions.Add(new SelectListItem { Value = actItem.ActionId.ToString(), Text = actItem.Year + " \\ " + actItem.Name});
+            }
             if (_context.Groups != null)
             {
                 IQueryable<Models.Group> groups = _context.Groups
@@ -94,10 +105,27 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
                         LectorsCount = x.Lectors!.Count(),
                         EnrollmentsCount = x.Enrollments!.Count(),
                         ParticipantsCount = 0,
-                        State = GroupState.Errorneouns
+                        State = x.PlannedOpening > DateTime.Now
+                            ? 
+                            GroupState.Fresh 
+                            :
+                                (x.PlannedOpening < DateTime.Now) && (x.OpenedAt == null)    
+                                ?
+                                GroupState.Waiting
+                                :
+                                (x.OpenedAt != null) && (x.ClosedAt == null)
+                                    ?
+                                    GroupState.Opened
+                                    :
+                                    x.ClosedAt != null
+                                        ?
+                                        GroupState.Closed
+                                        :
+                                        GroupState.Errorneouns
                     }), PageIndex ?? 1, PageSize ?? 100
                 );
             }
+            return Page();
         }
     }
 

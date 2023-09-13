@@ -17,7 +17,9 @@
             <input type="text" class="form-control mb-2 mr-sm-2" asp-for="Name" placeholder="@Html.DisplayNameFor(model => model.Groups[0].Name)">
         </div>
         <div class="col">
-            <input type="text" class="form-control mb-2 mr-sm-2" asp-for="ActionId" placeholder="@Html.DisplayNameFor(model => model.Groups[0].ActionId)">
+            <select class="form-control mb-2 mr-sm-2" asp-for="ActionId" asp-items="@Model.Actions">
+                <option value="">-- Vyberte --</option>
+            </select>
         </div>
         <div class="col">
             <input type="text" class="form-control mb-2 mr-sm-2" asp-for="Year" placeholder="@Html.DisplayNameFor(model => model.Groups[0].Action!.Year)">
