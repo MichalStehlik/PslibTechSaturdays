@@ -3,13 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
@@ -32,26 +29,43 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
         [TempData]
         public string? FailureMessage { get; set; }
 
-        public IActionResult OnGet()
-        {
-        ViewData["ActionId"] = new SelectList(_context.Actions, "ActionId", "Name");
-        ViewData["CreatedById"] = new SelectList(_context.Users, "Id", "FirstName");
-            return Page();
-        }
+        public SelectList? Actions { get; set; }
 
-        [BindProperty]
-        public Group Group { get; set; } = default!;
-        
+        public IActionResult OnGet(int? action)
+        {
+            Input = new CreateInputModel();
+            if (action == null)
+            {
+                Input.ActionId = action;
+            }
+            Actions = new SelectList(_context.Actions, "ActionId", "Name");
+            return Page();
+        }        
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-          if (!ModelState.IsValid || _context.Groups == null || Group == null)
+          if (!ModelState.IsValid || _context.Groups == null || Input == null)
             {
                 return Page();
             }
+            var userId = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value;
+            var group = new Group
+            {
+                Name = Input.Name,
+                Description = Input.Description,
+                ActionId = (int)Input.ActionId,
+                Capacity = Input.Capacity,
+                MinGrade = Input.MinGrade,
+                Note = Input.Note,
+                LectorsNote = Input.LectorsNote,
+                ApplicationCountVisible = Input.ApplicationCountVisible,
+                PlannedOpening = Input.PlannedOpening, 
+                CreatedById = Guid.Parse(userId),
+                Created = DateTime.Now,
+            };
 
-            _context.Groups.Add(Group);
+            _context.Groups.Add(group);
             await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
@@ -67,7 +81,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
         public string? Description { get; set; } = String.Empty;
         [Required]
         [DisplayName("Akce")]
-        public int ActionId { get; set; }
+        public int? ActionId { get; set; }
         [DisplayName("Deklarovaná kapacita")]
         public int Capacity { get; set; }
         [DisplayName("Minimální třída")]
@@ -76,8 +90,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
         public string? Note { get; set; }
         [DisplayName("Poznámka k lektorům")]
         public string? LectorsNote { get; set; }
-        [JsonIgnore]
-        public ICollection<ApplicationUser>? Lectors { get; set; }
         [DisplayName("Veřejný počet účastníků")]
         public bool ApplicationCountVisible { get; set; } = false;
         [Column(TypeName = "datetime2")]

@@ -74,7 +74,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
                 {
                     switch (State)
                     {
-                        case GroupState.Fresh: groups = groups = groups.Where(i => (i.PlannedOpening < DateTime.Now)); break;
+                        case GroupState.Fresh: groups = groups = groups.Where(i => (i.PlannedOpening == null || i.PlannedOpening < DateTime.Now)); break;
                         case GroupState.Waiting: groups = groups = groups.Where(i => ((i.PlannedOpening > DateTime.Now) && (i.OpenedAt == null))); break;
                         case GroupState.Opened: groups = groups = groups.Where(i => ((i.OpenedAt < DateTime.Now) && (i.ClosedAt == null))); break;
                         case GroupState.Closed: groups = groups = groups.Where(i => ((i.ClosedAt != null))); break;
@@ -105,7 +105,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
                         LectorsCount = x.Lectors!.Count(),
                         EnrollmentsCount = x.Enrollments!.Count(),
                         ParticipantsCount = 0,
-                        State = x.PlannedOpening > DateTime.Now
+                        State = (x.PlannedOpening == null || x.PlannedOpening > DateTime.Now)
                             ? 
                             GroupState.Fresh 
                             :

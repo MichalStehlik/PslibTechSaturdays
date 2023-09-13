@@ -32,9 +32,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
         [TempData]
         public string? FailureMessage { get; set; }
 
-        [BindProperty]
-        public Models.Action Action { get; set; } = default!;
-
         public async Task<IActionResult> OnGetAsync(int? id)
         {
             if (id == null || _context.Actions == null)
@@ -60,7 +57,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
                 End = action.End,
                 ExclusiveEnrollment = action.ExclusiveEnrollment
             };
-            Action = action;
 
            ViewData["CreatedById"] = new SelectList(_context.Users, "Id", "FirstName");
             return Page();
@@ -96,7 +92,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ActionExists(Action.ActionId))
+                if (!ActionExists(Input.ActionId))
                 {
                     return NotFound();
                 }

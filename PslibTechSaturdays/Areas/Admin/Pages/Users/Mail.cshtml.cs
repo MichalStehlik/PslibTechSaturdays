@@ -32,7 +32,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
             _renderer = renderer;
         }
         [BindProperty]
-        public EmailInputModel Input { get; set; }
+        public EmailInputModel? Input { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid id)
         {
@@ -41,13 +41,17 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
             {
                 return NotFound();
             }
+            if (!user.EmailConfirmed)
+            {
+                return RedirectToPage("/Index");
+            }
             Input = new EmailInputModel { UserId = id, To = user.Email };
             return Page();
         }
 
         public async Task<IActionResult> OnPost()
         {
-            var user = await _context.Users.FirstOrDefaultAsync(m => m.Id == Input.UserId);
+            var user = await _context.Users.FirstOrDefaultAsync(m => m.Id == Input!.UserId);
             if (user is null)
             {
                 return NotFound();

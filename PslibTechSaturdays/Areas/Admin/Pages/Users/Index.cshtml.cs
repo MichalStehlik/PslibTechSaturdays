@@ -121,6 +121,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
                         SchoolName = x.SchoolName,
                         Grade = x.Grade,
                         Email = x.Email,
+                        EmailConfirmed = x.EmailConfirmed,
                         BirthDate = x.BirthDate,
                         Created = x.Created,
                         Active = x.Active,

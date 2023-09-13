@@ -37,6 +37,8 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             }
             else 
             {
+                _context.Entry(group).Reference(p => p.CreatedBy).Load();
+                _context.Entry(group).Reference(p => p.Action).Load();
                 Group = group;
             }
             return Page();
