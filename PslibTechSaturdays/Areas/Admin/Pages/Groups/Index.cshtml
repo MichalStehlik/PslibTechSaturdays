@@ -65,9 +65,18 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Groups) {
+    @if (Model.Actions.Count() == 0) 
+    {
         <tr>
-            <td>
+            <td colspan="100" class="table-info">Zadaným kritériím neodpovídají žádné údaje.</td>
+            </tr>
+        } 
+        else
+        {
+            @foreach (var item in Model.Groups)
+            {
+                <tr>
+                    <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
@@ -93,7 +102,8 @@
                 </div>
             </td>
         </tr>
-}
+        }
+    }
     </tbody>
     @{
         var prevDisabled = !Model.Groups.HasPreviousPage ? "disabled" : "";

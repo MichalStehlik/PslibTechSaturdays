@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
 
@@ -18,8 +19,15 @@ namespace PslibTechSaturdays.Pages
 
         public List<Group> Groups { get; set; }
         public Models.Action Action { get; set; }
-        public void OnGet(int id)
+        public async Task<IActionResult> OnGet(int id)
         {
+            Action = await _context.Actions.Where(x => x.ActionId == id).SingleOrDefaultAsync();
+            if (Action is null)
+            {
+                return NotFound();
+            }
+            Groups = await _context.Groups.Where(x => x.ActionId == id).OrderBy(x => x.Name).ToListAsync();
+            return Page();
         }
     }
 }

@@ -1,4 +1,40 @@
 ﻿@page
 @model PslibTechSaturdays.Pages.ActionModel
 @{
+    ViewData["Title"] = "Akce";
+}
+<section>
+    <h1>@Model.Action.Name</h1>
+    <div>
+        @Html.Raw(Model.Action.Description)
+    </div>
+    <p>Trvání: <strong>@Model.Action.Start - @Model.Action.End</strong></p>
+    @if(Model.Action.ExclusiveEnrollment)
+    {
+        <div class="alert alert-info">V této akci se lze zapsat jen do jedné skupiny.</div>
+    }
+</section>
+<h2>Skupiny</h2>
+@if (Model.Groups.Count() > 0) {
+    <div class="row row-cols-1 row-cols-lg-2 g-4">
+        @foreach(var group in Model.Groups)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h3 class="card-title">@group.Name</h3>
+                        @Html.Raw(group.Description)
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item">Kapacita: <strong>@group.Capacity</strong></li>
+                        <li class="list-group-item">Minimální ročník: <strong>@group.MinGrade</strong></li>
+                    </ul>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>Tato akce neobsahuje žádné skupiny.</p>
 }
