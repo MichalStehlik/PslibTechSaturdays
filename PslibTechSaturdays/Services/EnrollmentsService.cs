@@ -1,4 +1,5 @@
 ﻿using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Models;
 using PslibTechSaturdays.ViewModels;
 
 namespace PslibTechSaturdays.Services
@@ -13,6 +14,16 @@ namespace PslibTechSaturdays.Services
         {
             _context = context;
             _logger = logger;
+        }
+
+        public List<EnrollmentListVM> Items()
+        {
+            IQueryable<Enrollment> enr = _context.Enrollments.AsQueryable();
+            var lst = enr.Select(x => new EnrollmentListVM
+            {
+
+            });
+            return (lst.ToList());
         }
     }
     public enum EnrollmentsOrder
