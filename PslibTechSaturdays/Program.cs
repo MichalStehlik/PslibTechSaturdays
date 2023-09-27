@@ -52,6 +52,7 @@ builder.Services.AddRazorPages(options => {
     options.Conventions.AuthorizeAreaFolder("Admin", "/Users", Security.ADMIN_POLICY);
     options.Conventions.AuthorizeAreaFolder("Admin", "/Actions", Security.ADMIN_POLICY);
     options.Conventions.AuthorizeAreaFolder("Lectoring", "/Groups", Security.LECTOR_POLICY);
+    //options.Conventions.AddAreaPageRoute("Admin", "/Users", "ManageUsers");
 });
 
 builder.Services.ConfigureApplicationCookie(options =>
