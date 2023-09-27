@@ -18,6 +18,7 @@ namespace PslibTechSaturdays.ViewModels
         [Required]
         [DisplayName("Email")]
         public string? Email { get; set; } = String.Empty;
+        public bool EmailConfirmed { get; set; }
         [Column(TypeName = "datetime2")]
         [DisplayName("Narození")]
         public DateTime? BirthDate { get; set; }

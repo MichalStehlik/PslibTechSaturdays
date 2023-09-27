@@ -1,0 +1,78 @@
+﻿@page
+@model PslibTechSaturdays.Areas.Admin.Pages.Enrollments.IndexModel
+
+@{
+    ViewData["Title"] = "Seznam přihlášek";
+}
+
+<h1>Seznam přihlášek</h1>
+
+<p>
+    <a asp-page="Create" class="btn btn-success">Nová</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Enrollment[0].User)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Enrollment[0].Group)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Enrollment[0].CreatedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Enrollment[0].Created)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Enrollment[0].CancelledBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Enrollment[0].Cancelled)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Enrollment[0].Present)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Enrollment[0].Certificate)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Enrollment) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Group.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedBy.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Created)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CancelledBy.FirstName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cancelled)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Present)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Certificate.CertificateId)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.EnrollmentId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.EnrollmentId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.EnrollmentId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

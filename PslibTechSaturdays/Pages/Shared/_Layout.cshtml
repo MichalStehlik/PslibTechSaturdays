@@ -5,22 +5,25 @@
 @inject IConfiguration conf
 @{ ClaimsPrincipal cp = this.User; }
 <!DOCTYPE html>
-<html lang="en">
+<html lang="cz">
 <head>
     <meta charset="utf-8" />
+    <meta name="author" content="Michal Stehlík">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - @conf["Application:Name"]</title>
-    <link rel="icon" type="image/x-icon" href="~/logo/pslib_small.svg">
+    <link rel="icon" type="image/x-icon" href="~/logo/pslib_small_extended.svg">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/PslibTechSaturdays.styles.css" asp-append-version="true" />
+    <meta name="description" content="Tradičně sobotní akce pro zájemce o studium na Střední průmyslové škole v Liberci v oborech strojírenství, elektrotechnika, informační technologie a textilnictví">
+    <meta name="keywords" content="Střední průmyslová škola, Liberec, strojírenství, elektrotechnika, informační technologie, textilnictví, nabídka oborů na SPŠ Liberec, přihlášky na Střední průmyslovou školu, obory na SPŠ Liberec, studium na střední škole v Liberci, studium">
 </head>
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand d-inline-flex align-items-center gap-2" asp-area="" asp-page="/Index">
-                    <img src="~/logo/pslib_small.svg" height="32" class="d-inline-block align-top" alt="Logo">
+                    <img src="~/logo/pslib_shape.svg" height="24" class="d-inline-block align-top" alt="Logo">
                     <span class="fw-bold">@conf["Application:Name"]</span>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -79,9 +82,20 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="bg-light text-dark text-center py-3">
         <div class="container">
-            &copy; 2023 - @conf["Application:Name"]
+            <p>&copy; 2023 @conf["Application:Name"] - Střední průmyslová škola v Liberci</p>
+            <div class="row">
+                <div class="col">
+                    <a href="https://www.pslib.cz/">SPŠ a VOŠ Liberec</a>
+                </div>
+                <div class="col">
+                    <a href="https://pslib.cz/pro-uchazece/prijimaci-zkousky/id:26973/prijimaci-rizeni-pro-skolni-rok-2023-2024">Přijímací řízení</a>
+                </div>
+                <div class="col">
+                    <a href="https://pslib.cz/kontakty">Kontakty</a>
+                </div>
+            </div>
         </div>
     </footer>
 

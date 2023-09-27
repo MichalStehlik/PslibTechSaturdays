@@ -10,101 +10,130 @@
 <p>
     <a asp-page="Create" class="btn btn-success">Nová</a>
 </p>
+<form method="get">
+    <input type="hidden" asp-for="Sort" />
+    <div class="row g-3">
+        <div class="col">
+            <input type="text" class="form-control mb-2 mr-sm-2" asp-for="Name" placeholder="@Html.DisplayNameFor(model => model.Groups[0].Name)">
+        </div>
+        <div class="col">
+            <select class="form-control mb-2 mr-sm-2" asp-for="ActionId" asp-items="@Model.Actions">
+                <option value="">-- Vyberte --</option>
+            </select>
+        </div>
+        <div class="col">
+            <input type="text" class="form-control mb-2 mr-sm-2" asp-for="Year" placeholder="@Html.DisplayNameFor(model => model.Groups[0].Action!.Year)">
+        </div>
+        <div class="col">
+            <select class="form-control" asp-for="State" placeholder="@Html.DisplayNameFor(model => model.Groups[0].State)" asp-items="@Html.GetEnumSelectList<GroupState>()">
+                <option value="">-- @Html.DisplayNameFor(model => model.Groups[0].State) --</option>
+            </select>
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary mb-2">Filtrovat</button>
+        </div>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Group[0].Name)
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == GroupsOrder.Name ? GroupsOrder.NameDesc : GroupsOrder.Name)">
+                    @Html.DisplayNameFor(model => model.Groups[0].Name)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Group[0].Description)
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == GroupsOrder.ActionName ? GroupsOrder.ActionNameDesc : GroupsOrder.ActionName)">
+                    @Html.DisplayNameFor(model => model.Groups[0].Action!.Name)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Group[0].Action)
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == GroupsOrder.Year ? GroupsOrder.YearDesc : GroupsOrder.Year)">
+                    @Html.DisplayNameFor(model => model.Groups[0].Action!.Year)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Group[0].Capacity)
+                @Html.DisplayNameFor(model => model.Groups[0].Capacity)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Group[0].MinGrade)
+                @Html.DisplayNameFor(model => model.Groups[0].EnrollmentsCount)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Group[0].Note)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Group[0].LectorsNote)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Group[0].ApplicationCountVisible)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Group[0].PlannedOpening)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Group[0].OpenedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Group[0].ClosedAt)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Group[0].CreatedBy)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Group[0].Created)
+                @Html.DisplayNameFor(model => model.Groups[0].State)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Group) {
+    @if (Model.Actions.Count() == 0) 
+    {
         <tr>
-            <td>
+            <td colspan="100" class="table-info">Zadaným kritériím neodpovídají žádné údaje.</td>
+            </tr>
+        } 
+        else
+        {
+            @foreach (var item in Model.Groups)
+            {
+                <tr>
+                    <td>
                 @Html.DisplayFor(modelItem => item.Name)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                <a asp-page="../Actions/Details" asp-route-id="@item.Action!.ActionId">@Html.DisplayFor(modelItem => item.Action!.Name)</a>
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Action.Name)
+                @Html.DisplayFor(modelItem => item.Action!.Year)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Capacity)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.MinGrade)
+                @Html.DisplayFor(modelItem => item.EnrollmentsCount)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Note)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LectorsNote)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ApplicationCountVisible)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.PlannedOpening)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.OpenedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ClosedAt)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
+                @Html.DisplayFor(modelItem => item.State)
             </td>
             <td>
                 <div class="btn-group">
-                    <a asp-page="./Details" asp-route-id="@item.ActionId" class="btn btn-primary btn-sm">Detail</a>
-                    <a asp-page="./Edit" asp-route-id="@item.ActionId" class="btn btn-secondary btn-sm">Editace</a>
-                    <a asp-page="./Delete" asp-route-id="@item.ActionId" class="btn btn-danger btn-sm">Smazání</a>
+                    <a asp-page="./Details" asp-route-id="@item.GroupId" class="btn btn-primary btn-sm">Detail</a>
+                    <a asp-page="./Edit" asp-route-id="@item.GroupId" class="btn btn-secondary btn-sm">Editace</a>
+                    <a asp-page="./Delete" asp-route-id="@item.GroupId" class="btn btn-danger btn-sm">Smazání</a>
                 </div>
             </td>
         </tr>
-}
+        }
+    }
     </tbody>
+    @{
+        var prevDisabled = !Model.Groups.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.Groups.HasNextPage ? "disabled" : "";
+    }
+    <tfoot>
+        <tr>
+            <td colspan="1000">
+                <a asp-page="./Index"
+                   asp-route-pageIndex="@(Model.Groups.PageIndex - 1)"
+                   asp-route-name="@(Model.Name)"
+                   asp-route-ActionId="@(Model.ActionId)"
+                   asp-route-email="@(Model.Year)"
+                   asp-route-admin="@(Model.State)"
+                   asp-route-sort="@(Model.Sort)"
+                   class="btn btn-primary @prevDisabled">
+                    Předchozí
+                </a>
+                <a asp-page="./Index"
+                   asp-route-sortOrder="@Model.Sort"
+                   asp-route-pageIndex="@(Model.Groups.PageIndex + 1)"
+                   asp-route-name="@(Model.Name)"
+                   asp-route-ActionId="@(Model.ActionId)"
+                   asp-route-email="@(Model.Year)"
+                   asp-route-admin="@(Model.State)"
+                   asp-route-sort="@(Model.Sort)"
+                   class="btn btn-primary @nextDisabled">
+                    Další
+                </a>
+            </td>
+        </tr>
+    </tfoot>
 </table>

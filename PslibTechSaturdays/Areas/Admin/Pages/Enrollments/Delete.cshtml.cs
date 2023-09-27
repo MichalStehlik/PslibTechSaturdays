@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
 
-namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
+namespace PslibTechSaturdays.Areas.Admin.Pages.Enrollments
 {
     public class DeleteModel : PageModel
     {
@@ -20,42 +20,40 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
         }
 
         [BindProperty]
-      public Group Group { get; set; } = default!;
+      public Enrollment Enrollment { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Groups == null)
+            if (id == null || _context.Enrollments == null)
             {
                 return NotFound();
             }
 
-            var group = await _context.Groups.FirstOrDefaultAsync(m => m.GroupId == id);
+            var enrollment = await _context.Enrollments.FirstOrDefaultAsync(m => m.EnrollmentId == id);
 
-            if (group == null)
+            if (enrollment == null)
             {
                 return NotFound();
             }
             else 
             {
-                _context.Entry(group).Reference(p => p.CreatedBy).Load();
-                _context.Entry(group).Reference(p => p.Action).Load();
-                Group = group;
+                Enrollment = enrollment;
             }
             return Page();
         }
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Groups == null)
+            if (id == null || _context.Enrollments == null)
             {
                 return NotFound();
             }
-            var group = await _context.Groups.FindAsync(id);
+            var enrollment = await _context.Enrollments.FindAsync(id);
 
-            if (group != null)
+            if (enrollment != null)
             {
-                Group = group;
-                _context.Groups.Remove(Group);
+                Enrollment = enrollment;
+                _context.Enrollments.Remove(Enrollment);
                 await _context.SaveChangesAsync();
             }
 

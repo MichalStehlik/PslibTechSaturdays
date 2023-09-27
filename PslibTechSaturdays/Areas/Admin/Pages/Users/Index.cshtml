@@ -121,7 +121,14 @@
                         @Html.DisplayFor(modelItem => item.Created)
                     </td>
                     <td>
-                        <a asp-page="Mail" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Email)</a>
+                        @if(item.EmailConfirmed)
+                        {
+                            <a asp-page="Mail" asp-route-id="@item.Id">@Html.DisplayFor(modelItem => item.Email)</a>
+                        }
+                        else
+                        {
+                            @item.Email
+                        }
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.EnrollmentsCount)
