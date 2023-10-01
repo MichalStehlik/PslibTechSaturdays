@@ -49,7 +49,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             {
                 return Page();
             }
-            var userId = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value;
+            var userId = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()!.Value;
             var group = new Group
             {
                 Name = Input.Name,
@@ -59,7 +59,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
                 MinGrade = Input.MinGrade,
                 Note = Input.Note,
                 LectorsNote = Input.LectorsNote,
-                ApplicationCountVisible = Input.ApplicationCountVisible,
+                EnrollmentsCountVisible = Input.ApplicationCountVisible,
                 PlannedOpening = Input.PlannedOpening, 
                 CreatedById = Guid.Parse(userId),
                 Created = DateTime.Now,

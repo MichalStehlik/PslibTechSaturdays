@@ -1,4 +1,5 @@
 ﻿@page
+@using PslibTechSaturdays.Services;
 @model PslibTechSaturdays.Areas.Admin.Pages.Enrollments.IndexModel
 
 @{
@@ -14,65 +15,120 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Enrollment[0].User)
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == EnrollmentsOrder.UserName ? EnrollmentsOrder.UserNameDesc : EnrollmentsOrder.UserName)">
+                    @Html.DisplayNameFor(model => model.Enrollments[0].User)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Enrollment[0].Group)
+                @Html.DisplayNameFor(model => model.Enrollments[0].Action)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Enrollment[0].CreatedBy)
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == EnrollmentsOrder.GroupName ? EnrollmentsOrder.GroupNameDesc : EnrollmentsOrder.GroupName)">
+                    @Html.DisplayNameFor(model => model.Enrollments[0].Group)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Enrollment[0].Created)
+                @Html.DisplayNameFor(model => model.Enrollments[0].CreatedBy)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Enrollment[0].CancelledBy)
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == EnrollmentsOrder.Created ? EnrollmentsOrder.CreatedDesc : EnrollmentsOrder.Created)">
+                    @Html.DisplayNameFor(model => model.Enrollments[0].Created)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Enrollment[0].Cancelled)
+                @Html.DisplayNameFor(model => model.Enrollments[0].CancelledBy)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Enrollment[0].Present)
+                @Html.DisplayNameFor(model => model.Enrollments[0].Cancelled)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Enrollment[0].Certificate)
+                @Html.DisplayNameFor(model => model.Enrollments[0].Present)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Enrollments[0].Certificate)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Enrollment) {
+    @if (Model.Enrollments.Count() == 0) 
+    {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Group.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Created)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CancelledBy.FirstName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cancelled)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Present)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Certificate.CertificateId)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.EnrollmentId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.EnrollmentId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.EnrollmentId">Delete</a>
+            <td colspan="100" class="table-info">Zadaným kritériím neodpovídají žádné údaje.</td>
+        </tr>
+    }
+    else
+    {
+        @foreach (var item in Model.Enrollments)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.FirstName + " " + item.User.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Action!.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Group.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CreatedBy!.FirstName + " " + item.CreatedBy!.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Created)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CancelledBy!.FirstName + " " + item.CancelledBy!.LastName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cancelled)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Present)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Certificate!.CertificateId)
+                </td>
+                <td>
+                    <div class="btn-group">
+                        <a asp-page="./Details" asp-route-id="@item.EnrollmentId" class="btn btn-primary btn-sm">Detail</a>
+                        <a asp-page="./Edit" asp-route-id="@item.EnrollmentId" class="btn btn-secondary btn-sm">Editace</a>
+                        <a asp-page="./Cancel" asp-route-id="@item.EnrollmentId" class="btn btn-secondary btn-sm">Zrušení</a>
+                        <a asp-page="./Delete" asp-route-id="@item.EnrollmentId" class="btn btn-danger btn-sm">Smazání</a>
+                    </div>
+                </td>
+            </tr>
+        }
+    }
+    </tbody>
+    @{
+        var prevDisabled = !Model.Enrollments.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.Enrollments.HasNextPage ? "disabled" : "";
+    }
+    <tfoot>
+        <tr>
+            <td colspan="1000">
+                <a asp-page="./Index"
+                   asp-route-pageIndex="@(Model.Enrollments.PageIndex - 1)"
+                   asp-route-name="@(Model.UserName)"
+                   asp-route-ActionId="@(Model.ActionId)"
+                   asp-route-email="@(Model.GroupId)"
+                   asp-route-admin="@(Model.UserId)"
+                   asp-route-sort="@(Model.Sort)"
+                   class="btn btn-primary @prevDisabled">
+                    Předchozí
+                </a>
+                <a asp-page="./Index"
+                   asp-route-pageIndex="@(Model.Enrollments.PageIndex + 1)"
+                   asp-route-name="@(Model.UserName)"
+                   asp-route-ActionId="@(Model.ActionId)"
+                   asp-route-email="@(Model.GroupId)"
+                   asp-route-admin="@(Model.UserId)"
+                   asp-route-sort="@(Model.Sort)"
+                   class="btn btn-primary @nextDisabled">
+                    Další
+                </a>
             </td>
         </tr>
-}
-    </tbody>
+    </tfoot>
 </table>

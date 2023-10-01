@@ -59,6 +59,12 @@
                 @Html.DisplayNameFor(model => model.Groups[0].EnrollmentsCount)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Groups[0].ParticipantsCount)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Groups[0].ParticipantsPresentCount)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.Groups[0].State)
             </th>
             <th></th>
@@ -92,6 +98,12 @@
                 @Html.DisplayFor(modelItem => item.EnrollmentsCount)
             </td>
             <td>
+                @Html.DisplayFor(modelItem => item.ParticipantsCount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ParticipantsPresentCount)
+            </td>
+            <td>
                 @Html.DisplayFor(modelItem => item.State)
             </td>
             <td>
@@ -123,7 +135,6 @@
                     Předchozí
                 </a>
                 <a asp-page="./Index"
-                   asp-route-sortOrder="@Model.Sort"
                    asp-route-pageIndex="@(Model.Groups.PageIndex + 1)"
                    asp-route-name="@(Model.Name)"
                    asp-route-ActionId="@(Model.ActionId)"

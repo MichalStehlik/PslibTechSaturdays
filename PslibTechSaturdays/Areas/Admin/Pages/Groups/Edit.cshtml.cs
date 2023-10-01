@@ -56,7 +56,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
                 MinGrade = group.MinGrade,
                 Note = group.Note,
                 LectorsNote = group.LectorsNote,
-                ApplicationCountVisible = group.ApplicationCountVisible,
+                EnrollmentsCountVisible = group.EnrollmentsCountVisible,
                 PlannedOpening = group.PlannedOpening,
                 OpenedAt = group.OpenedAt,
                 ClosedAt = group.ClosedAt
@@ -87,7 +87,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             group.Capacity = Input.Capacity;
             group.MinGrade = Input.MinGrade;
             group.LectorsNote = Input.LectorsNote;
-            group.ApplicationCountVisible = Input.ApplicationCountVisible;
+            group.EnrollmentsCountVisible = Input.EnrollmentsCountVisible;
             group.PlannedOpening = Input.PlannedOpening;
             group.OpenedAt = Input.OpenedAt;
             group.ClosedAt = Input.ClosedAt;
@@ -138,7 +138,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
         [DisplayName("Poznámka k lektorům")]
         public string? LectorsNote { get; set; }
         [DisplayName("Veřejný počet účastníků")]
-        public bool ApplicationCountVisible { get; set; } = false;
+        public bool EnrollmentsCountVisible { get; set; } = false;
         [Column(TypeName = "datetime2")]
         [DisplayName("Plánované otevření pro zápis")]
         public DateTime? PlannedOpening { get; set; }

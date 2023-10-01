@@ -1,5 +1,8 @@
 ﻿@page
+@using Microsoft.AspNetCore.Identity
+@using PslibTechSaturdays.Models;
 @model PslibTechSaturdays.Pages.ActionModel
+@inject SignInManager<ApplicationUser> SignInManager
 @{
     ViewData["Title"] = "Akce";
 }
@@ -26,9 +29,34 @@
                         @Html.Raw(group.Description)
                     </div>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">Kapacita: <strong>@group.Capacity</strong></li>
+                        @{
+                            int valid = group.EnrollmentsCountVisible ? group.Enrollments!.Count() : 0;
+                            int capacity = Math.Max(group.Capacity, group.Enrollments!.Count());
+                        }
+                        <li class="list-group-item">
+                            <div class="row align-items-center">
+                                <div class="col">
+                                    Kapacita: <strong>@(valid)</strong>/<strong>@(capacity)</strong>
+                                </div>
+                                <div class="col">
+                                    <div class="progress">
+                                        <div class="progress-bar" role="progressbar" style="width: @(valid/capacity)" aria-valuenow="@valid" aria-valuemin="0" aria-valuemax="@capacity"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
                         <li class="list-group-item">Minimální ročník: <strong>@group.MinGrade</strong></li>
                     </ul>
+                    <footer class="card-footer">
+                        <button class="btn btn-secondary">Detail</button>
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            @if (group.OpenedAt != null && group.ClosedAt == null)
+                            {
+                                <button class="btn btn-secondary btn-success">Přihlásit se</button>
+                            }
+                        }         
+                    </footer>
                 </div>
             </div>
         }

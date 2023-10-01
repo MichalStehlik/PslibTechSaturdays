@@ -104,7 +104,8 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
                         Capacity = x.Capacity,
                         LectorsCount = x.Lectors!.Count(),
                         EnrollmentsCount = x.Enrollments!.Count(),
-                        ParticipantsCount = 0,
+                        ParticipantsCount = x.Enrollments!.Count(e => e.Cancelled == null),
+                        ParticipantsPresentCount = x.Enrollments!.Count(e => e.Present == true),
                         State = (x.PlannedOpening == null || x.PlannedOpening > DateTime.Now)
                             ? 
                             GroupState.Fresh 

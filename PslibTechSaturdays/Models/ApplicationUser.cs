@@ -52,5 +52,7 @@ namespace PslibTechSaturdays.Models
         public ICollection<Certificate>? Certificates { get; set; }
         [JsonIgnore]
         public ICollection<Group>? Lectoring { get; set; }
+        [JsonIgnore]
+        public ICollection<File>? UploadedFiles { get; set; }
     }
 }

@@ -28,7 +28,7 @@
             @Html.DisplayNameFor(model => model.Group.Action)
         </dt>
         <dd class="col-sm-8">
-            @Html.DisplayFor(model => model.Group.Action.Name)
+            @Html.DisplayFor(model => model.Group.Action!.Name)
         </dd>
         <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Group.Capacity)
@@ -55,10 +55,10 @@
             @Html.Raw(Model.Group.LectorsNote)
         </dd>
         <dt class="col-sm-4">
-            @Html.DisplayNameFor(model => model.Group.ApplicationCountVisible)
+            @Html.DisplayNameFor(model => model.Group.EnrollmentsCountVisible)
         </dt>
         <dd class="col-sm-8">
-            @Html.DisplayFor(model => model.Group.ApplicationCountVisible)
+            @Html.DisplayFor(model => model.Group.EnrollmentsCountVisible)
         </dd>
         <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Group.PlannedOpening)
@@ -82,7 +82,7 @@
             @Html.DisplayNameFor(model => model.Group.CreatedBy)
         </dt>
         <dd class="col-sm-8">
-            @Html.DisplayFor(model => model.Group.CreatedBy.FirstName) @Html.DisplayFor(model => model.Group.CreatedBy.LastName)
+            @Html.DisplayFor(model => model.Group.CreatedBy!.FirstName) @Html.DisplayFor(model => model.Group.CreatedBy!.LastName)
         </dd>
         <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Group.Created)

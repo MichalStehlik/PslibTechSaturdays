@@ -24,6 +24,8 @@ namespace PslibTechSaturdays.ViewModels
         public int EnrollmentsCount { get; set; }
         [DisplayName("Zapsaní")]
         public int ParticipantsCount { get; set; }
+        [DisplayName("Přítomní")]
+        public int ParticipantsPresentCount { get; set; }
         [DisplayName("Stav")]
         public GroupState State { get; set; }
     }

@@ -10,28 +10,27 @@ namespace PslibTechSaturdays.ViewModels
     {
         public int EnrollmentId { get; set; }
         [Required]
+        [DisplayName("Uživatel")]
         public ApplicationUser User { get; set; } = new ApplicationUser();
-        public Guid ApplicationUserId { get; set; }
         [Required]
+        [DisplayName("Skupina")]
         public Group Group { get; set; } = new Group();
-        public int GroupId { get; set; }
+        [DisplayName("Akce")]
+        public Models.Action? Action { get; set; }
+        [DisplayName("Založil")]
+        [Column(TypeName = "datetime2")]
         public ApplicationUser? CreatedBy { get; set; }
         [Required]
-        [DisplayName("Založil")]
-        public Guid CreatedById { get; set; }
-        [Column(TypeName = "datetime2")]
         [DisplayName("Založeno")]
-        [Required]
         public DateTime Created { get; set; } = DateTime.Now;
         [DisplayName("Zrušil")]
         public ApplicationUser? CancelledBy { get; set; }
         [DisplayName("Zrušeno")]
-        public Guid CancelledById { get; set; }
         [Column(TypeName = "datetime2")]
         public DateTime? Cancelled { get; set; }
-        [DisplayName("Prezence potvrzena")]
+        [DisplayName("Přítomen")]
         public bool? Present { get; set; }
-        public Guid? CertificateId { get; set; } = null;
+        [DisplayName("Certifikát")]
         public Certificate? Certificate { get; set; }
     }
 }

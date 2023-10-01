@@ -31,7 +31,7 @@ namespace PslibTechSaturdays.Models
         [JsonIgnore]
         public ICollection<ApplicationUser>? Lectors { get; set; }
         [DisplayName("Veřejný počet účastníků")]
-        public bool ApplicationCountVisible { get; set; } = false;
+        public bool EnrollmentsCountVisible { get; set; } = false;
         [Column(TypeName = "datetime2")]
         [DisplayName("Plánované otevření pro zápis")]
         public DateTime? PlannedOpening { get; set; }
