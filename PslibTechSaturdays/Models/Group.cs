@@ -50,5 +50,7 @@ namespace PslibTechSaturdays.Models
         public DateTime Created { get; set; } = DateTime.Now;
         [JsonIgnore]
         public ICollection<Enrollment>? Enrollments { get; set; }
+        [JsonIgnore]
+        public ICollection<Tag>? Tags { get; set; }
     }
 }

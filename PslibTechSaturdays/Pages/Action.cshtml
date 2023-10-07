@@ -30,8 +30,8 @@
                     </div>
                     <ul class="list-group list-group-flush">
                         @{
-                            int valid = group.EnrollmentsCountVisible ? group.Enrollments!.Count() : 0;
-                            int capacity = Math.Max(group.Capacity, group.Enrollments!.Count());
+                            int valid = group.EnrollmentsCountVisible ? group.Enrollments!.Count(e => e.Cancelled == null) : 0;
+                            int capacity = Math.Max(group.Capacity, valid);
                         }
                         <li class="list-group-item">
                             <div class="row align-items-center">
@@ -40,12 +40,12 @@
                                 </div>
                                 <div class="col">
                                     <div class="progress">
-                                        <div class="progress-bar" role="progressbar" style="width: @(valid/capacity)" aria-valuenow="@valid" aria-valuemin="0" aria-valuemax="@capacity"></div>
+                                        <div class="progress-bar" role="progressbar" style="width: @(((float)valid/capacity)*100)%" aria-valuenow="@valid" aria-valuemin="0" aria-valuemax="@capacity"></div>
                                     </div>
                                 </div>
                             </div>
                         </li>
-                        <li class="list-group-item">Minimální ročník: <strong>@group.MinGrade</strong></li>
+                        <li class="list-group-item">Minimální ročník: <strong>@Html.DisplayFor(x => group.MinGrade)</strong></li>
                     </ul>
                     <footer class="card-footer">
                         <button class="btn btn-secondary">Detail</button>

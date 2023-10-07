@@ -11,6 +11,27 @@
 <p>
     <a asp-page="Create" class="btn btn-success">Nová</a>
 </p>
+<form method="get">
+    <input type="hidden" asp-for="Sort" />
+    <div class="row g-3">
+        <div class="col">
+            <input type="text" class="form-control mb-2 mr-sm-2" asp-for="UserName" placeholder="@Html.DisplayNameFor(model => model.Enrollments[0].User)">
+        </div>
+        <div class="col">
+            <select class="form-control" asp-for="GroupId" placeholder="@Html.DisplayNameFor(model => model.Enrollments[0].Group)" asp-items="Model.Groups">
+                <option value="">-- Skupina --</option>
+            </select>
+        </div>
+        <div class="col">
+            <select class="form-control" asp-for="ActionId" placeholder="@Html.DisplayNameFor(model => model.Enrollments[0].Action)" asp-items="Model.Actions">
+                <option value="">-- Akce --</option>
+            </select>
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary mb-2">Filtrovat</button>
+        </div>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
@@ -63,28 +84,36 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.User.FirstName + " " + item.User.LastName)
+                    <a asp-page="../Users/Details" asp-route-id="@item.User!.Id">@Html.DisplayFor(modelItem => item.User.LastName), @Html.DisplayFor(modelItem => item.User.FirstName)</a>
+                    
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Action!.Name)
+                    <a asp-page="../Actions/Details" asp-route-id="@item.Action!.ActionId">@Html.DisplayFor(modelItem => item.Action!.Name)</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Group.Name)
+                    <a asp-page="../Groups/Details" asp-route-id="@item.Group!.GroupId">@Html.DisplayFor(modelItem => item.Group!.Name)</a>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CreatedBy!.FirstName + " " + item.CreatedBy!.LastName)
+                    @Html.DisplayFor(modelItem => item.CreatedBy!.LastName), @Html.DisplayFor(modelItem => item.CreatedBy!.FirstName)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Created)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.CancelledBy!.FirstName + " " + item.CancelledBy!.LastName)
+                    @if (item.CancelledBy != null)
+                    {
+                        <span>@Html.DisplayFor(modelItem => item.CancelledBy!.LastName), @Html.DisplayFor(modelItem => item.CancelledBy!.FirstName)</span>
+                    }
+                    else
+                    {
+                        <span>--</span>
+                    }
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Cancelled)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Present)
+                    <span class="@(item.Present == Presence.Present ? "text-success" : item.Present == Presence.Absent ? "text-danger" : "text-secondary")">@Html.DisplayFor(modelItem => item.Present)</span>
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Certificate!.CertificateId)
@@ -92,8 +121,6 @@
                 <td>
                     <div class="btn-group">
                         <a asp-page="./Details" asp-route-id="@item.EnrollmentId" class="btn btn-primary btn-sm">Detail</a>
-                        <a asp-page="./Edit" asp-route-id="@item.EnrollmentId" class="btn btn-secondary btn-sm">Editace</a>
-                        <a asp-page="./Cancel" asp-route-id="@item.EnrollmentId" class="btn btn-secondary btn-sm">Zrušení</a>
                         <a asp-page="./Delete" asp-route-id="@item.EnrollmentId" class="btn btn-danger btn-sm">Smazání</a>
                     </div>
                 </td>

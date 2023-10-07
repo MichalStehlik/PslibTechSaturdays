@@ -131,7 +131,7 @@
                         }
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.EnrollmentsCount)
+                        <a asp-page="../Enrollments/Index" asp-route-UserId="@item.Id">@Html.DisplayFor(modelItem => item.EnrollmentsCount)</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.CertificatesCount)

@@ -29,7 +29,7 @@ namespace PslibTechSaturdays.ViewModels
         [Column(TypeName = "datetime2")]
         public DateTime? Cancelled { get; set; }
         [DisplayName("Přítomen")]
-        public bool? Present { get; set; }
+        public Presence Present { get; set; }
         [DisplayName("Certifikát")]
         public Certificate? Certificate { get; set; }
     }

@@ -2,61 +2,49 @@
 @model PslibTechSaturdays.Areas.Admin.Pages.Enrollments.CreateModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Nová přihláška";
 }
 
-<h1>Create</h1>
+<h1>Založení</h1>
 
-<h4>Enrollment</h4>
+<h4>Přihláška</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Enrollment.ApplicationUserId" class="control-label"></label>
-                <select asp-for="Enrollment.ApplicationUserId" class ="form-control" asp-items="ViewBag.ApplicationUserId"></select>
+                <label asp-for="Input.GroupId" class="control-label"></label>
+                <select asp-for="Input.GroupId" class ="form-control" asp-items="Model.ActiveGroups">
+                    <option>-- Vyberte --</option>
+                </select>
             </div>
             <div class="form-group">
-                <label asp-for="Enrollment.GroupId" class="control-label"></label>
-                <select asp-for="Enrollment.GroupId" class ="form-control" asp-items="ViewBag.GroupId"></select>
+                <label asp-for="Input.UserId" class="control-label"></label>
+                <select asp-for="Input.UserId" class="form-control" asp-items="Model.ActiveUsers">
+                    <option>-- Vyberte --</option>
+                </select>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Input.CheckCapacity" /> @Html.DisplayNameFor(model => model.Input.CheckCapacity)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Input.CheckOpened" /> @Html.DisplayNameFor(model => model.Input.CheckOpened)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Input.CheckCondition" /> @Html.DisplayNameFor(model => model.Input.CheckCondition)
+                </label>
             </div>
             <div class="form-group">
-                <label asp-for="Enrollment.CreatedById" class="control-label"></label>
-                <select asp-for="Enrollment.CreatedById" class ="form-control" asp-items="ViewBag.CreatedById"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Enrollment.Created" class="control-label"></label>
-                <input asp-for="Enrollment.Created" class="form-control" />
-                <span asp-validation-for="Enrollment.Created" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Enrollment.CancelledById" class="control-label"></label>
-                <select asp-for="Enrollment.CancelledById" class ="form-control" asp-items="ViewBag.CancelledById"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Enrollment.Cancelled" class="control-label"></label>
-                <input asp-for="Enrollment.Cancelled" class="form-control" />
-                <span asp-validation-for="Enrollment.Cancelled" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Enrollment.Present" class="control-label"></label>
-                <input asp-for="Enrollment.Present" class="form-control" />
-                <span asp-validation-for="Enrollment.Present" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Enrollment.CertificateId" class="control-label"></label>
-                <select asp-for="Enrollment.CertificateId" class ="form-control" asp-items="ViewBag.CertificateId"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Vytvořit" class="btn btn-primary" /> <a asp-page="Index" class="btn btn-secondary">Zpět</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-page="Index">Back to List</a>
 </div>
 
 @section Scripts {

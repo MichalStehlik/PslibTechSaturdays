@@ -61,17 +61,20 @@ namespace PslibTechSaturdays.Services
             return (await lst.ToListAsync());
         }
 
-        public async Task<Enrollment?> Get(int id)
+        public async Task<Enrollment?> GetAsync(int id)
         {
             var enrollment = await _context.Enrollments.Where(e => e.EnrollmentId == id).SingleOrDefaultAsync();
             if (enrollment != null)
             {
+                _context.Entry(enrollment).Reference(e => e.User).Load();
+                _context.Entry(enrollment).Reference(e => e.CreatedBy).Load();
+                _context.Entry(enrollment).Reference(e => e.CancelledBy).Load();
                 _context.Entry(enrollment).Reference(e => e.Group).Load();
             }        
             return enrollment;
         }
 
-        public async Task<CreationResult> CreateAsync(Guid userId, int groupId, Guid currentUserId, bool checkCapacity = true, bool checkOpened = true)
+        public async Task<CreationResult> CreateAsync(Guid userId, int groupId, Guid currentUserId, bool checkCapacity = true, bool checkOpened = true, bool checkCondition = true)
         {
             var user = await _context.Users.Where(u => u.Id == userId).SingleOrDefaultAsync();
             if (user == null)
@@ -110,7 +113,8 @@ namespace PslibTechSaturdays.Services
                 User = user,
                 Group = group,
                 Created = DateTime.Now,
-                CreatedBy = creator
+                CreatedBy = creator,
+                CancelledById = null,
             };
             try
             {
@@ -124,7 +128,7 @@ namespace PslibTechSaturdays.Services
             }
         }
 
-        public async Task<bool> Remove(int id)
+        public async Task<bool> RemoveAsync(int id)
         {
             var enrollment = await _context.Enrollments.Where(e => e.EnrollmentId == id).SingleOrDefaultAsync();
             if (enrollment == null)
@@ -143,7 +147,7 @@ namespace PslibTechSaturdays.Services
             }
         }
 
-        public async Task<bool> Cancel(int id, Guid userId)
+        public async Task<bool> CancelAsync(int id, Guid userId)
         {
             var user = await _context.Users.Where(u => u.Id == userId).SingleOrDefaultAsync();
             if (user == null)
@@ -159,6 +163,25 @@ namespace PslibTechSaturdays.Services
             {
                 enrollment.Cancelled = DateTime.Now;
                 enrollment.CancelledBy = user;
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public async Task<bool> SetPresenceAsync(int id, Presence state)
+        {
+            var enrollment = await _context.Enrollments.Where(e => e.EnrollmentId == id).SingleOrDefaultAsync();
+            if (enrollment == null)
+            {
+                return false;
+            }
+            try
+            {
+                enrollment.Present = state;
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -189,6 +212,7 @@ namespace PslibTechSaturdays.Services
         FullCapacity,
         ExclusivityConflict,
         ClosedGroup,
-        SQLError
+        SQLError,
+        ConditionUnsatisfied
     }
 }

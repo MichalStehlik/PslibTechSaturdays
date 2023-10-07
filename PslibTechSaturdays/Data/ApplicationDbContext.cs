@@ -17,6 +17,7 @@ namespace PslibTechSaturdays.Data
         public DbSet<Certificate> Certificates { get; set; }
         public DbSet<Text> Texts { get; set; }
         public DbSet<Models.File> Files { get; set; }
+        public DbSet<Tag> Tags { get; set; }
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options, ILogger<ApplicationDbContext> logger)
             : base(options)
         {
@@ -112,12 +113,69 @@ namespace PslibTechSaturdays.Data
                     Published = true,
                     Created = DateTime.Now,
                     CreatedById = Guid.Parse("11111111-1111-1111-1111-111111111111"),
-                    Start = new DateTime(2024,10,10,10,10,0),
+                    Start = new DateTime(2024, 10, 10, 10, 10, 0),
                     End = new DateTime(2024, 10, 10, 10, 30, 0)
+                });
+            });
+            modelBuilder.Entity<Tag>(entity => 
+            {
+                entity.HasData(new Tag
+                {
+                    TagId = 1,
+                    Text = "IT",
+                    BackgroundColor = "#e34242",
+                    ForegroundColor = "#ffffff"
+                });
+                entity.HasData(new Tag
+                {
+                    TagId = 2,
+                    Text = "Strojírenství",
+                    BackgroundColor = "#429fe3",
+                    ForegroundColor = "#ffffff"
+                });
+                entity.HasData(new Tag
+                {
+                    TagId = 3,
+                    Text = "Elektrotechnika",
+                    BackgroundColor = "#3cab68",
+                    ForegroundColor = "#ffffff"
+                });
+                entity.HasData(new Tag
+                {
+                    TagId = 4,
+                    Text = "Lyceum",
+                    BackgroundColor = "#e3a342",
+                    ForegroundColor = "#ffffff"
+                });
+                entity.HasData(new Tag
+                {
+                    TagId = 5,
+                    Text = "Oděvnictví",
+                    BackgroundColor = "#9c42e3",
+                    ForegroundColor = "#ffffff"
+                });
+                entity.HasData(new Tag
+                {
+                    TagId = 6,
+                    Text = "Textilnictví",
+                    BackgroundColor = "#e3428f",
+                    ForegroundColor = "#ffffff"
+                });
+                entity.HasData(new Tag
+                {
+                    TagId = 7,
+                    Text = "VOŠ",
+                    BackgroundColor = "#436a68",
+                    ForegroundColor = "#ffffff"
                 });
             });
             modelBuilder.Entity<Group>(entity =>
             {
+                entity.HasMany(g => g.Tags)
+                    .WithMany(t => t.Groups)
+                    .UsingEntity("GroupTags",
+                    l => l.HasOne(typeof(Tag)).WithMany().HasForeignKey("TagId"),
+                    r => r.HasOne(typeof(Group)).WithMany().HasForeignKey("GroupId"));
                 entity.HasData(new Group
                 {
                     GroupId = 1,

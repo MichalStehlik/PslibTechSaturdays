@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PslibTechSaturdays.Data;
 
@@ -11,9 +12,11 @@ using PslibTechSaturdays.Data;
 namespace PslibTechSaturdays.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20231007140417_EnrollmentFix1")]
+    partial class EnrollmentFix1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -213,7 +216,7 @@ namespace PslibTechSaturdays.Migrations
                         {
                             ActionId = 1,
                             Active = true,
-                            Created = new DateTime(2023, 10, 7, 16, 30, 57, 523, DateTimeKind.Local).AddTicks(5329),
+                            Created = new DateTime(2023, 10, 7, 16, 4, 17, 302, DateTimeKind.Local).AddTicks(2432),
                             CreatedById = new Guid("11111111-1111-1111-1111-111111111111"),
                             Description = "Tato akce slouží k testovacím účelům.",
                             End = new DateTime(2024, 10, 10, 10, 30, 0, 0, DateTimeKind.Unspecified),
@@ -371,8 +374,8 @@ namespace PslibTechSaturdays.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             Aspirant = false,
-                            ConcurrencyStamp = "7fbcb67b-69e8-402b-993a-3d89f90f193b",
-                            Created = new DateTime(2023, 10, 7, 16, 30, 57, 467, DateTimeKind.Local).AddTicks(9117),
+                            ConcurrencyStamp = "a6680a20-a7b7-44aa-9fde-4c9f05b27801",
+                            Created = new DateTime(2023, 10, 7, 16, 4, 17, 266, DateTimeKind.Local).AddTicks(7768),
                             Email = "soboty@pslib.cz",
                             EmailConfirmed = true,
                             FirstName = "Soboty",
@@ -382,11 +385,11 @@ namespace PslibTechSaturdays.Migrations
                             MailList = false,
                             NormalizedEmail = "SOBOTY@PSLIB.CZ",
                             NormalizedUserName = "SOBOTY@PSLIB.CZ",
-                            PasswordHash = "AQAAAAIAAYagAAAAED8+N1NR8+10fhhu1rX1EZPeUOojO7FbUcdunrbLs9+H+LHRjbH4weLgGUGmJ3EXaQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEDSIcUhjXhDo6OsUx2aYAryIw52MzKcuMsqaaHIrVjfIbjCdsFrdr4NqC5QqAPVdCw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI",
                             TwoFactorEnabled = false,
-                            Updated = new DateTime(2023, 10, 7, 16, 30, 57, 467, DateTimeKind.Local).AddTicks(9216),
+                            Updated = new DateTime(2023, 10, 7, 16, 4, 17, 266, DateTimeKind.Local).AddTicks(7828),
                             UserName = "soboty@pslib.cz"
                         });
                 });
@@ -452,8 +455,8 @@ namespace PslibTechSaturdays.Migrations
                     b.Property<int>("GroupId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Present")
-                        .HasColumnType("int");
+                    b.Property<bool?>("Present")
+                        .HasColumnType("bit");
 
                     b.HasKey("EnrollmentId");
 
@@ -557,7 +560,7 @@ namespace PslibTechSaturdays.Migrations
                             GroupId = 1,
                             ActionId = 1,
                             Capacity = 5,
-                            Created = new DateTime(2023, 10, 7, 16, 30, 57, 525, DateTimeKind.Local).AddTicks(6945),
+                            Created = new DateTime(2023, 10, 7, 16, 4, 17, 303, DateTimeKind.Local).AddTicks(2188),
                             CreatedById = new Guid("11111111-1111-1111-1111-111111111111"),
                             Description = "Skupina pro drobné pokusy.",
                             EnrollmentsCountVisible = false,
@@ -572,7 +575,7 @@ namespace PslibTechSaturdays.Migrations
                             GroupId = 2,
                             ActionId = 1,
                             Capacity = 10,
-                            Created = new DateTime(2023, 10, 7, 16, 30, 57, 525, DateTimeKind.Local).AddTicks(6987),
+                            Created = new DateTime(2023, 10, 7, 16, 4, 17, 303, DateTimeKind.Local).AddTicks(2205),
                             CreatedById = new Guid("11111111-1111-1111-1111-111111111111"),
                             Description = "Skupina pro další drobné pokusy.",
                             EnrollmentsCountVisible = false,

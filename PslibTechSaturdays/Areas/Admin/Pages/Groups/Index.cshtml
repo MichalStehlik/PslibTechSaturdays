@@ -44,7 +44,7 @@
             </th>
             <th>
                 <a asp-page="./Index" asp-route-sort="@(Model.Sort == GroupsOrder.ActionName ? GroupsOrder.ActionNameDesc : GroupsOrder.ActionName)">
-                    @Html.DisplayNameFor(model => model.Groups[0].Action!.Name)
+                    @Html.DisplayNameFor(model => model.Groups[0].Action)
                 </a>
             </th>
             <th>
@@ -95,7 +95,7 @@
                 @Html.DisplayFor(modelItem => item.Capacity)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.EnrollmentsCount)
+                <a asp-page="../Enrollments/Index" asp-route-GroupId="@item.GroupId">@Html.DisplayFor(modelItem => item.EnrollmentsCount)</a>
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ParticipantsCount)

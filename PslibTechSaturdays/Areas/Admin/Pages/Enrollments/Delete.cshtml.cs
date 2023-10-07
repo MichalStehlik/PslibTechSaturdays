@@ -7,29 +7,37 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
+using PslibTechSaturdays.Services;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Enrollments
 {
     public class DeleteModel : PageModel
     {
-        private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
+        private readonly EnrollmentsService _storage;
+        private readonly ILogger<IndexModel> _logger;
 
-        public DeleteModel(PslibTechSaturdays.Data.ApplicationDbContext context)
+        public DeleteModel(EnrollmentsService storage, ILogger<IndexModel> logger)
         {
-            _context = context;
+            _storage = storage;
+            _logger = logger;
         }
 
+        [TempData]
+        public string? SuccessMessage { get; set; }
+        [TempData]
+        public string? FailureMessage { get; set; }
+
         [BindProperty]
-      public Enrollment Enrollment { get; set; } = default!;
+        public Enrollment Enrollment { get; set; } = default!;
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Enrollments == null)
+            if (id == null || _storage == null)
             {
                 return NotFound();
             }
 
-            var enrollment = await _context.Enrollments.FirstOrDefaultAsync(m => m.EnrollmentId == id);
+            var enrollment = await _storage.GetAsync((int)id);
 
             if (enrollment == null)
             {
@@ -44,17 +52,24 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Enrollments
 
         public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Enrollments == null)
+            if (id == null || _storage == null)
             {
                 return NotFound();
             }
-            var enrollment = await _context.Enrollments.FindAsync(id);
+            var enrollment = await _storage.GetAsync((int)id);
 
             if (enrollment != null)
             {
-                Enrollment = enrollment;
-                _context.Enrollments.Remove(Enrollment);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    await _storage.RemoveAsync((int)id);
+                    SuccessMessage = "Přihláška byla odstraněna.";
+                }
+                catch
+                {
+                    FailureMessage = "Přihlášku se nepodařilo odstranit.";
+                }
+                
             }
 
             return RedirectToPage("./Index");
