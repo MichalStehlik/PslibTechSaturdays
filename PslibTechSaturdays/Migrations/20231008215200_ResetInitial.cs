@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PslibTechSaturdays.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class ResetInitial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -60,6 +60,21 @@ namespace PslibTechSaturdays.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Tags",
+                columns: table => new
+                {
+                    TagId = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    BackgroundColor = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ForegroundColor = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Tags", x => x.TagId);
                 });
 
             migrationBuilder.CreateTable(
@@ -238,6 +253,26 @@ namespace PslibTechSaturdays.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Files",
+                columns: table => new
+                {
+                    FileId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    OriginalName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UploaderId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    UploadedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Files", x => x.FileId);
+                    table.ForeignKey(
+                        name: "FK_Files_AspNetUsers_UploaderId",
+                        column: x => x.UploaderId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Groups",
                 columns: table => new
                 {
@@ -250,7 +285,7 @@ namespace PslibTechSaturdays.Migrations
                     MinGrade = table.Column<int>(type: "int", nullable: false),
                     Note = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     LectorsNote = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ApplicationCountVisible = table.Column<bool>(type: "bit", nullable: false),
+                    EnrollmentsCountVisible = table.Column<bool>(type: "bit", nullable: false),
                     PlannedOpening = table.Column<DateTime>(type: "datetime2", nullable: true),
                     OpenedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     ClosedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
@@ -284,9 +319,9 @@ namespace PslibTechSaturdays.Migrations
                     GroupId = table.Column<int>(type: "int", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Created = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CancelledById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    CancelledById = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
                     Cancelled = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    Present = table.Column<bool>(type: "bit", nullable: true),
+                    Present = table.Column<int>(type: "int", nullable: false),
                     CertificateId = table.Column<Guid>(type: "uniqueidentifier", nullable: true)
                 },
                 constraints: table =>
@@ -324,6 +359,30 @@ namespace PslibTechSaturdays.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "GroupTags",
+                columns: table => new
+                {
+                    GroupId = table.Column<int>(type: "int", nullable: false),
+                    TagId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_GroupTags", x => new { x.GroupId, x.TagId });
+                    table.ForeignKey(
+                        name: "FK_GroupTags_Groups_GroupId",
+                        column: x => x.GroupId,
+                        principalTable: "Groups",
+                        principalColumn: "GroupId",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_GroupTags_Tags_TagId",
+                        column: x => x.TagId,
+                        principalTable: "Tags",
+                        principalColumn: "TagId",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "LectorAssignments",
                 columns: table => new
                 {
@@ -357,12 +416,26 @@ namespace PslibTechSaturdays.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Active", "Aspirant", "BirthDate", "ConcurrencyStamp", "Created", "Email", "EmailConfirmed", "FirstName", "Grade", "LastName", "LockoutEnabled", "LockoutEnd", "MailList", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SchoolName", "SecurityStamp", "TwoFactorEnabled", "Updated", "UserName" },
-                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 0, true, false, null, "f8098904-e2d6-467d-a4a8-b86e456afa63", new DateTime(2023, 9, 1, 0, 22, 0, 827, DateTimeKind.Local).AddTicks(2747), "soboty@pslib.cz", true, "Soboty", 0, "s Technikou", false, null, false, "SOBOTY@PSLIB.CZ", "SOBOTY@PSLIB.CZ", "AQAAAAIAAYagAAAAEJ9QdGZZ3TCenUIjqjFtsgZ7tvwniYehWODSYaljUdHIqS+eQ+MZ95+AxZWJlT317w==", null, false, null, "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI", false, new DateTime(2023, 9, 1, 0, 22, 0, 827, DateTimeKind.Local).AddTicks(2855), "soboty@pslib.cz" });
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 0, true, false, null, "f11d9416-0796-40c1-861f-dda6d793e153", new DateTime(2023, 10, 8, 23, 51, 59, 893, DateTimeKind.Local).AddTicks(6710), "soboty@pslib.cz", true, "Soboty", 0, "s Technikou", false, null, false, "SOBOTY@PSLIB.CZ", "SOBOTY@PSLIB.CZ", "AQAAAAIAAYagAAAAED4x0GvCI88+sgwq1SqEnYAzIDoX9wyrbJ5XkdR2o+8P7RtZcmGO9vR2zI1qsQ5SoQ==", null, false, null, "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI", false, new DateTime(2023, 10, 8, 23, 51, 59, 893, DateTimeKind.Local).AddTicks(6786), "soboty@pslib.cz" });
+
+            migrationBuilder.InsertData(
+                table: "Tags",
+                columns: new[] { "TagId", "BackgroundColor", "ForegroundColor", "Text" },
+                values: new object[,]
+                {
+                    { 1, "#e34242", "#ffffff", "IT" },
+                    { 2, "#429fe3", "#ffffff", "Strojírenství" },
+                    { 3, "#3cab68", "#ffffff", "Elektrotechnika" },
+                    { 4, "#e3a342", "#ffffff", "Lyceum" },
+                    { 5, "#9c42e3", "#ffffff", "Oděvnictví" },
+                    { 6, "#e3428f", "#ffffff", "Textilnictví" },
+                    { 7, "#436a68", "#ffffff", "VOŠ" }
+                });
 
             migrationBuilder.InsertData(
                 table: "Actions",
                 columns: new[] { "ActionId", "Active", "Created", "CreatedById", "Description", "End", "ExclusiveEnrollment", "Name", "Published", "Start", "Year" },
-                values: new object[] { 1, true, new DateTime(2023, 9, 1, 0, 22, 0, 861, DateTimeKind.Local).AddTicks(9021), new Guid("11111111-1111-1111-1111-111111111111"), "Tato akce slouží k testovacím účelům.", new DateTime(2024, 10, 10, 10, 30, 0, 0, DateTimeKind.Unspecified), true, "Testovací akce", true, new DateTime(2024, 10, 10, 10, 10, 0, 0, DateTimeKind.Unspecified), 2023 });
+                values: new object[] { 1, true, new DateTime(2023, 10, 8, 23, 51, 59, 928, DateTimeKind.Local).AddTicks(9756), new Guid("11111111-1111-1111-1111-111111111111"), "Tato akce slouží k testovacím účelům.", new DateTime(2024, 10, 10, 10, 30, 0, 0, DateTimeKind.Unspecified), true, "Testovací akce", true, new DateTime(2024, 10, 10, 10, 10, 0, 0, DateTimeKind.Unspecified), 2023 });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
@@ -370,7 +443,7 @@ namespace PslibTechSaturdays.Migrations
                 values: new object[,]
                 {
                     { 1, "admin", "1", new Guid("11111111-1111-1111-1111-111111110000") },
-                    { 2, "lektor", "1", new Guid("22222222-2222-2222-2222-222222220000") }
+                    { 2, "lector", "1", new Guid("22222222-2222-2222-2222-222222220000") }
                 });
 
             migrationBuilder.InsertData(
@@ -380,11 +453,11 @@ namespace PslibTechSaturdays.Migrations
 
             migrationBuilder.InsertData(
                 table: "Groups",
-                columns: new[] { "GroupId", "ActionId", "ApplicationCountVisible", "Capacity", "ClosedAt", "Created", "CreatedById", "Description", "LectorsNote", "MinGrade", "Name", "Note", "OpenedAt", "PlannedOpening" },
+                columns: new[] { "GroupId", "ActionId", "Capacity", "ClosedAt", "Created", "CreatedById", "Description", "EnrollmentsCountVisible", "LectorsNote", "MinGrade", "Name", "Note", "OpenedAt", "PlannedOpening" },
                 values: new object[,]
                 {
-                    { 1, 1, false, 5, null, new DateTime(2023, 9, 1, 0, 22, 0, 861, DateTimeKind.Local).AddTicks(9061), new Guid("11111111-1111-1111-1111-111111111111"), "Skupina pro drobné pokusy.", "", 0, "První skupina", "Poznámka", null, new DateTime(2023, 9, 9, 9, 9, 9, 0, DateTimeKind.Unspecified) },
-                    { 2, 1, false, 10, null, new DateTime(2023, 9, 1, 0, 22, 0, 861, DateTimeKind.Local).AddTicks(9068), new Guid("11111111-1111-1111-1111-111111111111"), "Skupina pro další drobné pokusy.", "Lektoři jsou velmi dobří.", 9, "Druhá skupina", "Poznámka", null, new DateTime(2023, 9, 9, 9, 9, 9, 0, DateTimeKind.Unspecified) }
+                    { 1, 1, 5, null, new DateTime(2023, 10, 8, 23, 51, 59, 929, DateTimeKind.Local).AddTicks(8094), new Guid("11111111-1111-1111-1111-111111111111"), "Skupina pro drobné pokusy.", false, "", 0, "První skupina", "Poznámka", null, new DateTime(2023, 9, 9, 9, 9, 9, 0, DateTimeKind.Unspecified) },
+                    { 2, 1, 10, null, new DateTime(2023, 10, 8, 23, 51, 59, 929, DateTimeKind.Local).AddTicks(8110), new Guid("11111111-1111-1111-1111-111111111111"), "Skupina pro další drobné pokusy.", false, "Lektoři jsou velmi dobří.", 9, "Druhá skupina", "Poznámka", null, new DateTime(2023, 9, 9, 9, 9, 9, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.CreateIndex(
@@ -469,6 +542,11 @@ namespace PslibTechSaturdays.Migrations
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Files_UploaderId",
+                table: "Files",
+                column: "UploaderId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Groups_ActionId",
                 table: "Groups",
                 column: "ActionId");
@@ -477,6 +555,11 @@ namespace PslibTechSaturdays.Migrations
                 name: "IX_Groups_CreatedById",
                 table: "Groups",
                 column: "CreatedById");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_GroupTags_TagId",
+                table: "GroupTags",
+                column: "TagId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_LectorAssignments_UserId",
@@ -506,6 +589,12 @@ namespace PslibTechSaturdays.Migrations
                 name: "Enrollments");
 
             migrationBuilder.DropTable(
+                name: "Files");
+
+            migrationBuilder.DropTable(
+                name: "GroupTags");
+
+            migrationBuilder.DropTable(
                 name: "LectorAssignments");
 
             migrationBuilder.DropTable(
@@ -516,6 +605,9 @@ namespace PslibTechSaturdays.Migrations
 
             migrationBuilder.DropTable(
                 name: "Certificates");
+
+            migrationBuilder.DropTable(
+                name: "Tags");
 
             migrationBuilder.DropTable(
                 name: "Groups");
