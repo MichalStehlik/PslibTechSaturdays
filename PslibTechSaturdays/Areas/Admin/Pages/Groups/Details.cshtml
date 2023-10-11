@@ -9,7 +9,7 @@
 
 <div class="row">
     <div class="col-14 col-md-6">
-        <h4>Skupina</h4>
+        <h2>Skupina</h2>
         <hr />
         <dl class="row">
             <dt class="col-sm-4">
@@ -95,5 +95,75 @@
             <a asp-page="./Edit" asp-route-id="@Model.Group?.GroupId">Editace</a> |
             <a asp-page="./Index">Zpět na seznam</a>
         </div>
+    </div>
+    <div class="col-14 col-md-6">
+        <h2>Lektoři</h2>
+        <hr />
+        @if(Model.Group!.Lectors!.Count() == 0)
+        {
+            <p>Žádní lektoři v této skupině nejsou.</p>
+        }
+        else
+        {
+            <ul class="list-group">
+                @foreach (var l in Model.Group!.Lectors!)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <span>@l.LastName, @l.FirstName (@l.Email)</span>
+                        <a class="btn btn-sm btn-danger" asp-page-handler="RemoveLector" asp-route-groupId="@Model.Group.GroupId" asp-route-UserId="@l.Id">Odebrat</a>
+                    </li>
+                }
+            </ul>
+        }
+        @if(Model.UnusedLectors.Count() > 0)
+        {
+            <form method="post" class="row gy-2 gx-3 align-items-center" asp-page-handler="Lector">
+                <input type="hidden" asp-for="@Model.InputLector.GroupId" />
+                <div class="col-auto">
+                    <label class="visually-hidden" asp-for="@Model.InputLector.UserId">Lektoři</label>
+                    <select class="form-control" asp-for="@Model.InputLector.UserId" asp-items="@Model.UnusedLectors">
+                        <option value="" disabled>-- Vyberte --</option>
+                    </select>
+                    <span asp-validation-for="@Model.InputLector.UserId" class="text-danger"></span>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Přidat</button>
+                </div>
+            </form>
+        }
+        <h2>Značky</h2>
+        <hr />
+        @if (Model.Group!.Tags!.Count() == 0)
+        {
+            <p>Žádné značky nejsou skupině přiřazeny.</p>
+        }
+        else
+        {
+            <ul class="list-group">
+                @foreach (var t in Model.Group!.Tags!)
+                {
+                    <li class="list-group-item d-flex justify-content-between align-items-start">
+                        <span class="badge" style="background-color: @t.BackgroundColor; color: @t.ForegroundColor">@t.Text</span>
+                        <a class="btn btn-sm btn-danger" asp-page-handler="RemoveLector" asp-route-groupId="@Model.Group.GroupId" asp-route-TagId="@t.TagId">Odebrat</a>
+                    </li>
+                }
+            </ul>
+        }
+        @if (Model.UnusedTags.Count() > 0)
+        {
+            <form method="post" class="row gy-2 gx-3 align-items-center" asp-page-handler="Tag">
+                <input type="hidden" asp-for="@Model.InputTag.GroupId" />
+                <div class="col-auto">
+                    <label class="visually-hidden" asp-for="@Model.InputTag.TagId">Značky</label>
+                    <select class="form-control" asp-for="@Model.InputTag.TagId" asp-items="@Model.UnusedTags">
+                        <option value="" disabled>-- Vyberte --</option>
+                    </select>
+                    <span asp-validation-for="@Model.InputTag.TagId" class="text-danger"></span>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Přidat</button>
+                </div>
+            </form>
+        }
     </div>
 </div>

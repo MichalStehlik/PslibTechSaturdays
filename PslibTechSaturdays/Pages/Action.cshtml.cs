@@ -28,6 +28,7 @@ namespace PslibTechSaturdays.Pages
             }
             Groups = await _context.Groups.Where(x => x.ActionId == id)
                 .Include(g => g.Enrollments)
+                .Include(g => g.Tags)
                 .OrderBy(x => x.Name).ToListAsync();
             return Page();
         }
