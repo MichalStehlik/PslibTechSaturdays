@@ -1,0 +1,72 @@
+﻿@page
+@model PslibTechSaturdays.Areas.My.Pages.EnrollmentsModel
+
+@{
+    ViewData["Title"] = "Moje přihlášky";
+}
+
+<h1>Moje přihlášky</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Enrollments[0].Action!.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Enrollments[0].Group!.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Enrollments[0].Action!.Start)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Enrollments[0].Created)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Enrollments[0].Cancelled)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Enrollments.Count() > 0)
+        {
+            @foreach (var item in Model.Enrollments)
+            {
+                <tr class="@(item.Cancelled != null ? "table-danger" : "")">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Action!.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Group!.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Action!.Start)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Created)
+                    </td>
+                    <td>
+                        @if(item.Cancelled is not null) 
+                        {
+                            @Html.DisplayFor(modelItem => item.Cancelled)
+                        }
+                        else if(item.Action!.Start > @DateTime.Now)
+                        {
+                            <a asp-page-handler="Cancel" class="btn btn-sm btn-danger" asp-route-id="@item.EnrollmentId">Zrušit</a>
+                        }
+                        else
+                        {
+                            <span>&ndash;</span>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="100" class="table-info">Zatím žádné přihlášky nemáte.</td>
+            </tr>
+        }
+    </tbody>
+</table>

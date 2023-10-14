@@ -15,6 +15,11 @@ namespace PslibTechSaturdays.Areas.My.Pages
     {
         private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
 
+        [TempData]
+        public string? SuccessMessage { get; set; }
+        [TempData]
+        public string? FailureMessage { get; set; }
+
         public CertificatesModel(PslibTechSaturdays.Data.ApplicationDbContext context)
         {
             _context = context;
