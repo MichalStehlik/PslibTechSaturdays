@@ -1,0 +1,44 @@
+﻿@page
+@model PslibTechSaturdays.Pages.GroupModel
+@{
+}
+<div>
+    <a asp-page="Action" asp-route-id="@Model.Group.ActionId" class="btn btn-secondary">Zpět</a>
+</div>
+<h1>@Model.Group.Name</h1>
+<div>
+    @foreach (var t in Model.Group.Tags!)
+    {
+        <span class="badge" style="background-color: @t.BackgroundColor; color: @t.ForegroundColor">@t.Text</span>
+    }
+</div>
+<div class="mt-2">
+    @Html.Raw(Model.Group.Description)
+</div>
+@{
+    int valid = Model.Group.Enrollments!.Count(e => e.Cancelled == null);
+    int capacity = Math.Max(Model.Group.Capacity, valid);
+}
+<ul class="list-group">
+    <li class="list-group-item">Kapacita: <strong>@capacity</strong></li>
+    @if(Model.Group.EnrollmentsCountVisible == true) 
+    {
+        <li class="list-group-item">Počet přihlášených: <strong>@valid</strong></li>
+    }
+    <li class="list-group-item">Začátek: <strong>@Model.Group.Action!.Start</strong></li>
+    <li class="list-group-item">Konec: <strong>@Model.Group.Action!.End</strong></li>
+</ul>
+<h2>Lektoři</h2>
+@if(Model.Group.Lectors!.Count() == 0)
+{
+    <p>Skupina nemá přiřazené žádné lektory.</p>
+}
+else
+{
+    <ul class="list-group">
+    @foreach(var l in Model.Group.Lectors!)
+    {
+        <li class="list-group-item">@l.LastName, @l.FirstName</li>
+    }
+    </ul>
+}
