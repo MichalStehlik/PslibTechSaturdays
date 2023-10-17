@@ -115,6 +115,11 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Enrollments
                         FailureMessage = "Nejsou splněné podmínky zápisu.";
                         return RedirectToPage("./Index");
                     }
+                case CreationResult.EnrollmentDuplicity:
+                    {
+                        FailureMessage = "Uživatel již ve skupině je.";
+                        return RedirectToPage("./Index");
+                    }
                 default:
                     {
                         FailureMessage = "Nespecifikovaná chyba.";

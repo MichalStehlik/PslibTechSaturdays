@@ -108,6 +108,11 @@ namespace PslibTechSaturdays.Services
                     return CreationResult.FullCapacity;
                 }
             }
+            if(group.Enrollments!.Contains(new Enrollment { ApplicationUserId = user.Id, GroupId = group.GroupId}))
+            {
+                return CreationResult.EnrollmentDuplicity;
+            }
+
             var enrollment = new Enrollment
             {
                 User = user,
@@ -213,6 +218,7 @@ namespace PslibTechSaturdays.Services
         ExclusivityConflict,
         ClosedGroup,
         SQLError,
-        ConditionUnsatisfied
+        ConditionUnsatisfied,
+        EnrollmentDuplicity
     }
 }

@@ -4,7 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
 using PslibTechSaturdays.Services;
+using PslibTechSaturdays.ViewModels;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace PslibTechSaturdays.Pages
 {
@@ -26,11 +28,12 @@ namespace PslibTechSaturdays.Pages
         [TempData]
         public string? FailureMessage { get; set; }
 
-        public List<Group> Groups { get; set; }
+        public List<GroupEnrollmentVM> Groups { get; set; }
         public Models.Action Action { get; set; }
         public async Task<IActionResult> OnGetAsync(int id)
         {
-            Action = await _context!.Actions!.Where(x => x.ActionId == id).SingleOrDefaultAsync();
+            var user = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
+            Action = await _context.Actions!.Where(x => x.ActionId == id).SingleOrDefaultAsync();
             if (Action is null)
             {
                 return NotFound();
@@ -38,6 +41,21 @@ namespace PslibTechSaturdays.Pages
             Groups = await _context.Groups.Where(x => x.ActionId == id)
                 .Include(g => g.Enrollments)
                 .Include(g => g.Tags)
+                .Select(x => new GroupEnrollmentVM
+                {
+                    GroupId = x.GroupId,
+                    Name = x.Name,
+                    Tags = x.Tags!,
+                    OpenedAt = x.OpenedAt,
+                    ClosedAt = x.ClosedAt,
+                    MinGrade = x.MinGrade,
+                    Capacity = x.Capacity,
+                    EnrollmentsCountVisible = x.EnrollmentsCountVisible,
+                    EnrollmentsCount = x.Enrollments!.Count(),
+                    ParticipantsCount = x.Enrollments!.Count(e => e.Cancelled == null),
+                    UsersEnrollments = user != null ? x.Enrollments!.Count(e => e.ApplicationUserId == Guid.Parse(user.Value)) : 0,
+                    ShortenedDescription = Regex.Replace(x.Description!, @"<[^>]+>|", "").Trim(),
+                })
                 .OrderBy(x => x.Name).ToListAsync();
             return Page();
         }
@@ -94,6 +112,11 @@ namespace PslibTechSaturdays.Pages
                 case CreationResult.FalseCurrentUser:
                     {
                         FailureMessage = "Chyba pøi identifikování pøihlášeného uživatele.";
+                        return RedirectToPage();
+                    }
+                case CreationResult.EnrollmentDuplicity:
+                    {
+                        FailureMessage = "tato pøihláška již existuje.";
                         return RedirectToPage();
                     }
                 default:
