@@ -33,6 +33,9 @@ builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<EnrollmentsService>();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+builder.Services.Configure<PeriodicTasksOptions>(builder.Configuration.GetSection("PeriodicTasks"));
+builder.Services.AddHostedService<PeriodicTasksService>();
+//services.AddScoped<IScopedProcessingService, ScopedProcessingService>();
 
 builder.Services.AddIdentity<ApplicationUser, ApplicationRole>(
     options => {
