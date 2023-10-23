@@ -47,7 +47,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
                 return Page();
             }
 
-            var userId = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value;
+            var userId = User!.Claims!.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()!.Value;
             var action = new Models.Action
             {
                 Name = Input.Name,
