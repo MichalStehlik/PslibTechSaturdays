@@ -21,7 +21,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Enrollments
     public class CreateModel : PageModel
     {
         private readonly EnrollmentsService _storage;
-        private readonly ILogger<IndexModel> _logger;
+        private readonly ILogger<CreateModel> _logger;
         private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
 
         [TempData]
@@ -32,7 +32,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Enrollments
         public List<SelectListItem> ActiveGroups { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> ActiveUsers { get; set; } = new List<SelectListItem>();
 
-        public CreateModel(EnrollmentsService storage, ILogger<IndexModel> logger, ApplicationDbContext context)
+        public CreateModel(EnrollmentsService storage, ILogger<CreateModel> logger, ApplicationDbContext context)
         {
             _storage = storage;
             _logger = logger;

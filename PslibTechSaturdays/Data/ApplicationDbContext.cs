@@ -205,6 +205,12 @@ namespace PslibTechSaturdays.Data
                     CreatedById = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 });
             });
+            modelBuilder.Entity<Enrollment>(entity => 
+            {
+                entity.HasOne(e => e.Certificate)
+                    .WithOne(c => c.Enrollment)
+                    .HasForeignKey<Certificate>(c => c.EnrollmentId);
+            });
         }
     }
 }

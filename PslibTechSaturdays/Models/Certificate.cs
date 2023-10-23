@@ -7,7 +7,7 @@ namespace PslibTechSaturdays.Models
     public class Certificate
     {
         public Guid CertificateId { get; set; }
-        public ApplicationUser User { get; set; } = new ApplicationUser();
+        public ApplicationUser? User { get; set; }
         public Guid UserId { get; set; }
         [Column(TypeName = "datetime2")]
         [DisplayName("Datum vydání")]
@@ -19,6 +19,9 @@ namespace PslibTechSaturdays.Models
         public string Title { get; set; } = String.Empty;
         [DisplayName("Popisek")]
         public string Description { get; set; } = String.Empty;
+        [DisplayName("Text")]
+        public string Text { get; set; } = String.Empty;
         public Enrollment? Enrollment { get; set; }
+        public int? EnrollmentId { get; set; }
     }
 }
