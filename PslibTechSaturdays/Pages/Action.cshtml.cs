@@ -38,7 +38,7 @@ namespace PslibTechSaturdays.Pages
             {
                 return NotFound();
             }
-            Groups = await _context.Groups.Where(x => x.ActionId == id)
+            Groups = await _context.Groups.Where(x => x.ActionId == Action.ActionId)
                 .Include(g => g.Enrollments)
                 .Include(g => g.Tags)
                 .Select(x => new GroupEnrollmentVM
@@ -54,7 +54,7 @@ namespace PslibTechSaturdays.Pages
                     EnrollmentsCount = x.Enrollments!.Count(),
                     ParticipantsCount = x.Enrollments!.Count(e => e.Cancelled == null),
                     UsersEnrollments = user != null ? x.Enrollments!.Count(e => e.ApplicationUserId == Guid.Parse(user.Value)) : 0,
-                    ShortenedDescription = Regex.Replace(x.Description!, @"<[^>]+>|", "").Trim(),
+                    ShortenedDescription = !String.IsNullOrEmpty(x.Description) ? Regex.Replace(x.Description, @"<[^>]+>|", "").Trim() : null,
                 })
                 .OrderBy(x => x.Name).ToListAsync();
             return Page();

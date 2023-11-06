@@ -6,7 +6,7 @@ namespace PslibTechSaturdays.ViewModels
     {
         public int GroupId { get; set; } = 0;
         public string Name { get; set; } = string.Empty;
-        public string ShortenedDescription { get; set; } = string.Empty;
+        public string? ShortenedDescription { get; set; } = string.Empty;
         public int EnrollmentsCount { get; set; } = 0;
         public int ParticipantsCount { get; set; } = 0;
         public int Capacity { get; set; } = 0;

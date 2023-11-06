@@ -1,8 +1,14 @@
 ﻿@page
+@using static PslibTechSaturdays.Helpers.TempDataExtension;
 @model IndexModel
 @{
     ViewData["Title"] = "Úvodní stránka";
 }
+
+@{
+    string key = "infobox";
+}
+<partial name="_InfoBoxTempData" model="key" />
 
 <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
     <div class="col-10 col-sm-8 col-lg-6">
@@ -17,6 +23,13 @@
         </div>
     </div>
 </div>
+<section>
+    <div class="alert">Vaše poslední návštěva: @Model.LastAccess</div>
+</section>
+<section>
+    <a asp-page-handler="Message" asp-route-text="Success" asp-route-type="@MessageType.Success">Success text</a>
+    <a asp-page-handler="Message" asp-route-text="Dangerous thing." asp-route-type="@MessageType.Danger">Danger text</a>
+</section>
 <section>
     <h1>Dostupné akce</h1>
     @if (Model.PublishedActions.Count() > 0)

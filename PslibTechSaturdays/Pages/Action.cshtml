@@ -31,7 +31,10 @@
                     }
                     <div class="card-body">
                         <h3 class="card-title">@group.Name</h3>
-                        @(group.ShortenedDescription.Length > 1000 ? group.ShortenedDescription.Substring(0, 1000) : group.ShortenedDescription)
+                        @if (!String.IsNullOrEmpty(group.ShortenedDescription))
+                        {
+                            @(group.ShortenedDescription.Length > 1000 ? group.ShortenedDescription.Substring(0, 1000) : group.ShortenedDescription)
+                        }      
                     </div>
                     <ul class="list-group list-group-flush">
                         <li class="list-group-item">
