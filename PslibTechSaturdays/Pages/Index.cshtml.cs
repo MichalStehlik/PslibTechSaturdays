@@ -15,7 +15,6 @@ namespace PslibTechSaturdays.Pages
         private readonly ApplicationDbContext _context;
 
         public string? AppTitle { get; set; }
-        public string LastAccess { get; set; }
         public List<Models.Action> PublishedActions { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration, ApplicationDbContext context)
@@ -29,7 +28,6 @@ namespace PslibTechSaturdays.Pages
         {
             AppTitle = _configuration["Application:Name"];
             PublishedActions = await _context.Actions.Include(x => x.Groups).Where(x => x.Published == true).ToListAsync();
-            LastAccess = Request.Cookies["last-access"] ?? DateTime.Now.ToString();
             var options = new CookieOptions
             {
                 Expires = DateTime.Now.AddDays(365),

@@ -1,0 +1,39 @@
+﻿@page
+@model PslibTechSaturdays.Areas.Admin.Pages.Tags.DetailsModel
+
+@{
+    ViewData["Title"] = "Podrobnosti značky";
+}
+
+<h1>Podrobnosti</h1>
+
+<div class="row">
+    <div class="col-12 col-md-6">
+    <h2>Značka</h2>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Tag.Text)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Tag.Text)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Tag.BackgroundColor)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Tag.BackgroundColor)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Tag.ForegroundColor)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Tag.ForegroundColor)
+        </dd>
+    </dl>
+        <div>
+            <a asp-page="./Edit" asp-route-id="@Model.Tag?.TagId">Editace</a> |
+            <a asp-page="./Index">Zpět na seznam</a>
+        </div>
+    </div>
+</div>

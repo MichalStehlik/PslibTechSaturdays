@@ -1,0 +1,39 @@
+﻿@page
+@model PslibTechSaturdays.Areas.Admin.Pages.Tags.DeleteModel
+
+@{
+    ViewData["Title"] = "Odstranění značky";
+}
+
+<h1>Delete</h1>
+
+<p>Opravdu chcete značku odstranit?</p>
+<div>
+    <h2>Značka</h2>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Tag.Text)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Tag.Text)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Tag.BackgroundColor)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Tag.BackgroundColor)
+        </dd>
+        <dt class="col-sm-4">
+            @Html.DisplayNameFor(model => model.Tag.ForegroundColor)
+        </dt>
+        <dd class="col-sm-8">
+            @Html.DisplayFor(model => model.Tag.ForegroundColor)
+        </dd>
+    </dl>
+    
+    <form method="post">
+        <input type="hidden" asp-for="Tag.TagId" />
+        <input type="submit" value="Odstranit" class="btn btn-danger" /> <a asp-page="./Index" class="btn btn-secondary">Zpět</a>
+    </form>
+</div>

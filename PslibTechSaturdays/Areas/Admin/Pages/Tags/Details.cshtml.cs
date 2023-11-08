@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
 
-namespace PslibTechSaturdays.Areas.Admin.Pages.Certificates
+namespace PslibTechSaturdays.Areas.Admin.Pages.Tags
 {
     public class DetailsModel : PageModel
     {
@@ -19,26 +19,23 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Certificates
             _context = context;
         }
 
-      public Certificate Certificate { get; set; } = default!; 
+      public Tag Tag { get; set; } = default!; 
 
-        public async Task<IActionResult> OnGetAsync(Guid? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Certificates == null)
+            if (id == null || _context.Tags == null)
             {
                 return NotFound();
             }
 
-            var certificate = await _context.Certificates.FirstOrDefaultAsync(m => m.CertificateId == id);
-            if (certificate == null)
+            var tag = await _context.Tags.FirstOrDefaultAsync(m => m.TagId == id);
+            if (tag == null)
             {
                 return NotFound();
             }
             else 
             {
-                _context.Entry(certificate).Reference(c => c.User).Load();
-                _context.Entry(certificate).Reference(c => c.CreatedBy).Load();
-                _context.Entry(certificate).Reference(c => c.Enrollment).Load();
-                Certificate = certificate;
+                Tag = tag;
             }
             return Page();
         }

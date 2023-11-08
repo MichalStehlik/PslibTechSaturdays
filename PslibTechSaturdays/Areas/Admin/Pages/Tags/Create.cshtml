@@ -1,0 +1,40 @@
+﻿@page
+@model PslibTechSaturdays.Areas.Admin.Pages.Tags.CreateModel
+
+@{
+    ViewData["Title"] = "Vytvoření značky";
+}
+
+<h1>Vytvoření</h1>
+
+<h2>Značka</h2>
+<hr />
+<div class="row">
+    <div class="col">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Tag.Text" class="control-label"></label>
+                <input asp-for="Tag.Text" class="form-control" />
+                <span asp-validation-for="Tag.Text" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tag.BackgroundColor" class="control-label"></label>
+                <input asp-for="Tag.BackgroundColor" class="form-control" type="color" />
+                <span asp-validation-for="Tag.BackgroundColor" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Tag.ForegroundColor" class="control-label"></label>
+                <input asp-for="Tag.ForegroundColor" class="form-control" type="color" />
+                <span asp-validation-for="Tag.ForegroundColor" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
+                <input type="submit" value="Vytvořit" class="btn btn-primary" /> <a asp-page="Index" class="btn btn-secondary">Zpět na seznam</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

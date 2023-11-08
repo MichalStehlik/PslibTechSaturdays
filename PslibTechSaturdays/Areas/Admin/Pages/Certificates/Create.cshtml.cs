@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Certificates
@@ -38,10 +34,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Certificates
 
         [BindProperty]
         public CreateInputModel Input { get; set; } = default!;
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
 
         public List<SelectListItem> Users { get; set; } = new List<SelectListItem>();
 
@@ -59,11 +51,20 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Certificates
             {
                 Title = Input.Title,
                 Description = Input.Description,
+                Text = Input.Text,
                 UserId = Input.UserId,
                 CreatedById = Guid.Parse(userId),
                 Issued = DateTime.Now,
             });
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Certifikát byl vytvořen.");
+            }
+            catch(Exception ex) 
+            {
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Vytvoření certifikátu nebylo úspěšné.");
+            }
 
             return RedirectToPage("./Index");
         }
@@ -77,6 +78,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Certificates
         [Display(Name = "Titulek")]
         [Required(ErrorMessage = "Certifikát musí mít název")]
         public string Title { get; set; } = String.Empty;
+        public string Text { get; set; } = String.Empty;
 
         [DisplayName("Popisek")]
         public string Description { get; set; } = String.Empty;

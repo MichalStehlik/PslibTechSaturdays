@@ -5,56 +5,77 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Seznam certifikátů</h1>
 
 <p>
-    <a asp-page="Create">Create New</a>
+    <a asp-page="Create" class="btn btn-success">Nový</a>
 </p>
+<form method="get">
+    <input type="hidden" asp-for="Sort" />
+    <div class="row g-3">
+        <div class="col">
+            <input type="text" class="form-control mb-2 mr-sm-2" asp-for="Name" placeholder="@Html.DisplayNameFor(model => model.Certificates[0].User)">
+        </div>
+        <div class="col">
+            <button type="submit" class="btn btn-primary mb-2">Filtrovat</button>
+        </div>
+    </div>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Certificate[0].User)
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == CertificatesOrder.Name ? CertificatesOrder.NameDesc : CertificatesOrder.Name)">
+                    @Html.DisplayNameFor(model => model.Certificates[0].User)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Certificate[0].Issued)
+                <a asp-page="./Index" asp-route-sort="@(Model.Sort == CertificatesOrder.Date ? CertificatesOrder.DateDesc : CertificatesOrder.Date)">
+                    @Html.DisplayNameFor(model => model.Certificates[0].Issued)
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Certificate[0].CreatedBy)
+                @Html.DisplayNameFor(model => model.Certificates[0].Title)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Certificate[0].Title)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Certificate[0].Description)
+                @Html.DisplayNameFor(model => model.Certificates[0].Text)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Certificate) {
+    @if (Model.Certificates.Count() == 0) 
+    {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.User.FirstName)
+            <td colspan="100" class="table-info">Zadaným kritériím neodpovídají žádné údaje.</td>
+            </tr>
+        } 
+        else
+        {
+            @foreach (var item in Model.Certificates)
+            {
+                <tr>
+                    <td>
+                @Html.DisplayFor(modelItem => item.User!.LastName), @Html.DisplayFor(modelItem => item.User!.FirstName)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Issued)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedBy.FirstName)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Description)
+                @Html.DisplayFor(modelItem => item.Text)
             </td>
             <td>
-                <a asp-page="./Edit" asp-route-id="@item.CertificateId">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.CertificateId">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.CertificateId">Delete</a>
+                <div class="btn-group">
+                    <a asp-page="./Details" asp-route-id="@item.CertificateId" class="btn btn-primary btn-sm">Detail</a>
+                    <a asp-page="./Edit" asp-route-id="@item.CertificateId" class="btn btn-secondary btn-sm">Editace</a>
+                    <a asp-page="./Delete" asp-route-id="@item.CertificateId" class="btn btn-danger btn-sm">Smazání</a>
+                </div>
             </td>
         </tr>
-}
+        }
+    }
     </tbody>
 </table>

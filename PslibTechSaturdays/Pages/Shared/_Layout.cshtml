@@ -3,7 +3,9 @@
 @using PslibTechSaturdays.Models
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IConfiguration conf
-@{ ClaimsPrincipal cp = this.User; }
+@{ 
+    ClaimsPrincipal cp = this.User; 
+}
 <!DOCTYPE html>
 <html lang="cs" class="h-100">
 <head>
@@ -52,7 +54,8 @@
                                 <li><a class="nav-link text-dark" asp-area="Admin" asp-page="/Actions/Index">Akce</a></li>
                                 <li><a class="nav-link text-dark" asp-area="Admin" asp-page="/Groups/Index">Skupiny</a></li>
                                 <li><a class="nav-link text-dark" asp-area="Admin" asp-page="/Enrollments/Index">Přihlášky</a></li>
-                                <li><a class="nav-link text-dark" asp-area="Admin" asp-page="/Certificates/Index">Certifikáty</a></li>
+                                <li class="border-bottom"><a class="nav-link text-dark" asp-area="Admin" asp-page="/Certificates/Index">Certifikáty</a></li>
+                                <li><a class="nav-link text-dark" asp-area="Admin" asp-page="/Tags/Index">Značky</a></li>
                             </ul>
                         </li>
                         }
@@ -78,6 +81,7 @@
             {
                 <div class="alert alert-danger">@TempData["FailureMessage"]</div>
             }
+            <partial name="_InfoBoxTempData" model="@Constants.Messages.COOKIE_ID" />
         </div>
         <div class="container">
             @RenderBody()

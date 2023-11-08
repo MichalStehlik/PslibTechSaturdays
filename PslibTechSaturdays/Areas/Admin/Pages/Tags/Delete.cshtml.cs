@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
 
-namespace PslibTechSaturdays.Areas.Admin.Pages.Certificates
+namespace PslibTechSaturdays.Areas.Admin.Pages.Tags
 {
     public class DeleteModel : PageModel
     {
@@ -20,43 +20,40 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Certificates
         }
 
         [BindProperty]
-      public Certificate Certificate { get; set; } = default!;
+      public Tag Tag { get; set; } = default!;
 
-        public async Task<IActionResult> OnGetAsync(Guid? id)
+        public async Task<IActionResult> OnGetAsync(int? id)
         {
-            if (id == null || _context.Certificates == null)
+            if (id == null || _context.Tags == null)
             {
                 return NotFound();
             }
 
-            var certificate = await _context.Certificates.FirstOrDefaultAsync(m => m.CertificateId == id);
+            var tag = await _context.Tags.FirstOrDefaultAsync(m => m.TagId == id);
 
-            if (certificate == null)
+            if (tag == null)
             {
                 return NotFound();
             }
             else 
             {
-                _context.Entry(certificate).Reference(c => c.User).Load();
-                _context.Entry(certificate).Reference(c => c.CreatedBy).Load();
-                _context.Entry(certificate).Reference(c => c.Enrollment).Load();
-                Certificate = certificate;
+                Tag = tag;
             }
             return Page();
         }
 
-        public async Task<IActionResult> OnPostAsync(Guid? id)
+        public async Task<IActionResult> OnPostAsync(int? id)
         {
-            if (id == null || _context.Certificates == null)
+            if (id == null || _context.Tags == null)
             {
                 return NotFound();
             }
-            var certificate = await _context.Certificates.FindAsync(id);
+            var tag = await _context.Tags.FindAsync(id);
 
-            if (certificate != null)
+            if (tag != null)
             {
-                Certificate = certificate;
-                _context.Certificates.Remove(Certificate);
+                Tag = tag;
+                _context.Tags.Remove(Tag);
                 await _context.SaveChangesAsync();
             }
 

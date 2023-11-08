@@ -10,44 +10,30 @@
 <h4>Certificate</h4>
 <hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col">
         <form method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="Certificate.CertificateId" />
+            <input type="hidden" asp-for="Input.CertificateId" />
             <div class="form-group">
-                <label asp-for="Certificate.UserId" class="control-label"></label>
-                <select asp-for="Certificate.UserId" class="form-control" asp-items="ViewBag.UserId"></select>
-                <span asp-validation-for="Certificate.UserId" class="text-danger"></span>
+                <label asp-for="Input.Title" class="control-label"></label>
+                <input asp-for="Input.Title" class="form-control" />
+                <span asp-validation-for="Input.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Certificate.Issued" class="control-label"></label>
-                <input asp-for="Certificate.Issued" class="form-control" />
-                <span asp-validation-for="Certificate.Issued" class="text-danger"></span>
+                <label asp-for="Input.Text" class="control-label"></label>
+                <input asp-for="Input.Text" class="form-control" />
+                <span asp-validation-for="Input.Text" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Certificate.CreatedById" class="control-label"></label>
-                <select asp-for="Certificate.CreatedById" class="form-control" asp-items="ViewBag.CreatedById"></select>
-                <span asp-validation-for="Certificate.CreatedById" class="text-danger"></span>
+                <label asp-for="Input.Description" class="control-label"></label>
+                <input asp-for="Input.Description" class="form-control" />
+                <span asp-validation-for="Input.Description" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Certificate.Title" class="control-label"></label>
-                <input asp-for="Certificate.Title" class="form-control" />
-                <span asp-validation-for="Certificate.Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Certificate.Description" class="control-label"></label>
-                <input asp-for="Certificate.Description" class="form-control" />
-                <span asp-validation-for="Certificate.Description" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="form-group mt-2">
+                <input type="submit" value="Uložit" class="btn btn-primary" /> <a asp-page="./Index" class="btn btn-secondary">Zpět</a>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-page="./Index">Back to List</a>
 </div>
 
 @section Scripts {
