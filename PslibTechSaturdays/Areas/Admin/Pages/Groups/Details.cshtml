@@ -28,7 +28,7 @@
                 @Html.DisplayNameFor(model => model.Group.Action)
             </dt>
             <dd class="col-sm-8">
-                @Html.DisplayFor(model => model.Group.Action!.Name)
+                <a asp-area="Admin" asp-page="/Actions/Details" asp-route-id="@Model.Group.ActionId">@Html.DisplayFor(model => model.Group.Action!.Name)</a>
             </dd>
             <dt class="col-sm-4">
                 @Html.DisplayNameFor(model => model.Group.Capacity)
@@ -97,6 +97,7 @@
         </div>
     </div>
     <div class="col-14 col-md-6">
+        <section class="mt-2">
         <h2>Lektoři</h2>
         <hr />
         @if(Model.Group!.Lectors!.Count() == 0)
@@ -131,6 +132,8 @@
                 </div>
             </form>
         }
+        </section>
+        <section class="mt-2">
         <h2>Značky</h2>
         <hr />
         @if (Model.Group!.Tags!.Count() == 0)
@@ -165,5 +168,35 @@
                 </div>
             </form>
         }
+        </section>
+        <section class="mt-2">
+        <h2>Rychlé akce</h2>
+        <div>
+            @if (Model!.Group.OpenedAt == null)
+            {
+                <a asp-page-handler="Open" asp-route-id="@Model.Group.GroupId" class="btn btn-secondary">Otevřít</a>
+            }
+            else if(Model!.Group.ClosedAt == null)
+            {
+                <a asp-page-handler="Close" asp-route-id="@Model.Group.GroupId" class="btn btn-secondary">Zavřít</a>
+            }
+            else
+            {
+                <a asp-page-handler="Reopen" asp-route-id="@Model.Group.GroupId" class="btn btn-secondary">Zrušit zavření</a>
+            }
+
+            @if (Model!.Group!.EnrollmentsCountVisible == false)
+            {
+                <a asp-page-handler="SetCountVisible" asp-route-id="@Model.Group.GroupId" asp-route-value="true" class="btn btn-secondary">Zobrazit počet</a>
+            }
+            else
+            {
+                <a asp-page-handler="SetCountVisible" asp-route-id="@Model.Group.GroupId" asp-route-value="false" class="btn btn-secondary">Skrýt počet</a>
+            }
+        </div>
+        </section>
+    </div>
+    <div class="col-14 col-md-6">
+        <h2>Účastníci</h2>
     </div>
 </div>

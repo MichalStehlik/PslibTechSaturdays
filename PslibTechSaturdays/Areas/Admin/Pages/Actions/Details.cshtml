@@ -78,7 +78,7 @@
             <a asp-page="./Index">Zpět na seznam</a>
         </div>
     </div>
-    <div class="col-12 col-md-6">
+    <div class="col-12 col-md-6 mb-2">
          <h2>Rychlé akce</h2>
          <div>
             @if(Model!.Action!.Active == true)
@@ -98,5 +98,73 @@
                 <a asp-page-handler="SetPublished" asp-route-id="@Model.Action.ActionId" asp-route-value="true" class="btn btn-secondary">Publikovat</a>
             }
         </div>
+        <div class="mt-2">
+            <a asp-page-handler="OpenGroups" asp-route-id="@Model.Action.ActionId" class="btn btn-secondary">Otevřít neotevřené</a>
+            <a asp-page-handler="CloseGroups" asp-route-id="@Model.Action.ActionId" class="btn btn-secondary">Zavřít nezavřené</a>
+            <a asp-page-handler="ShowCountsGroups" asp-route-id="@Model.Action.ActionId" asp-route-value="@true" class="btn btn-secondary">Zobrazit počty</a>
+        </div>
+    </div>
+    <div class="col-12">
+        @{
+            int totalCapacity = 0;
+            int totalEnrollments = 0;
+            int totalUsers = 0;
+            int totalLectors = 0;
+        }
+        <h2>Skupiny</h2>
+        @if(Model.Groups.Count == 0)
+        {
+            <p>Akce nemá žádné skupiny</p>
+        } else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Název</th>
+                        <th>Kapacita</th>
+                        <th>Přihlášky</th>
+                        <th>Přihlášení</th>
+                        <th>Lektoři</th>
+                        <th>Lidé</th>
+                        <th>Otevřená</th>
+                        <th>Zavřená</th>
+                        <th>Veřejný počet</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach(var gr in Model.Groups)
+                    {
+                        totalCapacity += gr.Capacity;
+                        totalEnrollments += gr.Enrollments!.Count;
+                        totalUsers += gr.Enrollments!.Count(e => e.Cancelled == null);
+                        totalLectors += gr.Lectors!.Count;
+                        <tr>
+                            <td><a asp-area="Admin" asp-page="/Groups/Details" asp-route-id="@gr.GroupId">@gr.Name</a></td>
+                            <td>@gr.Capacity</td>
+                            <td>@gr.Enrollments!.Count</td>
+                            <td>@gr.Enrollments!.Count(e => e.Cancelled == null)</td>
+                            <td>@gr.Lectors!.Count</td>
+                            <td>@(gr.Lectors!.Count + gr.Enrollments!.Count(e => e.Cancelled == null))</td>
+                            <td>@gr.OpenedAt</td>
+                            <td>@gr.ClosedAt</td>
+                            <td>@gr.EnrollmentsCountVisible</td>
+                        </tr>
+                    }   
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td>Celkem:</td>
+                        <td>@totalCapacity</td>
+                        <td>@totalEnrollments</td>
+                        <td>@totalUsers</td>
+                        <td>@totalLectors</td>
+                        <td>@(totalUsers + totalLectors)</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+        }
     </div>
 </div>

@@ -76,7 +76,7 @@
                         <a class="btn btn-secondary mr-1" asp-page="Group" asp-route-id="@group.GroupId">Detail</a>
                         @if (SignInManager.IsSignedIn(User))
                         {
-                            @if (group.OpenedAt != null && group.ClosedAt == null && (float)valid / capacity < 1 && group.UsersEnrollments == 0)
+                            @if (group.OpenedAt != null && group.ClosedAt == null && (float)valid / capacity < 1 && group.UsersEnrollments == 0 && (Model.Action.ExclusiveEnrollment == true ? Model.Enrollments.Count == 0 : true))
                             {
                                 <a class="btn btn-secondary btn-success" asp-page="Action" asp-page-handler="Enroll" asp-route-id="@group.GroupId">Zapsat se</a>
                             }
@@ -94,7 +94,7 @@
                             }
                             else
                             {
-                                <span>?</span>
+                                <span class="btn btn-secondary disabled">Zapsat se</span>
                             }
                         }        
                     </footer>

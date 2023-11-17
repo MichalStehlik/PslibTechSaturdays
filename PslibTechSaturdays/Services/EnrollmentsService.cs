@@ -82,7 +82,7 @@ namespace PslibTechSaturdays.Services
                 return CreationResult.UnknownUser;
             }
             var creator = await _context.Users.Where(u => u.Id == currentUserId).SingleOrDefaultAsync();
-            if (user == null)
+            if (creator == null)
             {
                 return CreationResult.FalseCurrentUser;
             }
@@ -98,7 +98,8 @@ namespace PslibTechSaturdays.Services
                     return CreationResult.ClosedGroup;
                 }
             }
-            _context.Entry(group).Collection(p => p.Enrollments!).Load();
+            _context.Entry(group).Collection(g => g.Enrollments!).Load();
+            _context.Entry(group).Reference(g => g.Action!).Load();
             var total = group.Enrollments!.Count();
             var valid = group.Enrollments!.Where(x => x.Cancelled == null).Count();
             if (checkCapacity)
@@ -108,7 +109,28 @@ namespace PslibTechSaturdays.Services
                     return CreationResult.FullCapacity;
                 }
             }
-            if(group.Enrollments!.Contains(new Enrollment { ApplicationUserId = user.Id, GroupId = group.GroupId}))
+            if (checkCondition && user.Grade != SchoolGrade.None && group.MinGrade != SchoolGrade.None)
+            {
+                if (group.MinGrade > user.Grade)
+                {
+                    return CreationResult.ConditionUnsatisfied;
+                }
+            }
+            if (group.Action!.ExclusiveEnrollment)
+            {
+                var actionEnrollments = await _context.Enrollments
+                    .Include(x => x.Group)
+                    .Where(x =>
+                    x.ApplicationUserId == userId
+                    && x.Cancelled == null
+                    && x.Group.ActionId == group.ActionId
+                    ).ToListAsync() ?? new List<Enrollment>();
+                if (actionEnrollments.Count > 0)
+                {
+                    return CreationResult.ExclusivityConflict;
+                }
+            }
+            if (group.Enrollments!.Contains(new Enrollment { ApplicationUserId = user.Id, GroupId = group.GroupId}))
             {
                 return CreationResult.EnrollmentDuplicity;
             }

@@ -56,14 +56,14 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             }
             foreach (var l in lectors)
             {
-                if(!group.Lectors.Contains(l))
+                if(!group.Lectors!.Contains(l))
                 {
                     UnusedLectors.Add(new SelectListItem { Value = l.Id.ToString(), Text = l.LastName + ", " + l.FirstName + " (" + l.Email + ")" });
                 }
             }
             foreach (var t in tags)
             {
-                if (!group.Tags.Contains(t))
+                if (!group.Tags!.Contains(t))
                 {
                     UnusedTags.Add(new SelectListItem { Value = t.TagId.ToString(), Text = t.Text });
                 }
@@ -201,6 +201,90 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
                 TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Odebrání značky se nepodařilo.");
             }
             return RedirectToPage("Details", new { id = groupId });
+        }
+
+        public async Task<ActionResult> OnGetOpenAsync(int id)
+        {
+            var grp = _context.Groups.FirstOrDefault(g => g.GroupId == id);
+            if (grp == null)
+            {
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Skupina neexistuje.");
+                return RedirectToPage("Index");
+            }
+            try
+            {
+                grp.OpenedAt = DateTime.Now;
+                await _context.SaveChangesAsync();
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Skupina byla otevřena pro zápis.");
+            }
+            catch
+            {
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Při otevírání skupiny došlo k chybě.");
+            }
+            return RedirectToPage("Details", new { id = id });
+        }
+
+        public async Task<ActionResult> OnGetCloseAsync(int id)
+        {
+            var grp = _context.Groups.FirstOrDefault(g => g.GroupId == id);
+            if (grp == null)
+            {
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Skupina neexistuje.");
+                return RedirectToPage("Index");
+            }
+            try
+            {
+                grp.ClosedAt = DateTime.Now;
+                await _context.SaveChangesAsync();
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Skupina byla uzavřena pro zápis.");
+            }
+            catch
+            {
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Při uzavírání skupiny došlo k chybě.");
+            }
+            return RedirectToPage("Details", new { id = id });
+        }
+
+        public async Task<ActionResult> OnGetReopenAsync(int id)
+        {
+            var grp = _context.Groups.FirstOrDefault(g => g.GroupId == id);
+            if (grp == null)
+            {
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Skupina neexistuje.");
+                return RedirectToPage("Index");
+            }
+            try
+            {
+                grp.ClosedAt = null;
+                await _context.SaveChangesAsync();
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Skupina byla znovuotevřena pro zápis.");
+            }
+            catch
+            {
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Při znovuotevírání skupiny došlo k chybě.");
+            }
+            return RedirectToPage("Details", new { id = id });
+        }
+
+        public async Task<ActionResult> OnGetSetCountVisibleAsync(int id, bool value)
+        {
+            var grp = _context.Groups.FirstOrDefault(g => g.GroupId == id);
+            if (grp == null)
+            {
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Skupina neexistuje.");
+                return RedirectToPage("Index");
+            }
+            try
+            {
+                grp.EnrollmentsCountVisible = value;
+                await _context.SaveChangesAsync();
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Nastavení skupiny bylo změněno.");
+            }
+            catch
+            {
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Došlo k chybě při změně nastavení skupiny.");
+            }
+            return RedirectToPage("Details", new { id = id });
         }
     }
 

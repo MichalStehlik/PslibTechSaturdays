@@ -50,7 +50,7 @@ namespace PslibTechSaturdays.Pages
                     EnrollmentsCountVisible = x.EnrollmentsCountVisible,
                     EnrollmentsCount = x.Enrollments!.Count(),
                     ParticipantsCount = x.Enrollments!.Count(e => e.Cancelled == null),
-                    UsersEnrollments = user != null ? x.Enrollments!.Count(e => e.ApplicationUserId == Guid.Parse(user.Value)) : 0,
+                    UsersEnrollments = user != null ? x.Enrollments!.Count(e => (e.ApplicationUserId == Guid.Parse(user.Value) && e.Cancelled == null)) : 0,
                     ShortenedDescription = !String.IsNullOrEmpty(x.Description) ? Regex.Replace(x.Description, @"<[^>]+>|", "").Trim() : null,
                 })
                 .OrderBy(x => x.Name).ToListAsync();
@@ -74,6 +74,11 @@ namespace PslibTechSaturdays.Pages
             {
                 return BadRequest();
             }
+            var group = await _context.Groups.SingleOrDefaultAsync(x => x.GroupId == id);
+            if (group is null)
+            {
+                return NotFound();
+            }
             var result = await _storage.CreateAsync(Guid.Parse(userId), id, Guid.Parse(userId));
             switch (result) {
                 case CreationResult.Success:
@@ -84,52 +89,52 @@ namespace PslibTechSaturdays.Pages
                 case CreationResult.UnknownUser:
                     {
                         TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Neznámý uživatel.");
-                        return RedirectToPage();
+                        return RedirectToPage("Action", new { id = group.ActionId});
                     }
                 case CreationResult.UnknownGroup:
                     {
                         TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Neznámá skupina.");
-                        return RedirectToPage();
+                        return RedirectToPage("Action", new { id = group.ActionId });
                     }
                 case CreationResult.ExclusivityConflict:
                     {
                         TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Uživatel nemùže být ve více skupinách.");
-                        return RedirectToPage();
+                        return RedirectToPage("Action", new { id = group.ActionId });
                     }
                 case CreationResult.ClosedGroup:
                     {
                         TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Skupina je uzavøená pro zápis.");
-                        return RedirectToPage();
+                        return RedirectToPage("Action", new { id = group.ActionId });
                     }
                 case CreationResult.FullCapacity:
                     {
                         TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Skupina je již naplnìná.");
-                        return RedirectToPage();
+                        return RedirectToPage("Action", new { id = group.ActionId });
                     }
                 case CreationResult.ConditionUnsatisfied:
                     {
                         TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Nebyla splnìna potøebná podmínka.");
-                        return RedirectToPage();
+                        return RedirectToPage("Action", new { id = group.ActionId });
                     }
                 case CreationResult.SQLError:
                     {
                         TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Chyba pøi zápisu do databáze.");
-                        return RedirectToPage();
+                        return RedirectToPage("Action", new { id = group.ActionId });
                     }
                 case CreationResult.FalseCurrentUser:
                     {
                         TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Pøihlášený uživatel nemá platnou identifikaci.");
-                        return RedirectToPage();
+                        return RedirectToPage("Action", new { id = group.ActionId });
                     }
                 case CreationResult.EnrollmentDuplicity:
                     {
                         TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Pøihláška již existuje.");
-                        return RedirectToPage();
+                        return RedirectToPage("Action", new { id = group.ActionId });
                     }
                 default:
                     {
                         TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Pøihlášku se nepodaøilo vytvoøit z neznámého dùvodu.");
-                        return RedirectToPage();
+                        return RedirectToPage("Action", new { id = group.ActionId });
                     }
             }
             
