@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Users
@@ -28,10 +29,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
 
         [BindProperty]
         public EditInputModel Input { get; set; } = default!;
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
@@ -92,12 +89,12 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
             var result = await _userManager.UpdateAsync(user);
             if (result.Succeeded)
             {
-                SuccessMessage = "Uživatel byl aktualizován.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Uživatel byl aktualizován.");
                 return RedirectToPage("./Index");
             }
             else
             {
-                FailureMessage = "Při ukládání dat došlo k chybě.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Při ukládání dat došlo k chybě.");
                 return Page();
             }
         }

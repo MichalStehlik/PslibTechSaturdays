@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph.Models.ExternalConnectors;
 using Microsoft.Graph.Models;
 using System.Security.Claims;
+using PslibTechSaturdays.Helpers;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Enrollments
 {
@@ -23,12 +24,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Enrollments
         private readonly EnrollmentsService _storage;
         private readonly ILogger<CreateModel> _logger;
         private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
-
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
-
         public List<SelectListItem> ActiveGroups { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> ActiveUsers { get; set; } = new List<SelectListItem>();
 
@@ -77,52 +72,52 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Enrollments
             {
                 case CreationResult.Success:
                     {
-                        SuccessMessage = "Přihláška byla vytvořená.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Přihláška byla vytvořená.");
                         return RedirectToPage("./Index");
                     }
                 case CreationResult.FalseCurrentUser:
                     {
-                        FailureMessage = "Nemáte právo k založení přihlášky.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Nemáte právo vytvářet takovou přihlášku.");
                         return RedirectToPage("./Index");
                     }
                 case CreationResult.ExclusivityConflict:
                     {
-                        FailureMessage = "Uživatel má přihlášku v jiné skupině této akce.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Uživatel má přihlášku v jiné skupině.");
                         return RedirectToPage("./Index");
                     }
                 case CreationResult.UnknownUser:
                     {
-                        FailureMessage = "Uživatel neexistuje.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Uživatel neexistuje.");
                         return RedirectToPage("./Index");
                     }
                 case CreationResult.FullCapacity:
                     {
-                        FailureMessage = "Kapacita skupiny je již naplněná.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Kapacita skupiny již je naplněná.");
                         return RedirectToPage("./Index");
                     }
                 case CreationResult.ClosedGroup:
                     {
-                        FailureMessage = "Skupina je pro zápis uzavřená.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Skupina je uzavřená.");
                         return RedirectToPage("./Index");
                     }
                 case CreationResult.SQLError:
                     {
-                        FailureMessage = "Chyba SQL dotazu.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Chyba SQL dotazu.");
                         return RedirectToPage("./Index");
                     }
                 case CreationResult.ConditionUnsatisfied:
                     {
-                        FailureMessage = "Nejsou splněné podmínky zápisu.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Nejsou splněné podmínky zápisu.");
                         return RedirectToPage("./Index");
                     }
                 case CreationResult.EnrollmentDuplicity:
                     {
-                        FailureMessage = "Uživatel již ve skupině je.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Warning, "Uživatel už přihlášku má.");
                         return RedirectToPage("./Index");
                     }
                 default:
                     {
-                        FailureMessage = "Nespecifikovaná chyba.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Nespecifikovaná chyba při vytváření přihlášky.");
                         return Page();
                     }
             }

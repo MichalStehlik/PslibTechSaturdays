@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
@@ -54,9 +55,17 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
 
             if (group != null)
             {
-                Group = group;
-                _context.Groups.Remove(Group);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    Group = group;
+                    _context.Groups.Remove(Group);
+                    await _context.SaveChangesAsync();
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Skupina byla odstraněna.");
+                }
+                catch
+                {
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Při odstraňování skupiny došlo k chybě.");
+                }
             }
 
             return RedirectToPage("./Index");

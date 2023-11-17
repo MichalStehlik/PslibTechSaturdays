@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using PslibTechSaturdays.Data;
-using PslibTechSaturdays.Models;
+using PslibTechSaturdays.Helpers;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
 {
@@ -33,11 +28,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
 
         [BindProperty]
         public CreateInputModel Input { get; set; } = default!;
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
-
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
@@ -65,12 +55,12 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
             {
                 _context.Actions.Add(action);
                 await _context.SaveChangesAsync();
-                SuccessMessage = "Akce byla vytvořena";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Akce byla vytvořena.");
                 return RedirectToPage("./Index");
             }
             catch
             {
-                FailureMessage = "Při vytváření akce došlo k chybě";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Při vytváření akce došlo k chybě.");
                 return Page();
             }   
         }

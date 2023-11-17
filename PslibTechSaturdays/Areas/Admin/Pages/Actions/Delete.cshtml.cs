@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph.Models;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
@@ -54,9 +55,17 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
 
             if (action != null)
             {
-                Action = action;
-                _context.Actions.Remove(Action);
-                await _context.SaveChangesAsync();
+                try 
+                {
+                    Action = action;
+                    _context.Actions.Remove(Action);
+                    await _context.SaveChangesAsync();
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Akce byla odstraněna.");
+                } 
+                catch
+                {
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Akci se nepodařilo odstranit.");
+                }
             }
 
             return RedirectToPage("./Index");

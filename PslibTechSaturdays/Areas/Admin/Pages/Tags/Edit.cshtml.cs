@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Tags
@@ -53,9 +54,11 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Tags
             try
             {
                 await _context.SaveChangesAsync();
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Značka byla aktualizována.");
             }
             catch (DbUpdateConcurrencyException)
             {
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Při ukládání dat došlo k chybě.");
                 if (!TagExists(Tag.TagId))
                 {
                     return NotFound();

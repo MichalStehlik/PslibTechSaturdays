@@ -19,10 +19,6 @@ namespace PslibTechSaturdays.Pages
 
         public Group Group { get; set; }
 
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
         public async Task OnGetAsync(int id)
         {
             Group = await _context.Groups!.FirstOrDefaultAsync(g => g.GroupId == id);

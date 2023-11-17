@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Emails.PageModels;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 using PslibTechSaturdays.Services;
 using System.ComponentModel;
@@ -19,10 +20,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
         private readonly ILogger<DetailsModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RazorViewToStringRenderer _renderer;
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
 
         public MailModel( ApplicationDbContext context, ILogger<DetailsModel> logger, IEmailSender emailSender, RazorViewToStringRenderer renderer)
         {
@@ -64,11 +61,11 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
             try
             {
                 await _emailSender.SendEmailAsync(user.Email, Input.Subject, htmlBody);
-                SuccessMessage = "Zpráva byla odeslána";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Zpráva byla odeslána.");
             }
             catch
             {
-                SuccessMessage = "Pøi odesílání zprávy došlo k chybì.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Pøi odesílání zprávy došlo k chybì.");
             }
             return RedirectToPage("Index");
         }

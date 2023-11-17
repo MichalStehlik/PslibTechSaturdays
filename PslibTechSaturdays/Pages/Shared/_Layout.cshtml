@@ -73,14 +73,6 @@
     </header>
     <main class="flex-shrink-0 pb-3">
         <div class="container">
-            @if (TempData["SuccessMessage"] != null)
-            {
-                <div class="alert alert-success">@TempData["SuccessMessage"]</div>
-            }
-            @if (TempData["FailureMessage"] != null)
-            {
-                <div class="alert alert-danger">@TempData["FailureMessage"]</div>
-            }
             <partial name="_InfoBoxTempData" model="@Constants.Messages.COOKIE_ID" />
         </div>
         <div class="container">

@@ -7,6 +7,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
@@ -24,10 +25,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
 
         [BindProperty]
         public CreateInputModel Input { get; set; } = default!;
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
 
         public SelectList? Actions { get; set; }
 
@@ -65,9 +62,16 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
                 Created = DateTime.Now,
             };
 
-            _context.Groups.Add(group);
-            await _context.SaveChangesAsync();
-
+            try
+            {
+                _context.Groups.Add(group);
+                await _context.SaveChangesAsync();
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Skupina byla vytvořena.");
+            }
+            catch
+            {
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Při vytváření skupiny došlo k chybě.");
+            }
             return RedirectToPage("./Index");
         }
     }

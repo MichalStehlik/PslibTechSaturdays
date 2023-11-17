@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 using System.ComponentModel.DataAnnotations;
 
@@ -23,10 +24,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
 
         [BindProperty]
         public PasswordInputModel Input { get; set; } = default!;
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
         public async Task<IActionResult> OnGetAsync(Guid? id)
         {
             if (id == null || _context.Users == null)
@@ -59,12 +56,12 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
             var result = await _userManager.AddPasswordAsync(user,Input.Password);
             if (result.Succeeded)
             {
-                SuccessMessage = "Heslo bylo aktualizována.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Heslo bylo aktualizováno.");
                 return RedirectToPage("./Details", new { Id = Input.Id});
             }
             else
             {
-                FailureMessage = "Pøi ukládání hesla došlo k chybì.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Pøi ukládání hesla došlo k chybì.");
                 return Page();
             }
         }

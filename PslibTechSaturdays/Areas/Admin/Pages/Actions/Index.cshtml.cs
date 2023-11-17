@@ -9,10 +9,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
     public class IndexModel : PageModel
     {
         private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
         public IndexModel(PslibTechSaturdays.Data.ApplicationDbContext context)
         {
             _context = context;

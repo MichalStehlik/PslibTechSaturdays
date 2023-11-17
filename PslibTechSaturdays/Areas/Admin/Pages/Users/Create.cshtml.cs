@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Users
@@ -32,10 +27,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
         }
         [BindProperty]
         public CreateInputModel Input { get; set; } = default!;
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
@@ -72,12 +63,12 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
                 {
                     await _userManager.AddToRoleAsync(user, Constants.Security.LECTOR_ROLE);
                 }
-                SuccessMessage = "Uživatel byl vytvořen";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Uživatel byl vytvořen.");
                 return RedirectToPage("./Index");
             }
             else
             {
-                FailureMessage = "Při vytváření uživatele došlo k chybě.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Uživatele se nepodařilo vytvořit.");
                 return Page();
             }
         }

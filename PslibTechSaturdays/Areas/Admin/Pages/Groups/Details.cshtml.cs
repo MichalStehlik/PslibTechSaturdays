@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 using System.ComponentModel.DataAnnotations;
 
@@ -11,10 +12,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
     public class DetailsModel : PageModel
     {
         private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
 
         public DetailsModel(PslibTechSaturdays.Data.ApplicationDbContext context)
         {
@@ -78,37 +75,37 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
         {
                 if (InputLector.UserId == null)
                 {
-                    FailureMessage = "Žádný lektor nebyl vybrán.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Žádný lektor nebyl vybrán.");
                     return RedirectToPage("Details", new { id = InputLector.GroupId });
                 }
                 var grp = _context.Groups.FirstOrDefault(g => g.GroupId == InputLector.GroupId);
                 if (grp == null) 
                 {
-                    FailureMessage = "Taková skupina neexistuje.";
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Taková skupina neexistuje.");
                     return RedirectToPage("Details", new { id = InputLector.GroupId });
                 }
                 var usr = _context.Users.FirstOrDefault(u => u.Id == Guid.Parse(InputLector.UserId));
                 if (usr == null)
                 {
-                    FailureMessage = "Takový uživatel neexistuje.";
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Takový uživatel neexistuje.");
                     return RedirectToPage("Details", new { id = InputLector.GroupId });
                 }
                 _context.Entry(grp).Collection(p => p.Lectors).Load();
                 if (grp!.Lectors!.Contains(usr))
                 {
-                    FailureMessage = "Lektor už této skupině je přiřazen.";
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Lektor už v této skupině je.");
                     return RedirectToPage("Details", new { id = InputLector.GroupId });
                 }
                 grp!.Lectors!.Add(usr);
                 try
                 {
                     await _context.SaveChangesAsync();
-                    SuccessMessage = "Lektor byl přidán.";
-                }
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Lektor byl přidán.");
+            }
                 catch
                 {
-                    FailureMessage = "Přidání lektora se nepodařilo.";
-                }        
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Přidání lektora se nepodařilo.");
+            }        
                 return RedirectToPage("Details", new { id = InputLector.GroupId });
         }
 
@@ -116,36 +113,36 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
         {
                 if (InputTag.TagId == null)
                 {
-                    FailureMessage = "Žádná značka nebyla vybrána.";
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Žádná značka nebyla vybraná.");
                     return RedirectToPage("Details", new { id = InputTag.GroupId });
                 }
                 var grp = _context.Groups.FirstOrDefault(g => g.GroupId == InputTag.GroupId);
                 if (grp == null)
                 {
-                    FailureMessage = "Taková skupina neexistuje.";
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Skupina neexistuje.");
                     return RedirectToPage("Details", new { id = InputTag.GroupId });
                 }
                 var tag = _context.Tags.FirstOrDefault(t => t.TagId == InputTag.TagId);
                 if (tag == null)
                 {
-                    FailureMessage = "Taková značka neexistuje.";
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Značka neexistuje.");
                     return RedirectToPage("Details", new { id = InputTag.GroupId });
                 }
                 _context.Entry(grp).Collection(p => p.Tags).Load();
                 if (grp!.Tags!.Contains(tag))
                 {
-                    FailureMessage = "Značka už této skupině je přiřazena.";
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Značka už ke skupině patří.");
                     return RedirectToPage("Details", new { id = InputTag.GroupId });
                 }
                 grp!.Tags!.Add(tag);
                 try
                 {
                     await _context.SaveChangesAsync();
-                    SuccessMessage = "Značka byla přidána.";
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Značka byla přiřazena úspěšně.");
                 }
                 catch
                 {
-                    FailureMessage = "Přidání značky se nepodařilo.";
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Přiřazení značky se nepodařilo.");
                 }
                 return RedirectToPage("Details", new { id = InputTag.GroupId });
         }
@@ -155,13 +152,13 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             var grp = _context.Groups.FirstOrDefault(g => g.GroupId == groupId);
             if (grp == null)
             {
-                FailureMessage = "Taková skupina neexistuje.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Taková skupina neexistuje.");
                 return RedirectToPage("Index");
             }
             var usr = _context.Users.FirstOrDefault(u => u.Id == userId);
             if (usr == null)
             {
-                FailureMessage = "Takový uživatel neexistuje.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Takový uživatel neexistuje.");
                 return RedirectToPage("Details", new { id = groupId });
             }
             _context.Entry(grp).Collection(p => p.Lectors).Load();
@@ -169,11 +166,11 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             try
             {
                 await _context.SaveChangesAsync();
-                SuccessMessage = "Lektor byl odebrán.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Lektor byl odebrán.");
             }
             catch
             {
-                FailureMessage = "Odebrání lektora se nepodařilo.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Odebrání lektora se nepodařilo.");
             }
             return RedirectToPage("Details", new { id = groupId });
         }
@@ -183,13 +180,13 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             var grp = _context.Groups.FirstOrDefault(g => g.GroupId == groupId);
             if (grp == null)
             {
-                FailureMessage = "Taková skupina neexistuje.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Skupina neexistuje.");
                 return RedirectToPage("Index");
             }
             var tag = _context.Tags.FirstOrDefault(t => t.TagId == tagId);
             if (tag == null)
             {
-                FailureMessage = "Taková značka neexistuje.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Značka neexistuje.");
                 return RedirectToPage("Details", new { id = groupId });
             }
             _context.Entry(grp).Collection(p => p.Tags).Load();
@@ -197,11 +194,11 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             try
             {
                 await _context.SaveChangesAsync();
-                SuccessMessage = "Značka byla odebrána.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Značka byla odebrána.");
             }
             catch
             {
-                FailureMessage = "Odebrání značky se nepodařilo.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Odebrání značky se nepodařilo.");
             }
             return RedirectToPage("Details", new { id = groupId });
         }

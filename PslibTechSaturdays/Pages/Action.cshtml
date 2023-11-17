@@ -15,7 +15,15 @@
     <p>Trvání: <strong>@Model.Action.Start - @Model.Action.End</strong></p>
     @if(Model.Action.ExclusiveEnrollment)
     {
-        <div class="alert alert-info">V této akci se lze zapsat jen do jedné skupiny.</div>
+        <div class="alert alert-warning">V této akci se lze zapsat jen do jedné skupiny.</div>
+    }
+    @if (@Model.Enrollments.Count > 1)
+    {
+        <div class="alert alert-info">Máte zde @Model.Enrollments.Count <a asp-area="My" asp-page="/Enrollments" class="alert-link">platných přihlášek</a>.</div>
+    }
+    else if (@Model.Enrollments.Count == 1)
+    {
+        <div class="alert alert-info">Zde již máte <a asp-area="My" asp-page="/Enrollments" class="alert-link">platnou přihlášku</a>.</div>
     }
 </section>
 <h2>Skupiny</h2>

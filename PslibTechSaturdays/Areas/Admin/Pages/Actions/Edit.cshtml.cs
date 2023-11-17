@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
+using PslibTechSaturdays.Helpers;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
 {
@@ -27,10 +28,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
 
         [BindProperty]
         public EditInputModel Input { get; set; } = default!;
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -88,7 +85,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
             try
             {
                 await _context.SaveChangesAsync();
-                SuccessMessage = "Akce byla aktualizována";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Akce byla aktializována.");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -98,7 +95,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
                 }
                 else
                 {
-                    FailureMessage = "Aktualizace akce se nepodařila.";
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Aktualizace akce se nepodařila.");
                 } 
             }
             return RedirectToPage("./Index");

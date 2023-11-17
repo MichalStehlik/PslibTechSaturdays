@@ -1,24 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
-using PslibTechSaturdays.Data;
-using PslibTechSaturdays.Models;
+using PslibTechSaturdays.Helpers;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
 {
     public class DetailsModel : PageModel
     {
         private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
 
         public DetailsModel(PslibTechSaturdays.Data.ApplicationDbContext context)
         {
@@ -67,10 +56,10 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
             try
             {
                 await _context.SaveChangesAsync();
-                SuccessMessage = "Akce byla změněna.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Akce byla změněna.");
             }
             catch {
-                FailureMessage = "Změna stavu neproběhla.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Změna stavu neproběhla.");
             }
             return RedirectToPage("Details", new { Id = action.ActionId });
         }
@@ -95,11 +84,11 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
             try
             {
                 await _context.SaveChangesAsync();
-                SuccessMessage = "Akce byla změněna.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Akce byla změněna.");
             }
             catch
             {
-                FailureMessage = "Změna stavu neproběhla.";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Změna stavu neproběhla.");
             }
             return RedirectToPage("Details", new { Id = action.ActionId });
         }

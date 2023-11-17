@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 using PslibTechSaturdays.Services;
 
@@ -16,11 +17,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Enrollments
     {
         private readonly EnrollmentsService _storage;
         private readonly ILogger<IndexModel> _logger;
-
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
 
         public DetailsModel(EnrollmentsService storage, ILogger<IndexModel> logger)
         {
@@ -84,7 +80,15 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Enrollments
             }
             else
             {
-                await _storage.SetPresenceAsync((int)id, state);
+                if (await _storage.SetPresenceAsync((int)id, state))
+                {
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Prezence byla uložená.");
+                }
+                else 
+                {
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Při ukládání prezence došlo k chybě.");
+                }
+                
                 Enrollment = enrollment;
             }
             return Page();

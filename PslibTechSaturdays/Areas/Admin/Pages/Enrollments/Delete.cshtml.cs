@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 using PslibTechSaturdays.Services;
 
@@ -21,11 +22,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Enrollments
             _storage = storage;
             _logger = logger;
         }
-
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
 
         [BindProperty]
         public Enrollment Enrollment { get; set; } = default!;
@@ -63,11 +59,11 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Enrollments
                 try
                 {
                     await _storage.RemoveAsync((int)id);
-                    SuccessMessage = "Přihláška byla odstraněna.";
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Přihláška byla odstraněna.");
                 }
                 catch
                 {
-                    FailureMessage = "Přihlášku se nepodařilo odstranit.";
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Přihlášku se nepodařilo odstranit.");
                 }
                 
             }

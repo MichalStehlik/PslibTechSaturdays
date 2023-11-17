@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 using PslibTechSaturdays.Services;
 using PslibTechSaturdays.ViewModels;
@@ -14,11 +15,6 @@ namespace PslibTechSaturdays.Areas.My.Pages
         private readonly EnrollmentsService _storage;
         private readonly ILogger<EnrollmentsModel> _logger;
         private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
-
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
 
         public EnrollmentsModel(EnrollmentsService storage, ILogger<EnrollmentsModel> logger, ApplicationDbContext context)
         {
@@ -59,18 +55,18 @@ namespace PslibTechSaturdays.Areas.My.Pages
             _context.Entry(enrollment.Group)!.Reference(g => g.Action).Load();
             if (enrollment.Group!.Action!.Start < DateTime.Now)
             {
-                FailureMessage = "Pøihláška už nelze zrušit. Akce již probíhá";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Pøihlášku již nelze zrušit.");
             }
             else
             {
                 bool done = await _storage.CancelAsync(id, Guid.Parse(userId));
                 if (done)
                 {
-                    SuccessMessage = "Pøihláška byla zrušena.";
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Pøihláška byla zrušená.");
                 }
                 else
                 {
-                    FailureMessage = "Pøi rušení pøihlášky došlo k chybì.";
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Pøi rušení pøihlášky došlo k chybì.");
                 }
             }    
             return RedirectToPage("Enrollments");

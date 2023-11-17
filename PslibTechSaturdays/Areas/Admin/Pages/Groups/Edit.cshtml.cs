@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
 using System.ComponentModel.DataAnnotations;
+using PslibTechSaturdays.Helpers;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
 {
@@ -25,10 +26,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             _context = context;
             _logger = logger;
         }
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
         public SelectList? Actions { get; set; }
         [BindProperty]
         public EditInputModel Input { get; set; } = default!;
@@ -95,7 +92,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             try
             {
                 await _context.SaveChangesAsync();
-                SuccessMessage = "Skupina byla aktualizována";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Skupina byla aktualizována.");
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -105,7 +102,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
                 }
                 else
                 {
-                    FailureMessage = "Aktualizace skupiny se nepodařila.";
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Aktualizace skupiny se nepodařila.");
                 }
             }
 

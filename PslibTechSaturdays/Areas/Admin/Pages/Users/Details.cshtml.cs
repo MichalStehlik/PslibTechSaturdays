@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Graph.Models;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Users
@@ -18,11 +19,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
         private readonly RoleManager<ApplicationRole> _roleManager;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<DetailsModel> _logger;
-
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
 
         public DetailsModel(ApplicationDbContext context, RoleManager<ApplicationRole> roleManager, UserManager<ApplicationUser> userManager, ILogger<DetailsModel> logger)
         {
@@ -83,11 +79,11 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
             var result = await _userManager.AddToRoleAsync(applicationuser,name);
             if (result.Succeeded)
             {
-                SuccessMessage = "Uživateli byla přiřazena nová role";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Uživateli byla přiřazena role.");
             }
             else
             {
-                FailureMessage = "Přidání role se nepodařilo";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Přiřazení role se nepodařilo.");
             }
             return RedirectToPage("Details", new { Id = applicationuser.Id });
         }
@@ -114,11 +110,11 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
             var result = await _userManager.RemoveFromRoleAsync(applicationuser, name);
             if (result.Succeeded)
             {
-                SuccessMessage = "Uživateli byla odebrána role";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Uživateli byla odebrána role.");
             }
             else
             {
-                FailureMessage = "Odebrání role se nepodařilo";
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Odebrání role se nepodařilo.");
             }
             return RedirectToPage("Details", new { Id = applicationuser.Id });
         }

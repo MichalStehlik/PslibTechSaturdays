@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Certificates
@@ -55,9 +56,17 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Certificates
 
             if (certificate != null)
             {
-                Certificate = certificate;
-                _context.Certificates.Remove(Certificate);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    Certificate = certificate;
+                    _context.Certificates.Remove(Certificate);
+                    await _context.SaveChangesAsync();
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Certifikát byl odstraněn.");
+                }
+                catch
+                {
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Certifikát se nepodařilo odstranit.");
+                }
             }
 
             return RedirectToPage("./Index");

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 using PslibTechSaturdays.Services;
 using PslibTechSaturdays.ViewModels;
@@ -23,13 +24,9 @@ namespace PslibTechSaturdays.Pages
             _storage = storage;
         }
 
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
-
         public List<GroupEnrollmentVM> Groups { get; set; }
         public Models.Action Action { get; set; }
+        public List<Enrollment> Enrollments { get; set; } = new List<Enrollment>();
         public async Task<IActionResult> OnGetAsync(int id)
         {
             var user = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault();
@@ -57,6 +54,16 @@ namespace PslibTechSaturdays.Pages
                     ShortenedDescription = !String.IsNullOrEmpty(x.Description) ? Regex.Replace(x.Description, @"<[^>]+>|", "").Trim() : null,
                 })
                 .OrderBy(x => x.Name).ToListAsync();
+            if (user != null)
+            {
+                Enrollments = await _context.Enrollments
+                    .Include(x => x.Group)
+                    .Where(x => 
+                    x.ApplicationUserId == Guid.Parse(user!.Value)
+                    && x.Cancelled == null
+                    && x.Group.ActionId == id
+                    ).ToListAsync() ?? new List<Enrollment>();
+            }
             return Page();
         }
 
@@ -71,57 +78,57 @@ namespace PslibTechSaturdays.Pages
             switch (result) {
                 case CreationResult.Success:
                     {
-                        SuccessMessage = "Pøihláška byla vytvoøená.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Pøihláška byla vytvoøena.");
                         return RedirectToPage("Enrollments", new { Area = "My" });
                     }
                 case CreationResult.UnknownUser:
                     {
-                        FailureMessage = "Neznámý uživatel.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Neznámý uživatel.");
                         return RedirectToPage();
                     }
                 case CreationResult.UnknownGroup:
                     {
-                        FailureMessage = "Neznámá skupina.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Neznámá skupina.");
                         return RedirectToPage();
                     }
                 case CreationResult.ExclusivityConflict:
                     {
-                        FailureMessage = "Uživatel nemùže být ve dvou skupinách zároveò.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Uživatel nemùže být ve více skupinách.");
                         return RedirectToPage();
                     }
                 case CreationResult.ClosedGroup:
                     {
-                        FailureMessage = "Skupina je uzavøená pro zápis.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Skupina je uzavøená pro zápis.");
                         return RedirectToPage();
                     }
                 case CreationResult.FullCapacity:
                     {
-                        FailureMessage = "Skupina je již naplnìná.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Skupina je již naplnìná.");
                         return RedirectToPage();
                     }
                 case CreationResult.ConditionUnsatisfied:
                     {
-                        FailureMessage = "Nebyla splnìna nutná podmínka.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Nebyla splnìna potøebná podmínka.");
                         return RedirectToPage();
                     }
                 case CreationResult.SQLError:
                     {
-                        FailureMessage = "Chyba pøi zápisu do databáze.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Chyba pøi zápisu do databáze.");
                         return RedirectToPage();
                     }
                 case CreationResult.FalseCurrentUser:
                     {
-                        FailureMessage = "Chyba pøi identifikování pøihlášeného uživatele.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Pøihlášený uživatel nemá platnou identifikaci.");
                         return RedirectToPage();
                     }
                 case CreationResult.EnrollmentDuplicity:
                     {
-                        FailureMessage = "tato pøihláška již existuje.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Pøihláška již existuje.");
                         return RedirectToPage();
                     }
                 default:
                     {
-                        FailureMessage = "Vytvoøení pøihlášky se nepodaøilo z neznámého dùvodu.";
+                        TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Pøihlášku se nepodaøilo vytvoøit z neznámého dùvodu.");
                         return RedirectToPage();
                     }
             }

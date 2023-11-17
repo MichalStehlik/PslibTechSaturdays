@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Tags
@@ -52,9 +53,17 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Tags
 
             if (tag != null)
             {
-                Tag = tag;
-                _context.Tags.Remove(Tag);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    Tag = tag;
+                    _context.Tags.Remove(Tag);
+                    await _context.SaveChangesAsync();
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Značka byla odstraněna.");
+                }
+                catch
+                {
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Odstranění značky se nepodařilo.");
+                }
             }
 
             return RedirectToPage("./Index");

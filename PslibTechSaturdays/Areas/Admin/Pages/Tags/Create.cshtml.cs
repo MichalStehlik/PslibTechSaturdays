@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Tags
@@ -36,10 +37,16 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Tags
             {
                 return Page();
             }
-
-            _context.Tags.Add(Tag);
-            await _context.SaveChangesAsync();
-
+          try
+            {
+                _context.Tags.Add(Tag);
+                await _context.SaveChangesAsync();
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Značka byla vytvořena.");
+            }
+            catch
+            {
+                TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Vytvoření značky se nepodařilo.");
+            }
             return RedirectToPage("./Index");
         }
     }

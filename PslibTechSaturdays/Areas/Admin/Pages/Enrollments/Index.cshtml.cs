@@ -29,11 +29,6 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Enrollments
             _context = context;
         }
 
-        [TempData]
-        public string? SuccessMessage { get; set; }
-        [TempData]
-        public string? FailureMessage { get; set; }
-
         public PaginatedList<EnrollmentListVM> Enrollments { get; set; } = default!;
         public List<SelectListItem> Groups { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> Actions { get; set; } = new List<SelectListItem>();

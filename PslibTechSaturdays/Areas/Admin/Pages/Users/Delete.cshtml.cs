@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
+using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Users
@@ -53,8 +50,16 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Users
             if (applicationuser != null)
             {
                 ApplicationUser = applicationuser;
-                _context.Users.Remove(ApplicationUser);
-                await _context.SaveChangesAsync();
+                try
+                {
+                    _context.Users.Remove(ApplicationUser);
+                    await _context.SaveChangesAsync();
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Uživatel byl odstraněn.");
+                }
+                catch
+                {
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Uživatele se nepodařilo odstranit.");
+                }
             }
 
             return RedirectToPage("./Index");
