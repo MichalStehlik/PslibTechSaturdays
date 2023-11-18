@@ -13,22 +13,22 @@ else
 {
     foreach(var gr in Model.Groups)
     {
-        <div class="card">
+        <div class="card mb-2">
             <div class="card-body">
                 <h2 class="card-title">@gr.Name</h2>
                 <div class="card-text">@Html.Raw(gr.Description)</div>
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item">Minimální ročník: <strong>@gr.MinGrade</strong></li>
-                    <li class="list-group-item">Kapacita: <strong>@gr.Capacity</strong></li>
-                    <li class="list-group-item">Akce: <strong>@gr.Action!.Name</strong></li>
-                    <li class="list-group-item">Začátek: <strong>@gr.Action!.Start</strong></li>
-                    <li class="list-group-item">Konec: <strong>@gr.Action!.End</strong></li>
-                    <li class="list-group-item">Odemčení: <strong>@gr.PlannedOpening</strong></li>
-                    <li class="list-group-item">Založení: <strong>@gr.Created</strong></li>
-                </ul>
             </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Minimální ročník: <strong>@gr.MinGrade</strong></li>
+                <li class="list-group-item">Kapacita: <strong>@gr.Capacity</strong></li>
+                <li class="list-group-item">Akce: <strong>@gr.Action!.Name</strong></li>
+                <li class="list-group-item">Začátek: <strong>@gr.Action!.Start</strong></li>
+                <li class="list-group-item">Konec: <strong>@gr.Action!.End</strong></li>
+                <li class="list-group-item">Plánované odemčení: <strong>@gr.PlannedOpening</strong></li>
+                <li class="list-group-item">Založení: <strong>@gr.Created</strong></li>
+            </ul>
             <div class="card-footer">
-                <a class="btn btn-primary">Detail</a>
+                <a class="btn btn-primary" asp-page="Details" asp-route-id="@gr.GroupId">Detail</a>
             </div>
         </div>
     }
