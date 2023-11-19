@@ -1,0 +1,32 @@
+﻿@page "{id}"
+@model PslibTechSaturdays.Areas.Lectoring.Pages.Groups.DetailsModel
+@{
+    ViewData["Title"] = "Podrobnosti kurzu";
+}
+<div>
+    <a class="btn btn-secondary" asp-page="Index">Zpět na seznam</a>
+</div>
+<h1>@Model.Group.Name</h1>
+<div>
+    @Html.Raw(Model.Group.Description)
+</div>
+<div class="row">
+    <div class="col-6">
+        <div class="card mt-2">
+            <div class="card-header">
+                <h2>Akce</h2>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Název: <strong>@Model.Group.Action.Name</strong></li>
+            </ul>
+        </div>
+        <div class="card mt-2">
+            <div class="card-header">
+                <h2>Skupina</h2>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">Kapacita: <strong>@Model.Group.Capacity</strong></li>
+            </ul>
+        </div>
+    </div>
+</div>
