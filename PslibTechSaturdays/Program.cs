@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using PslibTechSaturdays.Constants;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
@@ -63,6 +64,12 @@ builder.Services.AddRazorPages(options => {
     //options.Conventions.AddAreaPageRoute("Admin", "/Users", "ManageUsers");
 });
 
+builder.Services.Configure<CookiePolicyOptions>(options =>
+{
+    options.CheckConsentNeeded = context => true;
+    options.MinimumSameSitePolicy = SameSiteMode.None;
+});
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = $"/Identity/Account/Login";
@@ -92,9 +99,8 @@ else
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
-
 app.UseRouting();
-
+app.UseCookiePolicy();
 app.UseAuthentication();
 app.UseAuthorization();
 
