@@ -61,7 +61,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Certificates
                 await _context.SaveChangesAsync();
                 TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Certifikát byl vytvořen.");
             }
-            catch(Exception ex) 
+            catch(Exception) 
             {
                 TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Vytvoření certifikátu nebylo úspěšné.");
             }

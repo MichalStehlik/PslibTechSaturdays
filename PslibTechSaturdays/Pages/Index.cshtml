@@ -7,11 +7,11 @@
 }
 <partial name="_InfoBoxTempData" model="key" />
 
-<div class="row flex-lg-row-reverse align-items-center g-5 py-5">
-    <div class="col-10 col-sm-8 col-lg-6">
-        <img src="~/image/abstract1.jpg" class="d-block mx-lg-auto img-fluid" alt="Student" width="500" height="500" loading="lazy">
+<div class="row flex-lg-row-reverse align-items-center g-5">
+    <div class="col-12 col-lg-6 d-flex justify-content-md-center align-items-md-center">
+        <img src="~/image/abstract1.jpg" class="d-block m-auto mx-lg-auto img-fluid" alt="Soboty s technikou" width="500" height="500" loading="lazy">
     </div>
-    <div class="col-lg-6">
+    <div class="col-12 col-lg-6">
         <h1 class="display-5 fw-bold lh-1 mb-3">@Model.AppTitle</h1>
         <p class="lead">Soboty s technikou jsou série akcí pořádaných <a href="https://www.pslib.cz">Střední průmyslovou školou a Vyšší odbornou školou v Liberci</a> pro zájemce o strojírenství, elektrotechniku, informační a komunikační technologie, textilní technologie nebo matematiku s fyzikou.</p>
         <p>Jsou zaměřené zejména na potenciální studenty průmyslovky z 8. a 9. tříd ZŠ. Pro žáky z nižších ročníků organizujeme kurzy v rámci <a href="https://stansevedcem.tul.cz/nabidka-aktivit-pro-mladez/detska-univerzita">Dětské univerzity</a>.</p>
@@ -20,7 +20,7 @@
         </div>
     </div>
 </div>
-<section>
+<section class="mt-4">
     <h1>Dostupné akce</h1>
     @if (Model.PublishedActions.Count() > 0)
     {

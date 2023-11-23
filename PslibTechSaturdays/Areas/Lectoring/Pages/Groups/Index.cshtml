@@ -12,24 +12,28 @@
 }
 else
 {
-    foreach(var gr in Model.Groups)
+    <div class="row">
+    @foreach(var gr in Model.Groups)
     {
-        <div class="card mb-2">
-            <div class="card-body">
-                <h2 class="card-title">@gr.Name</h2>
-            </div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">Minimální ročník: <strong>@Html.DisplayFor(x => gr.MinGrade)</strong></li>
-                <li class="list-group-item">Kapacita: <strong>@gr.Capacity</strong></li>
-                <li class="list-group-item">Akce: <strong>@gr.Action!.Name</strong></li>
-                <li class="list-group-item">Začátek: <strong>@gr.Action!.Start</strong></li>
-                <li class="list-group-item">Konec: <strong>@gr.Action!.End</strong></li>
-                <li class="list-group-item">Plánované odemčení: <strong>@gr.PlannedOpening</strong></li>
-                <li class="list-group-item">Založení: <strong>@gr.Created</strong></li>
-            </ul>
-            <div class="card-footer">
-                <a class="btn btn-primary" asp-page="Details" asp-route-id="@gr.GroupId">Detail</a>
+        <div class="col-12 col-md-6">
+            <div class="card mb-2">
+                <div class="card-body">
+                    <h2 class="card-title">@gr.Name</h2>
+                </div>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item">Minimální ročník: <strong>@Html.DisplayFor(x => gr.MinGrade)</strong></li>
+                    <li class="list-group-item">Kapacita: <strong>@gr.Capacity</strong></li>
+                    <li class="list-group-item">Akce: <strong>@gr.Action!.Name</strong></li>
+                    <li class="list-group-item">Začátek: <strong>@gr.Action!.Start</strong></li>
+                    <li class="list-group-item">Konec: <strong>@gr.Action!.End</strong></li>
+                    <li class="list-group-item">Plánované odemčení: <strong>@gr.PlannedOpening</strong></li>
+                    <li class="list-group-item">Založení: <strong>@gr.Created</strong></li>
+                </ul>
+                <div class="card-footer">
+                    <a class="btn btn-secondary" asp-page="Details" asp-route-id="@gr.GroupId">Detail</a>
+                </div>
             </div>
         </div>
     }
+    </div>
 }

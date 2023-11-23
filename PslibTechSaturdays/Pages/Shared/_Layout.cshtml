@@ -20,11 +20,12 @@
     <meta name="robots" content="index, follow" />
     <meta name="description" content="Tradičně sobotní akce pro zájemce o studium na Střední průmyslové škole v Liberci v oborech strojírenství, elektrotechnika, informační technologie, technické lyceum a textilnictví">
     <meta name="keywords" content="Střední průmyslová škola, Liberec, strojírenství, elektrotechnika, informační technologie, textil, nabídka oborů na SPŠ Liberec, přihlášky na Střední průmyslovou školu, obory na SPŠ Liberec, studium na střední škole v Liberci, studium, sobota, technika">
+    <meta name="google-site-verification" content="@conf["SEO:SearchConsoleVerificationCode"]" />
 </head>
 <body class="d-flex flex-column h-100">
     <partial name="_CookieConsentPartial" />
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3 fixed-top">
+        <nav class="navbar navbar-expand-md navbar-toggleable-md navbar-light bg-white border-bottom box-shadow mb-3 fixed-top">
             <div class="container">
                 <a class="navbar-brand d-inline-flex align-items-center gap-2" asp-area="" asp-page="/Index">
                     <img src="~/logo/pslib_shape.svg" height="24" class="d-inline-block align-top" alt="Logo">
@@ -34,7 +35,7 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-md-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         @if (SignInManager.IsSignedIn(User))
                         {
@@ -81,19 +82,21 @@
             @RenderBody()
         </div>  
     </main>
-
+    @{
+        var FooterLinksSection = conf.GetSection("FooterLinks").Get<List<LinkPair>>();
+    }
     <footer class="bg-light text-dark text-center py-3 mt-auto">
         <div class="container">
-            <p>&copy; 2023 @conf["Application:Name"] - Střední průmyslová škola v Liberci</p>
+            <p>&copy; 2024 @conf["Application:Name"] - Střední průmyslová škola v Liberci</p>
             <div class="row">
-                <div class="col">
-                    <a href="https://www.pslib.cz/">SPŠ a VOŠ Liberec</a>
-                </div>
-                <div class="col">
-                    <a href="https://pslib.cz/pro-uchazece/prijimaci-zkousky/id:26973/prijimaci-rizeni-pro-skolni-rok-2023-2024">Přijímací řízení</a>
-                </div>
-                <div class="col">
-                    <a href="https://pslib.cz/kontakty">Kontakty</a>
+                @foreach(var link in FooterLinksSection)
+                {
+                    <div class="col-12 col-md-3">
+                        <a href="@link.Link">@link.Text</a>
+                    </div>
+                }
+                <div class="col-12 col-md-3">
+                    <a asp-page="/Privacy">Ochrana osobních údajů</a>
                 </div>
             </div>
         </div>

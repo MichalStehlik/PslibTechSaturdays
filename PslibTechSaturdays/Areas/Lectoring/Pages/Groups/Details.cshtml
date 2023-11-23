@@ -11,22 +11,83 @@
     @Html.Raw(Model.Group.Description)
 </div>
 <div class="row">
-    <div class="col-6">
+    <div class="col-12 col-md-6">
         <div class="card mt-2">
             <div class="card-header">
                 <h2>Akce</h2>
             </div>
             <ul class="list-group list-group-flush">
-                <li class="list-group-item">Název: <strong>@Model.Group.Action.Name</strong></li>
+                <li class="list-group-item">Název: <strong>@Model.Group.Action!.Name</strong></li>
+                <li class="list-group-item">Začátek: <strong>@Model.Group.Action.Start</strong></li>
+                <li class="list-group-item">Konec: <strong>@Model.Group.Action.End</strong></li>
+                <li class="list-group-item">Zveřejněná: <strong>@(Model.Group.Action.Published ? "Ano" : "Ne")</strong></li>
+                <li class="list-group-item">Lze s ní pracovat: <strong>@(Model.Group.Action.Active ? "Ano" : "Ne")</strong></li>
             </ul>
         </div>
+    </div>
+    <div class="col-12 col-md-6">
         <div class="card mt-2">
             <div class="card-header">
                 <h2>Skupina</h2>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">Kapacita: <strong>@Model.Group.Capacity</strong></li>
+                <li class="list-group-item">Počet přihlášek: <strong>@Model.Group.Enrollments!.Count</strong></li>
+                <li class="list-group-item">Plánované otevření: <strong>@Model.Group.PlannedOpening</strong></li>
+                <li class="list-group-item">Otevřená: <strong>@Model.Group.OpenedAt</strong></li>
+                <li class="list-group-item">Uzavřená: <strong>@Model.Group.ClosedAt</strong></li>
             </ul>
         </div>
     </div>
 </div>
+<div class="row mt-3">
+    <div class="col">
+        <h1>Účastníci</h1>
+        @if (Model.Enrollments.Count() == 0)
+        {
+            <div class="alert alert-info">Skupina nemá žádné účastníky.</div>
+        }
+        else
+        {
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Příjmení</th>
+                        <th>Jméno</th>
+                        <th>Třída</th>
+                        <th>Přihlášen</th>
+                        <th>Prezence</th>
+                        <th>Akce</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var en in Model.Enrollments)
+                    {
+                        <tr>
+                            <td>@en.User.LastName</td>
+                            <td>@en.User.FirstName</td>
+                            <td>@Html.DisplayFor(x => en.User.Grade)</td>
+                            <td>@en.Created</td>
+                            <td>@Html.DisplayFor(x => en.Present)</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a class="btn btn-sm btn-warning" asp-page-handler="Cancel" asp-route-id="@en.EnrollmentId">Vyhodit</a>
+                                    <div class="dropdown">
+                                        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownPresent" data-bs-toggle="dropdown" aria-expanded="false">
+                                            Prezence
+                                        </button> <ul class="dropdown-menu" aria-labelledby="dropdownPresent">
+                                            <li><a class="dropdown-item" asp-page-handler="Presence" asp-route-id="@en.EnrollmentId" asp-route-presence="@Presence.Present">Přítomen</a></li>
+                                            <li><a class="dropdown-item" asp-page-handler="Presence" asp-route-id="@en.EnrollmentId" asp-route-presence="@Presence.Absent">Nepřítomen</a></li>
+                                            <li><a class="dropdown-item" asp-page-handler="Presence" asp-route-id="@en.EnrollmentId" asp-route-presence="@Presence.Unknown">Neznámo</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+</div>
+

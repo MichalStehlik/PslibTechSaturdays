@@ -8,16 +8,14 @@ namespace PslibTechSaturdays.Services
     {
         private readonly ILogger<PeriodicTasksService> _logger;
         private readonly PeriodicTasksOptions _options;
-        private readonly ApplicationDbContext _context;
         public IServiceProvider Services { get; }
         private Timer? _timer = null;
 
-        public PeriodicTasksService(IServiceProvider services, ILogger<PeriodicTasksService> logger, IOptions<PeriodicTasksOptions> options/*, ApplicationDbContext context*/)
+        public PeriodicTasksService(IServiceProvider services, ILogger<PeriodicTasksService> logger, IOptions<PeriodicTasksOptions> options)
         {
             Services = services;
             _logger = logger;
             _options = options.Value;
-            //_context = context;
         }
 
         public override Task StartAsync(CancellationToken stoppingToken)
