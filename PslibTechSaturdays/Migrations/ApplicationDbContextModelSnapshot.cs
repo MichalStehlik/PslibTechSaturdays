@@ -213,7 +213,7 @@ namespace PslibTechSaturdays.Migrations
                         {
                             ActionId = 1,
                             Active = true,
-                            Created = new DateTime(2023, 10, 21, 21, 9, 0, 65, DateTimeKind.Local).AddTicks(3329),
+                            Created = new DateTime(2023, 11, 24, 19, 39, 8, 816, DateTimeKind.Local).AddTicks(8499),
                             CreatedById = new Guid("11111111-1111-1111-1111-111111111111"),
                             Description = "Tato akce slouží k testovacím účelům.",
                             End = new DateTime(2024, 10, 10, 10, 30, 0, 0, DateTimeKind.Unspecified),
@@ -371,8 +371,8 @@ namespace PslibTechSaturdays.Migrations
                             AccessFailedCount = 0,
                             Active = true,
                             Aspirant = false,
-                            ConcurrencyStamp = "2a1fdc8c-7153-4b84-b29b-bd08675b4b90",
-                            Created = new DateTime(2023, 10, 21, 21, 9, 0, 28, DateTimeKind.Local).AddTicks(7578),
+                            ConcurrencyStamp = "5113675a-feed-487e-a724-f28f039bc1d3",
+                            Created = new DateTime(2023, 11, 24, 19, 39, 8, 776, DateTimeKind.Local).AddTicks(7088),
                             Email = "soboty@pslib.cz",
                             EmailConfirmed = true,
                             FirstName = "Soboty",
@@ -382,11 +382,11 @@ namespace PslibTechSaturdays.Migrations
                             MailList = false,
                             NormalizedEmail = "SOBOTY@PSLIB.CZ",
                             NormalizedUserName = "SOBOTY@PSLIB.CZ",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIf2X2AxOxBhd+VOQnb00fzCw6FNGfcXDYvBRMSx6ZeNiLEIZUJqrOPzEr+G6BNRcg==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFOHwj63T7mw1ijVtUdVgmy5IML1KsgoRf/m6MyGelthtn7v9oXsIMnFSjTqWMMGCw==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI",
                             TwoFactorEnabled = false,
-                            Updated = new DateTime(2023, 10, 21, 21, 9, 0, 28, DateTimeKind.Local).AddTicks(7649),
+                            Updated = new DateTime(2023, 11, 24, 19, 39, 8, 776, DateTimeKind.Local).AddTicks(7135),
                             UserName = "soboty@pslib.cz"
                         });
                 });
@@ -403,9 +403,6 @@ namespace PslibTechSaturdays.Migrations
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("EnrollmentId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("Issued")
                         .HasColumnType("datetime2");
@@ -424,10 +421,6 @@ namespace PslibTechSaturdays.Migrations
                     b.HasKey("CertificateId");
 
                     b.HasIndex("CreatedById");
-
-                    b.HasIndex("EnrollmentId")
-                        .IsUnique()
-                        .HasFilter("[EnrollmentId] IS NOT NULL");
 
                     b.HasIndex("UserId");
 
@@ -471,6 +464,10 @@ namespace PslibTechSaturdays.Migrations
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("CancelledById");
+
+                    b.HasIndex("CertificateId")
+                        .IsUnique()
+                        .HasFilter("[CertificateId] IS NOT NULL");
 
                     b.HasIndex("CreatedById");
 
@@ -564,7 +561,7 @@ namespace PslibTechSaturdays.Migrations
                             GroupId = 1,
                             ActionId = 1,
                             Capacity = 5,
-                            Created = new DateTime(2023, 10, 21, 21, 9, 0, 66, DateTimeKind.Local).AddTicks(2887),
+                            Created = new DateTime(2023, 11, 24, 19, 39, 8, 817, DateTimeKind.Local).AddTicks(8035),
                             CreatedById = new Guid("11111111-1111-1111-1111-111111111111"),
                             Description = "Skupina pro drobné pokusy.",
                             EnrollmentsCountVisible = false,
@@ -579,7 +576,7 @@ namespace PslibTechSaturdays.Migrations
                             GroupId = 2,
                             ActionId = 1,
                             Capacity = 10,
-                            Created = new DateTime(2023, 10, 21, 21, 9, 0, 66, DateTimeKind.Local).AddTicks(2905),
+                            Created = new DateTime(2023, 11, 24, 19, 39, 8, 817, DateTimeKind.Local).AddTicks(8052),
                             CreatedById = new Guid("11111111-1111-1111-1111-111111111111"),
                             Description = "Skupina pro další drobné pokusy.",
                             EnrollmentsCountVisible = false,
@@ -615,9 +612,11 @@ namespace PslibTechSaturdays.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TagId"));
 
                     b.Property<string>("BackgroundColor")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ForegroundColor")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Text")
@@ -782,10 +781,6 @@ namespace PslibTechSaturdays.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("PslibTechSaturdays.Models.Enrollment", "Enrollment")
-                        .WithOne("Certificate")
-                        .HasForeignKey("PslibTechSaturdays.Models.Certificate", "EnrollmentId");
-
                     b.HasOne("PslibTechSaturdays.Models.ApplicationUser", "User")
                         .WithMany("Certificates")
                         .HasForeignKey("UserId")
@@ -793,8 +788,6 @@ namespace PslibTechSaturdays.Migrations
                         .IsRequired();
 
                     b.Navigation("CreatedBy");
-
-                    b.Navigation("Enrollment");
 
                     b.Navigation("User");
                 });
@@ -812,6 +805,10 @@ namespace PslibTechSaturdays.Migrations
                         .HasForeignKey("CancelledById")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("PslibTechSaturdays.Models.Certificate", "Certificate")
+                        .WithOne("Enrollment")
+                        .HasForeignKey("PslibTechSaturdays.Models.Enrollment", "CertificateId");
+
                     b.HasOne("PslibTechSaturdays.Models.ApplicationUser", "CreatedBy")
                         .WithMany("CreatedEnrollments")
                         .HasForeignKey("CreatedById")
@@ -825,6 +822,8 @@ namespace PslibTechSaturdays.Migrations
                         .IsRequired();
 
                     b.Navigation("CancelledBy");
+
+                    b.Navigation("Certificate");
 
                     b.Navigation("CreatedBy");
 
@@ -904,9 +903,9 @@ namespace PslibTechSaturdays.Migrations
                     b.Navigation("UploadedFiles");
                 });
 
-            modelBuilder.Entity("PslibTechSaturdays.Models.Enrollment", b =>
+            modelBuilder.Entity("PslibTechSaturdays.Models.Certificate", b =>
                 {
-                    b.Navigation("Certificate");
+                    b.Navigation("Enrollment");
                 });
 
             modelBuilder.Entity("PslibTechSaturdays.Models.Group", b =>

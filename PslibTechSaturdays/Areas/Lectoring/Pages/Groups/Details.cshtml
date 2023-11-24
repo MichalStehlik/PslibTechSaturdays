@@ -49,7 +49,8 @@
         }
         else
         {
-            <table class="table">
+            <div class="table-responsive">
+            <table class="table table-hover">
                 <thead>
                     <tr>
                         <th>Příjmení</th>
@@ -57,6 +58,7 @@
                         <th>Třída</th>
                         <th>Přihlášen</th>
                         <th>Prezence</th>
+                        <th>Osvědčení</th>
                         <th>Akce</th>
                     </tr>
                 </thead>
@@ -70,6 +72,18 @@
                             <td>@en.Created</td>
                             <td>@Html.DisplayFor(x => en.Present)</td>
                             <td>
+                                @if (en.CertificateId != null)
+                                {
+                                    <span>Ano</span>
+                                }
+                                else
+                                {
+                                    <span>Ne</span>
+                                }
+                                </td>
+                            <td>
+                            @if (en.CertificateId == null)
+                            {
                                 <div class="btn-group" role="group">
                                     <a class="btn btn-sm btn-warning" asp-page-handler="Cancel" asp-route-id="@en.EnrollmentId">Vyhodit</a>
                                     <div class="dropdown">
@@ -82,12 +96,17 @@
                                         </ul>
                                     </div>
                                 </div>
+                            }   
                             </td>
                         </tr>
                     }
                 </tbody>
             </table>
+            </div>
         }
+        <div>
+            <a asp-page-handler="CertPresent" asp-route-id="@Model.Group.GroupId">Vydat osvědčení přítomným</a>
+        </div>
     </div>
 </div>
 

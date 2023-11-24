@@ -33,6 +33,7 @@ builder.Services.AddScoped<RazorViewToStringRenderer>();
 builder.Services.Configure<EmailOptions>(builder.Configuration.GetSection("Email"));
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddScoped<EnrollmentsService>();
+builder.Services.AddScoped<CertificateGenerationService>();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.Configure<PeriodicTasksOptions>(builder.Configuration.GetSection("PeriodicTasks"));
 builder.Services.AddHostedService<PeriodicTasksService>();
@@ -60,6 +61,10 @@ builder.Services.AddRazorPages(options => {
     options.Conventions.AuthorizeAreaFolder("My", "/");
     options.Conventions.AuthorizeAreaFolder("Admin", "/Users", Security.ADMIN_POLICY);
     options.Conventions.AuthorizeAreaFolder("Admin", "/Actions", Security.ADMIN_POLICY);
+    options.Conventions.AuthorizeAreaFolder("Admin", "/Groups", Security.ADMIN_POLICY);
+    options.Conventions.AuthorizeAreaFolder("Admin", "/Enrollments", Security.ADMIN_POLICY);
+    options.Conventions.AuthorizeAreaFolder("Admin", "/Tags", Security.ADMIN_POLICY);
+    options.Conventions.AuthorizeAreaFolder("Admin", "/Certificates", Security.ADMIN_POLICY);
     options.Conventions.AuthorizeAreaFolder("Lectoring", "/Groups", Security.LECTOR_POLICY);
     //options.Conventions.AddAreaPageRoute("Admin", "/Users", "ManageUsers");
 });

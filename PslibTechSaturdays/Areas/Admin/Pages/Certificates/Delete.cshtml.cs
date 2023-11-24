@@ -59,6 +59,13 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Certificates
                 try
                 {
                     Certificate = certificate;
+                    _context.Entry(Certificate).Reference(p => p.Enrollment).Load();
+                    if (Certificate.Enrollment != null)
+                    {
+                        var enroll = Certificate.Enrollment;
+                        enroll.CertificateId = null;
+                        await _context.SaveChangesAsync();
+                    }
                     _context.Certificates.Remove(Certificate);
                     await _context.SaveChangesAsync();
                     TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Certifikát byl odstraněn.");

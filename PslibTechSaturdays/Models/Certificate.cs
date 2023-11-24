@@ -21,7 +21,7 @@ namespace PslibTechSaturdays.Models
         public string Description { get; set; } = String.Empty;
         [DisplayName("Text")]
         public string Text { get; set; } = String.Empty;
+        [DisplayName("Přihláška")]
         public Enrollment? Enrollment { get; set; }
-        public int? EnrollmentId { get; set; }
     }
 }

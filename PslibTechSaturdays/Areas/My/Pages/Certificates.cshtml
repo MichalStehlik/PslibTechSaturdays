@@ -2,11 +2,11 @@
 @model PslibTechSaturdays.Areas.My.Pages.CertificatesModel
 
 @{
-    ViewData["Title"] = "Moje certifikáty";
+    ViewData["Title"] = "Moje osvědčení";
 }
 
-<h1>Moje certifikáty</h1>
-
+<h1>Moje osvědčení</h1>
+<div class="table-responsive">
 <table class="table">
     <thead>
         <tr>
@@ -32,7 +32,7 @@
                         @Html.DisplayFor(modelItem => item.Title)
                     </td>
                     <td>
-                        <a asp-page-handler="Download" asp-route-id="@item.CertificateId">Stáhnout</a> |
+                        <a asp-page-handler="Download" asp-route-id="@item.CertificateId">Stáhnout</a>
                     </td>
                 </tr>
             }
@@ -45,3 +45,4 @@
         }
     </tbody>
 </table>
+</div>

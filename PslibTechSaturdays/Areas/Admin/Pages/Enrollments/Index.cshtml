@@ -32,6 +32,7 @@
         </div>
     </div>
 </form>
+<div class="table-responsive">
 <table class="table">
     <thead>
         <tr>
@@ -116,7 +117,14 @@
                     <span class="@(item.Present == Presence.Present ? "text-success" : item.Present == Presence.Absent ? "text-danger" : "text-secondary")">@Html.DisplayFor(modelItem => item.Present)</span>
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Certificate!.CertificateId)
+                    @if(item.Certificate == null)
+                    {
+                        <span>Ne</span>
+                    }
+                    else
+                    {
+                         <a asp-area="Admin" asp-page="/Certificates/Details" asp-route-id="@item.Certificate!.CertificateId">Ano</a>       
+                    }
                 </td>
                 <td>
                     <div class="btn-group">
@@ -159,3 +167,4 @@
         </tr>
     </tfoot>
 </table>
+</div>

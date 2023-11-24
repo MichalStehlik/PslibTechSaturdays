@@ -42,6 +42,10 @@ namespace PslibTechSaturdays.Data
                 ).ToTable("LectorAssignments")
                 .HasKey(x => new { x.GroupId, x.UserId });
             });
+            modelBuilder.Entity<Enrollment>(entity =>
+            {
+                entity.HasOne(e => e.Certificate).WithOne(c => c.Enrollment);
+            });
             var hasher = new PasswordHasher<ApplicationUser>();
             modelBuilder.Entity<ApplicationRole>(entity =>
             {
@@ -204,12 +208,6 @@ namespace PslibTechSaturdays.Data
                     Created = DateTime.Now,
                     CreatedById = Guid.Parse("11111111-1111-1111-1111-111111111111")
                 });
-            });
-            modelBuilder.Entity<Enrollment>(entity => 
-            {
-                entity.HasOne(e => e.Certificate)
-                    .WithOne(c => c.Enrollment)
-                    .HasForeignKey<Certificate>(c => c.EnrollmentId);
             });
         }
     }

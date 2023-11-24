@@ -33,7 +33,7 @@ namespace PslibTechSaturdays.Models
         [DisplayName("Prezence")]
         public Presence Present { get; set; } = Presence.Unknown;
         public Guid? CertificateId { get; set; } = null;
-        [DisplayName("Certifikát")]
+        [DisplayName("Osvědčení")]
         public Certificate? Certificate { get; set; }
     }
 }

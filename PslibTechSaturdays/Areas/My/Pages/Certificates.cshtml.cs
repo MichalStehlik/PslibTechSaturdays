@@ -8,16 +8,21 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
+using PslibTechSaturdays.Services;
 
 namespace PslibTechSaturdays.Areas.My.Pages
 {
     public class CertificatesModel : PageModel
     {
         private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
+        private readonly ILogger<CertificatesModel> _logger;
+        private readonly CertificateGenerationService _cgs;
 
-        public CertificatesModel(PslibTechSaturdays.Data.ApplicationDbContext context)
+        public CertificatesModel(ApplicationDbContext context, ILogger<CertificatesModel> logger, CertificateGenerationService cgs)
         {
             _context = context;
+            _logger = logger;
+            _cgs = cgs;
         }
 
         public IList<Certificate> Certificates { get;set; } = default!;
@@ -39,6 +44,12 @@ namespace PslibTechSaturdays.Areas.My.Pages
                 return Page();
             }
             return NotFound();
+        }
+
+        public async Task<ActionResult> OnGetDownloadAsync(Guid id)
+        {
+            string html = await _cgs.GetHtmlAsync(id);
+            return new ContentResult { Content = html, ContentType="text/html"};
         }
     }
 }

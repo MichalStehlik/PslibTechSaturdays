@@ -5,7 +5,9 @@ using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 using PslibTechSaturdays.Services;
+using System.Globalization;
 using System.Security.Claims;
+using System.Text;
 
 namespace PslibTechSaturdays.Areas.Lectoring.Pages.Groups
 {
@@ -98,6 +100,55 @@ namespace PslibTechSaturdays.Areas.Lectoring.Pages.Groups
             }
             TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Pøítomnost uživatele byla nastavena.");
             return RedirectToPage("Details", new { id = enr!.GroupId });
+        }
+
+        public async Task<IActionResult> OnGetCertPresentAsync(int id)
+        {
+            if (_context.Enrollments == null)
+            {
+                return NotFound();
+            }
+            List<Enrollment> enrollments = await _context.Enrollments
+                .Include(e => e.Group)
+                .ThenInclude(g => g.Action)
+                .Where(e => e.GroupId == id)
+                .Where(e => e.CertificateId == null)
+                .Where(e => e.Present == Presence.Present)
+                .ToListAsync();
+            var userId = User!.Claims!.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()!.Value;
+            if (userId == null)
+            {
+                return NotFound();
+            }
+            foreach (var en in enrollments)
+            {
+                DateTime? e = en.Group.Action!.End;
+                StringBuilder sb = new StringBuilder("Úèastník absolvoval");
+                if (e != null) sb.Append(" dne " + ((DateTime)e).ToString("d", new CultureInfo("cs-CZ")));
+                sb.Append(" akci " + en.Group.Action.Name);
+                var cert = new Certificate
+                {
+                    CreatedById = Guid.Parse(userId),
+                    Title = "Osvìdèení",
+                    Text = sb.ToString(),
+                    Description = en.Group.Name,
+                    UserId = en.ApplicationUserId,
+                    Issued = DateTime.Now,
+                };
+                try
+                {
+                    _context.Certificates.Add(cert);
+                    await _context.SaveChangesAsync();
+                    en.CertificateId = cert.CertificateId;
+                    await _context.SaveChangesAsync();
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, cert.CertificateId.ToString());
+                }
+                catch
+                {
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Pøi vydávání osvìdèení došlo k chybì.");
+                }               
+            }        
+            return RedirectToPage("Details", new { id = id });
         }
     }
 }

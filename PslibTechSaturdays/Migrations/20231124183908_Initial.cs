@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PslibTechSaturdays.Migrations
 {
     /// <inheritdoc />
-    public partial class ResetInitial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -69,8 +69,8 @@ namespace PslibTechSaturdays.Migrations
                     TagId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Text = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    BackgroundColor = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ForegroundColor = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    BackgroundColor = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ForegroundColor = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -233,7 +233,8 @@ namespace PslibTechSaturdays.Migrations
                     Issued = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedById = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Text = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -416,7 +417,7 @@ namespace PslibTechSaturdays.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "Active", "Aspirant", "BirthDate", "ConcurrencyStamp", "Created", "Email", "EmailConfirmed", "FirstName", "Grade", "LastName", "LockoutEnabled", "LockoutEnd", "MailList", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SchoolName", "SecurityStamp", "TwoFactorEnabled", "Updated", "UserName" },
-                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 0, true, false, null, "f11d9416-0796-40c1-861f-dda6d793e153", new DateTime(2023, 10, 8, 23, 51, 59, 893, DateTimeKind.Local).AddTicks(6710), "soboty@pslib.cz", true, "Soboty", 0, "s Technikou", false, null, false, "SOBOTY@PSLIB.CZ", "SOBOTY@PSLIB.CZ", "AQAAAAIAAYagAAAAED4x0GvCI88+sgwq1SqEnYAzIDoX9wyrbJ5XkdR2o+8P7RtZcmGO9vR2zI1qsQ5SoQ==", null, false, null, "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI", false, new DateTime(2023, 10, 8, 23, 51, 59, 893, DateTimeKind.Local).AddTicks(6786), "soboty@pslib.cz" });
+                values: new object[] { new Guid("11111111-1111-1111-1111-111111111111"), 0, true, false, null, "5113675a-feed-487e-a724-f28f039bc1d3", new DateTime(2023, 11, 24, 19, 39, 8, 776, DateTimeKind.Local).AddTicks(7088), "soboty@pslib.cz", true, "Soboty", 0, "s Technikou", false, null, false, "SOBOTY@PSLIB.CZ", "SOBOTY@PSLIB.CZ", "AQAAAAIAAYagAAAAEFOHwj63T7mw1ijVtUdVgmy5IML1KsgoRf/m6MyGelthtn7v9oXsIMnFSjTqWMMGCw==", null, false, null, "G56SBMMYFYXDNGIMOS5RMZUDSTQ4BQHI", false, new DateTime(2023, 11, 24, 19, 39, 8, 776, DateTimeKind.Local).AddTicks(7135), "soboty@pslib.cz" });
 
             migrationBuilder.InsertData(
                 table: "Tags",
@@ -435,7 +436,7 @@ namespace PslibTechSaturdays.Migrations
             migrationBuilder.InsertData(
                 table: "Actions",
                 columns: new[] { "ActionId", "Active", "Created", "CreatedById", "Description", "End", "ExclusiveEnrollment", "Name", "Published", "Start", "Year" },
-                values: new object[] { 1, true, new DateTime(2023, 10, 8, 23, 51, 59, 928, DateTimeKind.Local).AddTicks(9756), new Guid("11111111-1111-1111-1111-111111111111"), "Tato akce slouží k testovacím účelům.", new DateTime(2024, 10, 10, 10, 30, 0, 0, DateTimeKind.Unspecified), true, "Testovací akce", true, new DateTime(2024, 10, 10, 10, 10, 0, 0, DateTimeKind.Unspecified), 2023 });
+                values: new object[] { 1, true, new DateTime(2023, 11, 24, 19, 39, 8, 816, DateTimeKind.Local).AddTicks(8499), new Guid("11111111-1111-1111-1111-111111111111"), "Tato akce slouží k testovacím účelům.", new DateTime(2024, 10, 10, 10, 30, 0, 0, DateTimeKind.Unspecified), true, "Testovací akce", true, new DateTime(2024, 10, 10, 10, 10, 0, 0, DateTimeKind.Unspecified), 2023 });
 
             migrationBuilder.InsertData(
                 table: "AspNetRoleClaims",
@@ -456,8 +457,8 @@ namespace PslibTechSaturdays.Migrations
                 columns: new[] { "GroupId", "ActionId", "Capacity", "ClosedAt", "Created", "CreatedById", "Description", "EnrollmentsCountVisible", "LectorsNote", "MinGrade", "Name", "Note", "OpenedAt", "PlannedOpening" },
                 values: new object[,]
                 {
-                    { 1, 1, 5, null, new DateTime(2023, 10, 8, 23, 51, 59, 929, DateTimeKind.Local).AddTicks(8094), new Guid("11111111-1111-1111-1111-111111111111"), "Skupina pro drobné pokusy.", false, "", 0, "První skupina", "Poznámka", null, new DateTime(2023, 9, 9, 9, 9, 9, 0, DateTimeKind.Unspecified) },
-                    { 2, 1, 10, null, new DateTime(2023, 10, 8, 23, 51, 59, 929, DateTimeKind.Local).AddTicks(8110), new Guid("11111111-1111-1111-1111-111111111111"), "Skupina pro další drobné pokusy.", false, "Lektoři jsou velmi dobří.", 9, "Druhá skupina", "Poznámka", null, new DateTime(2023, 9, 9, 9, 9, 9, 0, DateTimeKind.Unspecified) }
+                    { 1, 1, 5, null, new DateTime(2023, 11, 24, 19, 39, 8, 817, DateTimeKind.Local).AddTicks(8035), new Guid("11111111-1111-1111-1111-111111111111"), "Skupina pro drobné pokusy.", false, "", 0, "První skupina", "Poznámka", null, new DateTime(2023, 9, 9, 9, 9, 9, 0, DateTimeKind.Unspecified) },
+                    { 2, 1, 10, null, new DateTime(2023, 11, 24, 19, 39, 8, 817, DateTimeKind.Local).AddTicks(8052), new Guid("11111111-1111-1111-1111-111111111111"), "Skupina pro další drobné pokusy.", false, "Lektoři jsou velmi dobří.", 9, "Druhá skupina", "Poznámka", null, new DateTime(2023, 9, 9, 9, 9, 9, 0, DateTimeKind.Unspecified) }
                 });
 
             migrationBuilder.CreateIndex(

@@ -2,10 +2,10 @@
 @model PslibTechSaturdays.Areas.Admin.Pages.Certificates.IndexModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Seznam osvědčení";
 }
 
-<h1>Seznam certifikátů</h1>
+<h1>Seznam osvědčení</h1>
 
 <p>
     <a asp-page="Create" class="btn btn-success">Nový</a>
@@ -21,6 +21,7 @@
         </div>
     </div>
 </form>
+<div class="table-responsive">
 <table class="table">
     <thead>
         <tr>
@@ -79,3 +80,4 @@
     }
     </tbody>
 </table>
+</div>

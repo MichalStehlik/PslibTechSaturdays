@@ -44,7 +44,7 @@ namespace PslibTechSaturdays.ViewModels
         public ICollection<Enrollment>? Enrollments { get; set; }
         [DisplayName("Přihlášky")]
         public int EnrollmentsCount { get; set; } = 0;
-        [DisplayName("Certifikáty")]
+        [DisplayName("Osvědčení")]
         public int CertificatesCount { get; set; } = 0;
     }
 }

@@ -38,6 +38,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Certificates
                 _context.Entry(certificate).Reference(c => c.User).Load();
                 _context.Entry(certificate).Reference(c => c.CreatedBy).Load();
                 _context.Entry(certificate).Reference(c => c.Enrollment).Load();
+                if (certificate.Enrollment != null) _context.Entry(certificate.Enrollment).Reference(c => c.Group).Load();
                 Certificate = certificate;
             }
             return Page();
