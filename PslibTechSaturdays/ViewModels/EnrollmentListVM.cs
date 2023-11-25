@@ -30,7 +30,7 @@ namespace PslibTechSaturdays.ViewModels
         public DateTime? Cancelled { get; set; }
         [DisplayName("Přítomen")]
         public Presence Present { get; set; }
-        [DisplayName("Certifikát")]
+        [DisplayName("Osvědčení")]
         public Certificate? Certificate { get; set; }
     }
 }

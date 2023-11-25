@@ -61,7 +61,8 @@
     </dl>
         <div>
             <a asp-page="./Edit" asp-route-id="@Model.Certificate?.CertificateId">Editace</a> |
-            <a asp-page="./Index">Zpět na seznam</a>
+            <a asp-page="./Index">Zpět na seznam</a> |
+            <a asp-page-handler="DownloadHtml" asp-route-id="@Model.Certificate!.CertificateId">Stáhnout</a>
         </div>
     </div>
 </div>

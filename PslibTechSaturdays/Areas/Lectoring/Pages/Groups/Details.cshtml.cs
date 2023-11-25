@@ -16,12 +16,14 @@ namespace PslibTechSaturdays.Areas.Lectoring.Pages.Groups
         private readonly PslibTechSaturdays.Data.ApplicationDbContext _context;
         private readonly ILogger<DetailsModel> _logger;
         private readonly EnrollmentsService _es;
+        private readonly CertificateGenerationService _cgs;
 
-        public DetailsModel(ApplicationDbContext context, ILogger<DetailsModel> logger, EnrollmentsService es)
+        public DetailsModel(ApplicationDbContext context, ILogger<DetailsModel> logger, EnrollmentsService es, CertificateGenerationService cgs)
         {
             _context = context;
             _logger = logger;
             _es = es;
+            _cgs = cgs;
         }
 
         public Group? Group { get; set; }
@@ -57,7 +59,7 @@ namespace PslibTechSaturdays.Areas.Lectoring.Pages.Groups
                 return RedirectToPage("Details", new { id = enr!.GroupId });
             }
             _context.Entry(enr).Reference(p => p.Group).Load();
-            _context.Entry(enr.Group).Collection(p => p.Lectors).Load();
+            _context.Entry(enr.Group).Collection(p => p.Lectors!).Load();
             var userId = User!.Claims!.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()!.Value;
             if (enr.Group.Lectors!.All(x => x.Id != Guid.Parse(userId) ))
             {
@@ -86,7 +88,7 @@ namespace PslibTechSaturdays.Areas.Lectoring.Pages.Groups
                 return RedirectToPage("Details", new { id = enr!.GroupId });
             }
             _context.Entry(enr).Reference(p => p.Group).Load();
-            _context.Entry(enr.Group).Collection(p => p.Lectors).Load();
+            _context.Entry(enr.Group).Collection(p => p.Lectors!).Load();
             var userId = User!.Claims!.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()!.Value;
             if (enr.Group.Lectors!.All(x => x.Id != Guid.Parse(userId)))
             {
@@ -149,6 +151,19 @@ namespace PslibTechSaturdays.Areas.Lectoring.Pages.Groups
                 }               
             }        
             return RedirectToPage("Details", new { id = id });
+        }
+
+        public async Task<ActionResult> OnGetDownloadHtmlAsync(Guid id)
+        {
+            var userId = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()!.Value;
+            Certificate? cert = await _context.Certificates.FirstOrDefaultAsync(x => x.CertificateId == id);
+            if (cert == null)
+            {
+                return NotFound();
+            }
+            _context.Entry(cert).Reference(p => p.User).Load();
+            string html = await _cgs.GetHtmlAsync(cert);
+            return new ContentResult { Content = html, ContentType = "text/html" };
         }
     }
 }

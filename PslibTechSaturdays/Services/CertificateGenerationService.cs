@@ -1,7 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using PslibTechSaturdays.Certificates.PageModels;
+using PslibTechSaturdays.Prints.PageModels;
 using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Models;
+
+using System.Text;
 
 namespace PslibTechSaturdays.Services
 {
@@ -18,14 +20,18 @@ namespace PslibTechSaturdays.Services
             _renderer = renderer;
         }
 
-        public async Task<string> GetHtmlAsync(Guid id)
+        public async Task<string> GetHtmlAsync(Certificate cert)
         {
-            Certificate? cert = await _context.Certificates.FirstOrDefaultAsync(x => x.CertificateId == id);
-            string certificateHtml = await _renderer.RenderViewToStringAsync("/Certificates/Pages/Simple.cshtml",
-                new SimpleCertificateVM
-                {
-                    Title = cert!.Title,
-                });
+            string certificateHtml = await _renderer.RenderViewToStringAsync("/Prints/Pages/Simple.cshtml",
+                    new SimpleCertificateVM
+                    {
+                        Title = cert!.Title,
+                        Description = cert!.Description,
+                        Text = cert!.Text,
+                        IssueDate = cert.Issued,
+                        User = cert.User,
+                        CertificateId = cert.CertificateId
+                    });
             return certificateHtml;
         }
     }

@@ -29,7 +29,7 @@ namespace PslibTechSaturdays.Areas.My.Pages
 
         public async Task<ActionResult> OnGetAsync()
         {
-            var userId = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault().Value;
+            var userId = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()!.Value;
             if (userId is null)
             {
                 return BadRequest();
@@ -46,9 +46,20 @@ namespace PslibTechSaturdays.Areas.My.Pages
             return NotFound();
         }
 
-        public async Task<ActionResult> OnGetDownloadAsync(Guid id)
+        public async Task<ActionResult> OnGetDownloadHtmlAsync(Guid id)
         {
-            string html = await _cgs.GetHtmlAsync(id);
+            var userId = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()!.Value;
+            Certificate? cert = await _context.Certificates.FirstOrDefaultAsync(x => x.CertificateId == id);
+            if (cert == null)
+            {
+                return NotFound();
+            }
+            if (cert.UserId != Guid.Parse(userId))
+            {
+                return Unauthorized();
+            }
+            _context.Entry(cert).Reference(p => p.User).Load();
+            string html = await _cgs.GetHtmlAsync(cert);
             return new ContentResult { Content = html, ContentType="text/html"};
         }
     }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using PslibTechSaturdays.Data;
 using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 using System.ComponentModel.DataAnnotations;
@@ -19,13 +18,13 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
         }
 
         public Group Group { get; set; } = default!;
-        public List<SelectListItem> UnusedLectors { get; set; }
-        public List<SelectListItem> UnusedTags { get; set; }
+        public List<SelectListItem> UnusedLectors { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> UnusedTags { get; set; } = new List<SelectListItem>();
         [Required(ErrorMessage = "Je potřeba nějakého lektora vybrat")]
         [BindProperty]
-        public AddLectorInputModel InputLector { get; set; }
+        public AddLectorInputModel InputLector { get; set; } = null!;
         [BindProperty]
-        public AddTagInputModel InputTag { get; set; }
+        public AddTagInputModel InputTag { get; set; } = new AddTagInputModel();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -90,7 +89,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
                     TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Takový uživatel neexistuje.");
                     return RedirectToPage("Details", new { id = InputLector.GroupId });
                 }
-                _context.Entry(grp).Collection(p => p.Lectors).Load();
+                _context.Entry(grp).Collection(p => p.Lectors!).Load();
                 if (grp!.Lectors!.Contains(usr))
                 {
                     TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Lektor už v této skupině je.");
@@ -128,7 +127,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
                     TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Značka neexistuje.");
                     return RedirectToPage("Details", new { id = InputTag.GroupId });
                 }
-                _context.Entry(grp).Collection(p => p.Tags).Load();
+                _context.Entry(grp).Collection(p => p.Tags!).Load();
                 if (grp!.Tags!.Contains(tag))
                 {
                     TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Značka už ke skupině patří.");
@@ -161,8 +160,8 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
                 TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Takový uživatel neexistuje.");
                 return RedirectToPage("Details", new { id = groupId });
             }
-            _context.Entry(grp).Collection(p => p.Lectors).Load();
-            grp.Lectors.Remove(usr);
+            _context.Entry(grp).Collection(p => p.Lectors!).Load();
+            grp.Lectors!.Remove(usr);
             try
             {
                 await _context.SaveChangesAsync();
@@ -189,8 +188,8 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
                 TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Značka neexistuje.");
                 return RedirectToPage("Details", new { id = groupId });
             }
-            _context.Entry(grp).Collection(p => p.Tags).Load();
-            grp.Tags.Remove(tag);
+            _context.Entry(grp).Collection(p => p.Tags!).Load();
+            grp.Tags!.Remove(tag);
             try
             {
                 await _context.SaveChangesAsync();

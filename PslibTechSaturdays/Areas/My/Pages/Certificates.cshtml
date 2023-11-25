@@ -16,6 +16,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Certificates[0].Title)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Certificates[0].Text)
+            </th>
             <th>Akce</th>
         </tr>
     </thead>
@@ -32,7 +35,10 @@
                         @Html.DisplayFor(modelItem => item.Title)
                     </td>
                     <td>
-                        <a asp-page-handler="Download" asp-route-id="@item.CertificateId">Stáhnout</a>
+                        @Html.DisplayFor(modelItem => item.Text)
+                    </td>
+                    <td>
+                        <a asp-page-handler="DownloadHtml" asp-route-id="@item.CertificateId">Stáhnout</a>
                     </td>
                 </tr>
             }
