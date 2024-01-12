@@ -18,6 +18,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
         }
 
         public Group Group { get; set; } = default!;
+        public List<Enrollment> ActiveEnrollments { get; set; } = new List<Enrollment>();
         public List<SelectListItem> UnusedLectors { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> UnusedTags { get; set; } = new List<SelectListItem>();
         [Required(ErrorMessage = "Je potřeba nějakého lektora vybrat")]
@@ -67,6 +68,10 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
                     UnusedTags.Add(new SelectListItem { Value = t.TagId.ToString(), Text = t.Text });
                 }
             }
+            ActiveEnrollments = await _context.Enrollments
+                .Include(e => e.User)
+                .Where(e => e.GroupId == id && e.Cancelled == null)
+                .OrderBy(e => e.Created).ThenBy(e => e.User.LastName).ToListAsync();
             return Page();
         }
 

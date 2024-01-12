@@ -4,7 +4,7 @@ namespace PslibTechSaturdays.Models
 {
     public enum SchoolGrade
     {
-        [Display(Name = "Žádný")]
+        [Display(Name = "Žádná")]
         None = 0,
         [Display(Name = "Základní škola 1-7")]
         Lesser = 7,

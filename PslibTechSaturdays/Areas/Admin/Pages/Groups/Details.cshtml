@@ -196,7 +196,47 @@
         </div>
         </section>
     </div>
-    <div class="col-14 col-md-6">
+    <div class="col-12 mt-3">
         <h2>Účastníci</h2>
+        <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Datum a čas</th>
+                    <th>Příjmení</th>
+                    <th>Jméno</th>
+                    <th>E-mail</th>
+                    <th>Prezence</th>
+                    <th>Třída</th>
+                    <th>Akce</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if(Model.ActiveEnrollments.Count == 0)
+                {
+                    <tr>
+                        <td colspan="6">Žádní účastníci</td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var e in Model.ActiveEnrollments)
+                    {
+                        <tr>
+                            <td>@e.Created</td>
+                            <td>@e.User.LastName</td>
+                            <td>@e.User.FirstName</td>
+                            <td><a asp-area="Admin" asp-page="/Users/Mail" asp-route-id="@e.User.Id">@e.User.Email</a></td>
+                            <td>@Html.DisplayFor(model => e.Present)</td>
+                            <td>@Html.DisplayFor(model => e.User.Grade)</td>
+                            <td>
+                                <a asp-area="Admin" asp-page="/Enrollments/Details" asp-route-id="@e.EnrollmentId" class="btn btn-secondary btn-sm">Detail</a>
+                            </td>
+                        </tr>
+                        }
+                    }
+            </tbody>
+        </table>
+        </div>
     </div>
 </div>
