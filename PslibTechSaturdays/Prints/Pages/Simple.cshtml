@@ -1,9 +1,15 @@
-﻿﻿@using PslibTechSaturdays.Prints.PageModels
-
+﻿@using PslibTechSaturdays.Prints.PageModels
 @model SimpleCertificateVM
 
-<p>@Model.Title</p>
-<p>@Model.Text</p>
-<p>@Model.Description</p>
-<p>@Model.User.LastName, @Model.User.FirstName</p>
-<p>@Model.CertificateId</p>
+<div>
+    <h1>@Model.Title</h1>
+    <p>@Model.Text</p>
+    <p>@Model.Description</p>
+    <p><strong>Účastník:</strong> @Model.User.LastName, @Model.User.FirstName</p>
+    <p><strong>ID:</strong> @Model.CertificateId</p>
+    <p><strong>Datum vytvoření:</strong> @Model.IssueDate.ToShortDateString()</p>
+
+    <div class="signature-block">
+        <div>Účastník</div>
+    </div>
+</div>

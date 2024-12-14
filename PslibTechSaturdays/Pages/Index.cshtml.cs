@@ -16,6 +16,7 @@ namespace PslibTechSaturdays.Pages
 
         public string? AppTitle { get; set; }
         public List<Models.Action> PublishedActions { get; set; }
+        public string IntroductionHTMLText { get; set; }
 
         public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration, ApplicationDbContext context)
         {
@@ -27,6 +28,8 @@ namespace PslibTechSaturdays.Pages
         public async Task OnGetAsync()
         {
             AppTitle = _configuration["Application:Name"];
+            IntroductionHTMLText = _configuration["TitlePage:Introduction"] ?? "<p>?</p>";
+
             PublishedActions = await _context.Actions.Include(x => x.Groups).Where(x => x.Published == true).ToListAsync();
             var options = new CookieOptions
             {

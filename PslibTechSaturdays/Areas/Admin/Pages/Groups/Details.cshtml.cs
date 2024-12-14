@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Graph.Models;
 using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 using System.ComponentModel.DataAnnotations;
@@ -17,7 +18,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             _context = context;
         }
 
-        public Group Group { get; set; } = default!;
+        public Models.Group Group { get; set; } = default!;
         public List<Enrollment> ActiveEnrollments { get; set; } = new List<Enrollment>();
         public List<SelectListItem> UnusedLectors { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> UnusedTags { get; set; } = new List<SelectListItem>();
@@ -35,7 +36,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             }
             InputLector = new AddLectorInputModel {GroupId = (int)id };
             var lectors = _context.Users.Include(u => u.Roles)
-                .Where(u => (u.Roles!.All(x => x.NormalizedName == Constants.Security.LECTOR_ROLE.ToUpper())))
+                .Where(u => (u.Roles!.Any(x => x.NormalizedName == Constants.Security.LECTOR_ROLE.ToUpper())))
                 .OrderBy(u => u.LastName).ThenBy(u => u.FirstName).ToList();
             UnusedLectors = new List<SelectListItem>();
             var tags = _context.Tags.OrderBy(t => t.Text).ToList();

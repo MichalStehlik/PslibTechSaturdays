@@ -9,12 +9,11 @@
 
 <div class="row flex-lg-row-reverse align-items-center g-5">
     <div class="col-12 col-lg-6 d-flex justify-content-md-center align-items-md-center">
-        <img src="~/image/abstract1.jpg" class="d-block m-auto mx-lg-auto img-fluid" alt="Soboty s technikou" width="500" height="500" loading="lazy">
+        <img src="~/image/abstract2.png" class="d-block m-auto mx-lg-auto img-fluid" alt="Soboty s technikou" width="500" height="500" loading="lazy">
     </div>
     <div class="col-12 col-lg-6">
         <h1 class="display-5 fw-bold lh-1 mb-3">@Model.AppTitle</h1>
-        <p class="lead">Soboty s technikou jsou série akcí pořádaných <a href="https://www.pslib.cz">Střední průmyslovou školou a Vyšší odbornou školou v Liberci</a> pro zájemce o strojírenství, elektrotechniku, informační a komunikační technologie, textilní technologie nebo matematiku s fyzikou.</p>
-        <p>Jsou zaměřené zejména na potenciální studenty průmyslovky z 8. a 9. tříd ZŠ. Pro žáky z nižších ročníků organizujeme kurzy v rámci <a href="https://stansevedcem.tul.cz/nabidka-aktivit-pro-mladez/detska-univerzita">Dětské univerzity</a>.</p>
+        @Html.Raw(Model.IntroductionHTMLText)
         <div class="d-grid gap-2 d-md-flex justify-content-md-start">
             <a class="btn btn-primary btn-lg px-4 me-md-2" asp-area="Identity" asp-page="/Account/Register">Registrace</a>
         </div>
