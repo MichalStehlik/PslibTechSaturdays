@@ -6,6 +6,9 @@ using Microsoft.Graph.Models;
 using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
+using System.Security.Claims;
+using System.Text;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
 {
@@ -288,6 +291,55 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             catch
             {
                 TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Došlo k chybě při změně nastavení skupiny.");
+            }
+            return RedirectToPage("Details", new { id = id });
+        }
+
+        public async Task<IActionResult> OnGetCertPresentAsync(int id)
+        {
+            if (_context.Enrollments == null)
+            {
+                return NotFound();
+            }
+            List<Enrollment> enrollments = await _context.Enrollments
+                .Include(e => e.Group)
+                .ThenInclude(g => g.Action)
+                .Where(e => e.GroupId == id)
+                .Where(e => e.CertificateId == null)
+                .Where(e => e.Present == Models.Presence.Present)
+                .ToListAsync();
+            var userId = User!.Claims!.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()!.Value;
+            if (userId == null)
+            {
+                return NotFound();
+            }
+            foreach (var en in enrollments)
+            {
+                DateTime? e = en.Group.Action!.End;
+                StringBuilder sb = new StringBuilder("Účastník absolvoval");
+                if (e != null) sb.Append(" dne " + ((DateTime)e).ToString("d", new CultureInfo("cs-CZ")));
+                sb.Append(" akci " + en.Group.Action.Name);
+                var cert = new Certificate
+                {
+                    CreatedById = Guid.Parse(userId),
+                    Title = "Osvědčení",
+                    Text = sb.ToString(),
+                    Description = en.Group.Name,
+                    UserId = en.ApplicationUserId,
+                    Issued = DateTime.Now,
+                };
+                try
+                {
+                    _context.Certificates.Add(cert);
+                    await _context.SaveChangesAsync();
+                    en.CertificateId = cert.CertificateId;
+                    await _context.SaveChangesAsync();
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Osvědčení " + cert.CertificateId.ToString() + " byo uděleno.");
+                }
+                catch
+                {
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Při vydávání osvědčení došlo k chybě.");
+                }
             }
             return RedirectToPage("Details", new { id = id });
         }

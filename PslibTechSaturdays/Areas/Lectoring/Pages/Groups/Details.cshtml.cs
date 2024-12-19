@@ -143,7 +143,7 @@ namespace PslibTechSaturdays.Areas.Lectoring.Pages.Groups
                     await _context.SaveChangesAsync();
                     en.CertificateId = cert.CertificateId;
                     await _context.SaveChangesAsync();
-                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, cert.CertificateId.ToString());
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Osvìdèení " + cert.CertificateId.ToString() + " bylo udìleno.");
                 }
                 catch
                 {
