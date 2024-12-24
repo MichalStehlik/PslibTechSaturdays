@@ -84,18 +84,13 @@
                             <td>
                             @if (en.CertificateId == null)
                             {
-                                <div class="btn-group" role="group">
+                                
                                     <a class="btn btn-sm btn-warning" asp-page-handler="Cancel" asp-route-id="@en.EnrollmentId">Vyhodit</a>
-                                    <div class="dropdown">
-                                        <button class="btn btn-secondary dropdown-toggle btn-sm" type="button" id="dropdownPresent" data-bs-toggle="dropdown" aria-expanded="false">
-                                            Prezence
-                                        </button> <ul class="dropdown-menu" aria-labelledby="dropdownPresent">
-                                            <li><a class="dropdown-item" asp-page-handler="Presence" asp-route-id="@en.EnrollmentId" asp-route-presence="@Presence.Present">Přítomen</a></li>
-                                            <li><a class="dropdown-item" asp-page-handler="Presence" asp-route-id="@en.EnrollmentId" asp-route-presence="@Presence.Absent">Nepřítomen</a></li>
-                                            <li><a class="dropdown-item" asp-page-handler="Presence" asp-route-id="@en.EnrollmentId" asp-route-presence="@Presence.Unknown">Neznámo</a></li>
-                                        </ul>
+                                    <div class="btn-group" role="group">
+                                        <a class="btn btn-sm btn-secondary" asp-page-handler="Presence" asp-route-id="@en.EnrollmentId" asp-route-presence="@Presence.Present" title="Přítomen">✓</a>
+                                        <a class="btn btn-sm btn-secondary" asp-page-handler="Presence" asp-route-id="@en.EnrollmentId" asp-route-presence="@Presence.Absent" title="Nepřítomen">🗙</a>
+                                        <a class="btn btn-sm btn-secondary" asp-page-handler="Presence" asp-route-id="@en.EnrollmentId" asp-route-presence="@Presence.Unknown" title="Neznámo">?</a>
                                     </div>
-                                </div>
                             }   
                             </td>
                         </tr>
@@ -105,7 +100,7 @@
             </div>
         }
         <div>
-            <a asp-page-handler="CertPresent" asp-route-id="@Model.Group.GroupId">Vydat osvědčení přítomným</a>
+            <a asp-page-handler="CertPresent" asp-route-id="@Model.Group.GroupId" class="btn btn-secondary">Vydat osvědčení přítomným</a>
         </div>
     </div>
 </div>
