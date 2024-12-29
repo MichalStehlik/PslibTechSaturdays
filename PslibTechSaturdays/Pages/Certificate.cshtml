@@ -1,0 +1,35 @@
+﻿@page
+@model PslibTechSaturdays.Pages.CertificateModel
+@{
+    ViewData["Title"] = "Ověření osvědčení";
+}
+
+<h1 class="mt-4">@ViewData["Title"]</h1>
+
+<p class="lead">Pomocí této stránky můžete ověřit, zda osvědčení existuje.</p>
+
+<div class="card shadow-sm my-4">
+    <div class="card-body">
+        <form method="get" class="row g-3">
+            <div class="col-md-8">
+                <label for="Id" class="form-label">ID osvědčení:</label>
+                <input type="text"
+                       id="Id"
+                       name="Id"
+                       value="@Model.Id"
+                       class="form-control"
+                       placeholder="Zadejte ID osvědčení" />
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Ověřit</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(Model.Message))
+{
+    <div class="alert @(!Model.Message.Contains("neexistuje") ? "alert-success" : "alert-danger") mt-4">
+        <strong>Výsledek:</strong> @Model.Message
+    </div>
+}
