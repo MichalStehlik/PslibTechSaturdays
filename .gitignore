@@ -364,4 +364,4 @@ FodyWeavers.xsd
 
 # Custom configuration files
 appsettings.Production.json
-/PslibTechSaturdays/appsettings.Development.json
+appsettings.Development.json
