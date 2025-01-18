@@ -92,6 +92,9 @@
                 toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
             })
             .then(editor => {
+                descriptioninput.form.addEventListener('submit', () => {
+                    descriptioninput.value = editor.getData();
+                });
                 editor.model.document.on('change', () => {
 
                 });
@@ -105,6 +108,9 @@
                 toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
             })
             .then(editor => {
+                noteinput.form.addEventListener('submit', () => {
+                    noteinput.value = editor.getData();
+                });
                 editor.model.document.on('change', () => {
 
                 });
@@ -118,6 +124,9 @@
                 toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
             })
             .then(editor => {
+                lectorsNote.form.addEventListener('submit', () => {
+                    lectorsNote.value = editor.getData();
+                });
                 editor.model.document.on('change', () => {
 
                 });

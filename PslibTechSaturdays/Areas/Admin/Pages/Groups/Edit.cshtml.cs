@@ -47,12 +47,12 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             {
                 GroupId = group.GroupId,
                 Name = group.Name,
-                Description = group.Description,
+                Description = group.Description ?? "",
                 ActionId = group.ActionId,
                 Capacity = group.Capacity,
                 MinGrade = group.MinGrade,
-                Note = group.Note,
-                LectorsNote = group.LectorsNote,
+                Note = group.Note ?? "",
+                LectorsNote = group.LectorsNote ?? "",
                 EnrollmentsCountVisible = group.EnrollmentsCountVisible,
                 PlannedOpening = group.PlannedOpening,
                 OpenedAt = group.OpenedAt,
@@ -131,9 +131,9 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
         [DisplayName("Minimální třída")]
         public SchoolGrade MinGrade { get; set; } = SchoolGrade.None;
         [DisplayName("Veřejná poznámka")]
-        public string? Note { get; set; }
+        public string? Note { get; set; } = String.Empty;
         [DisplayName("Poznámka k lektorům")]
-        public string? LectorsNote { get; set; }
+        public string? LectorsNote { get; set; } = String.Empty;
         [DisplayName("Veřejný počet účastníků")]
         public bool EnrollmentsCountVisible { get; set; } = false;
         [Column(TypeName = "datetime2")]

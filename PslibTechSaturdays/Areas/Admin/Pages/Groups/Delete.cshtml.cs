@@ -62,9 +62,9 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
                     await _context.SaveChangesAsync();
                     TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Skupina byla odstraněna.");
                 }
-                catch
+                catch(Exception ex)
                 {
-                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Při odstraňování skupiny došlo k chybě.");
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Při odstraňování skupiny došlo k chybě: " + ex.Message);
                 }
             }
 

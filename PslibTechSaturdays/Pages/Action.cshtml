@@ -26,6 +26,7 @@
         <div class="alert alert-info">Zde již máte <a asp-area="My" asp-page="/Enrollments" class="alert-link">platnou přihlášku</a>.</div>
     }
 </section>
+<p>Po otevření skupiny pro zápis je třeba znovunačíst stránku.</p>
 <h2>Skupiny</h2>
 @if (Model.Groups.Count() > 0) {
     <div class="row row-cols-1 row-cols-lg-2 g-4">
@@ -51,8 +52,19 @@
                                     Kapacita: <strong>@(valid)</strong>/<strong>@(capacity)</strong>
                                 </div>
                                 <div class="col">
+                                    @{
+                                        float percentage = ((float)valid / capacity) * 100;
+                                        string barColor = percentage == 100 ? "bg-danger" : "bg-primary";
+                                    }
+
                                     <div class="progress">
-                                        <div class="progress-bar" role="progressbar" style="width: @(((float)valid/capacity)*100)%" aria-valuenow="@valid" aria-valuemin="0" aria-valuemax="@capacity"></div>
+                                        <div class="progress-bar @barColor"
+                                             role="progressbar"
+                                             style="width: @Math.Floor(percentage)%"
+                                             aria-valuenow="@valid"
+                                             aria-valuemin="0"
+                                             aria-valuemax="@capacity">
+                                        </div>
                                     </div>
                                 </div>
                             </div>

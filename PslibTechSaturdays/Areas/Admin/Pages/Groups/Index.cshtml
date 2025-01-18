@@ -109,11 +109,21 @@
             </td>
             <td>
                 <div class="btn-group">
-                    <a asp-page="./Details" asp-route-id="@item.GroupId" class="btn btn-primary btn-sm">Detail</a>
-                    <a asp-page="./Edit" asp-route-id="@item.GroupId" class="btn btn-secondary btn-sm">Editace</a>
-                    <a asp-page="./Delete" asp-route-id="@item.GroupId" class="btn btn-danger btn-sm">Smazání</a>
+                    <a asp-page="./Details" asp-route-id="@item.GroupId" class="btn btn-primary btn-sm" title="Zobrazit detail">
+                        <i class="bi bi-info-circle"></i>
+                    </a>
+                    <a asp-page="./Edit" asp-route-id="@item.GroupId" class="btn btn-secondary btn-sm" title="Upravit skupinu">
+                        <i class="bi bi-pencil"></i>
+                    </a>
+                    <a asp-page="./Delete" asp-route-id="@item.GroupId" class="btn btn-danger btn-sm" title="Smazat skupinu">
+                        <i class="bi bi-trash"></i>
+                    </a>
+                    <a asp-page="./Create" asp-route-source="@item.GroupId" class="btn btn-secondary btn-sm" title="Vytvořit kopii">
+                        <i class="bi bi-files"></i>
+                    </a>
                 </div>
             </td>
+
         </tr>
         }
     }
@@ -150,3 +160,14 @@
     </tfoot>
 </table>
 </div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[title]'));
+            tooltipTriggerList.map(function (tooltipTriggerEl) {
+                new bootstrap.Tooltip(tooltipTriggerEl);
+            });
+        });
+    </script>
+}

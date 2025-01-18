@@ -28,16 +28,45 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
 
         public SelectList? Actions { get; set; }
 
-        public IActionResult OnGet(int? action)
+        public IActionResult OnGet(int? action, int? source)
         {
-            Input = new CreateInputModel();
-            if (action == null)
+            if (source != null)
             {
-                Input.ActionId = action;
+                var sourceGroup = _context.Groups.FirstOrDefault(g => g.GroupId == source);
+                if (sourceGroup != null)
+                {
+                    Input = new CreateInputModel
+                    {
+                        Name = sourceGroup.Name,
+                        Description = sourceGroup.Description,
+                        ActionId = sourceGroup.ActionId,
+                        Capacity = sourceGroup.Capacity,
+                        MinGrade = sourceGroup.MinGrade,
+                        Note = sourceGroup.Note,
+                        LectorsNote = sourceGroup.LectorsNote,
+                        ApplicationCountVisible = sourceGroup.EnrollmentsCountVisible,
+                        PlannedOpening = sourceGroup.PlannedOpening
+                    };
+                }
+                else
+                {
+                    TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Warning, "Zdrojová skupina nebyla nalezena.");
+                    Input = new CreateInputModel();
+                }
             }
+            else
+            {
+                Input = new CreateInputModel();
+                if (action == null)
+                {
+                    Input.ActionId = action;
+                }
+            }
+
             Actions = new SelectList(_context.Actions, "ActionId", "Name");
             return Page();
-        }        
+        }
+
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
