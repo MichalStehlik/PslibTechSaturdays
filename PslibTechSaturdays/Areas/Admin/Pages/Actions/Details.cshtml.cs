@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
+using PslibTechSaturdays.ViewModels;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
 {
@@ -16,7 +17,7 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
         }
 
         public Models.Action Action { get; set; } = default!;
-        public List<Group> Groups { get; set; } = new List<Group>();
+        public List<GroupWithLastEnrollmentVM> Groups { get; set; } = new List<GroupWithLastEnrollmentVM>();
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {
@@ -30,10 +31,30 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
             {
                 return NotFound();
             }
-            else 
+            else
             {
                 _context.Entry(action).Reference(p => p.CreatedBy).Load();
-                Groups = await _context.Groups.Include(g => g.Lectors).Include(g => g.Enrollments).Where(g => g.ActionId == id).OrderBy(g => g.Name).ToListAsync();
+                Groups = await _context.Groups
+                    .Include(g => g.Enrollments)
+                    .Select(g => new GroupWithLastEnrollmentVM
+                    {
+                        GroupId = g.GroupId,
+                        Name = g.Name,
+                        Capacity = g.Capacity,
+                        OpenedAt = g.OpenedAt,
+                        ClosedAt = g.ClosedAt,
+                        EnrollmentsCountVisible = g.EnrollmentsCountVisible,
+                        Lectors = g.Lectors!.ToList(),
+                        EnrollmentCount = g.Enrollments!.Count(e => e.Cancelled == null),
+                        LastActiveEnrollment = g.Enrollments != null && g.Enrollments.Any(e => e.Cancelled == null)
+                            ? g.Enrollments
+                                .Where(e => e.Cancelled == null)
+                                .OrderByDescending(e => e.Created)
+                                .FirstOrDefault()
+                                .Created
+                            : (DateTime?)null
+                    })
+                    .ToListAsync();
                 Action = action;
             }
             return Page();
@@ -61,7 +82,8 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
                 await _context.SaveChangesAsync();
                 TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Akce byla změněna.");
             }
-            catch {
+            catch
+            {
                 TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Danger, "Změna stavu neproběhla.");
             }
             return RedirectToPage("Details", new { Id = action.ActionId });

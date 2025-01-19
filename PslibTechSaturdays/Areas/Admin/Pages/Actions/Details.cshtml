@@ -129,6 +129,7 @@
                         <th>Lidé</th>
                         <th>Otevřená</th>
                         <th>Zavřená</th>
+                        <th>Poslední přihláška</th>
                         <th>Veřejný počet</th>
                     </tr>
                 </thead>
@@ -148,6 +149,7 @@
                             <td>@(gr.Lectors!.Count + gr.Enrollments!.Count(e => e.Cancelled == null))</td>
                             <td>@gr.OpenedAt</td>
                             <td>@gr.ClosedAt</td>
+                            <td>@gr.LastActiveEnrollment</td>
                             <td>@gr.EnrollmentsCountVisible</td>
                         </tr>
                     }   
@@ -160,6 +162,7 @@
                         <td>@totalUsers</td>
                         <td>@totalLectors</td>
                         <td>@(totalUsers + totalLectors)</td>
+                        <td></td>
                         <td></td>
                         <td></td>
                         <td></td>
