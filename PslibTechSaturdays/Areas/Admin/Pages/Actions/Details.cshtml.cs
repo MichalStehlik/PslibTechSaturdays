@@ -39,13 +39,15 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
                     .Select(g => new GroupWithLastEnrollmentVM
                     {
                         GroupId = g.GroupId,
+                        ActionId = g.ActionId,
                         Name = g.Name,
                         Capacity = g.Capacity,
                         OpenedAt = g.OpenedAt,
                         ClosedAt = g.ClosedAt,
                         EnrollmentsCountVisible = g.EnrollmentsCountVisible,
                         Lectors = g.Lectors!.ToList(),
-                        EnrollmentCount = g.Enrollments!.Count(e => e.Cancelled == null),
+                        EnrollmentCount = g.Enrollments!.Count, // Celkový počet přihlášek
+                        ActiveEnrollmentCount = g.Enrollments!.Count(e => e.Cancelled == null), // Počet nezrušených přihlášek
                         LastActiveEnrollment = g.Enrollments != null && g.Enrollments.Any(e => e.Cancelled == null)
                             ? g.Enrollments
                                 .Where(e => e.Cancelled == null)
@@ -54,6 +56,8 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
                                 .Created
                             : (DateTime?)null
                     })
+                    .Where(g => g.ActionId == id)
+                    .OrderBy(g => g.Name)
                     .ToListAsync();
                 Action = action;
             }

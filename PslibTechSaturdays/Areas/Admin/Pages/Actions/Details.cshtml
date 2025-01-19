@@ -143,14 +143,14 @@
                         <tr>
                             <td><a asp-area="Admin" asp-page="/Groups/Details" asp-route-id="@gr.GroupId">@gr.Name</a></td>
                             <td>@gr.Capacity</td>
-                            <td>@gr.Enrollments!.Count</td>
-                            <td>@gr.Enrollments!.Count(e => e.Cancelled == null)</td>
+                            <td>@gr.EnrollmentCount</td>
+                            <td>@gr.ActiveEnrollmentCount</td>
                             <td>@gr.Lectors!.Count</td>
-                            <td>@(gr.Lectors!.Count + gr.Enrollments!.Count(e => e.Cancelled == null))</td>
+                            <td>@(gr.Lectors!.Count + gr.ActiveEnrollmentCount)</td>
                             <td>@gr.OpenedAt</td>
                             <td>@gr.ClosedAt</td>
                             <td>@gr.LastActiveEnrollment</td>
-                            <td>@gr.EnrollmentsCountVisible</td>
+                            <td>@(gr.EnrollmentsCountVisible ? "Ano" : "Ne")</td>
                         </tr>
                     }   
                 </tbody>
