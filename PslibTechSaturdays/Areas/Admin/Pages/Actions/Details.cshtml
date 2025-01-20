@@ -137,8 +137,8 @@
                     @foreach(var gr in Model.Groups)
                     {
                         totalCapacity += gr.Capacity;
-                        totalEnrollments += gr.Enrollments!.Count;
-                        totalUsers += gr.Enrollments!.Count(e => e.Cancelled == null);
+                        totalEnrollments += gr.EnrollmentCount;
+                        totalUsers += gr.ActiveEnrollmentCount;
                         totalLectors += gr.Lectors!.Count;
                         <tr>
                             <td><a asp-area="Admin" asp-page="/Groups/Details" asp-route-id="@gr.GroupId">@gr.Name</a></td>
