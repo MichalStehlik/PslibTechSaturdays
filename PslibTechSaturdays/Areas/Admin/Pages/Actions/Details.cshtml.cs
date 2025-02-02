@@ -4,6 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using PslibTechSaturdays.Helpers;
 using PslibTechSaturdays.Models;
 using PslibTechSaturdays.ViewModels;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
 {
@@ -188,6 +190,38 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Actions
                 TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Při změně nastavení skupin došlo k chybě.");
             }
             return RedirectToPage("Details", new { Id = action.ActionId });
+        }
+
+        public async Task<IActionResult> OnGetDownloadEnrolledList(int? id)
+        {
+            if (id == null || _context.Actions == null)
+            {
+                return NotFound();
+            }
+            var action = await _context.Actions.FirstOrDefaultAsync(m => m.ActionId == id);
+            if (action == null)
+            {
+                return NotFound();
+            }
+            var enrollments = await _context.Enrollments
+                .Include(e => e.User)
+                .Include(e => e.Group)
+                .Where(e => e.Group.ActionId == id)
+                .Where(e => e.Cancelled == null)
+                .OrderBy(e => e.Created)
+                .ToListAsync();
+            var stream = new MemoryStream();
+            using (var writer = new StreamWriter(stream, Encoding.UTF8, 1024, true))
+            {
+                writer.WriteLine("Jméno;Příjmení;E-mail;Skupina;Vytvořeno");
+                foreach (var enrollment in enrollments)
+                {
+                    writer.WriteLine($"{enrollment.User.FirstName};{enrollment.User.LastName};{enrollment.User.Email};{enrollment.Group.Name};{enrollment.Created}");
+                }
+            }
+            string sanitizedActionName = Regex.Replace(action.Name, @"[^A-Za-z0-9_]", "");
+            stream.Position = 0;
+            return File(stream, "text/csv", $"{sanitizedActionName}_prihlasky.csv");
         }
     }
 }

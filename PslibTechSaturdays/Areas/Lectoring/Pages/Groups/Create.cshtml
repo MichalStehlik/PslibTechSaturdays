@@ -1,0 +1,125 @@
+﻿@page
+@model PslibTechSaturdays.Areas.Lectoring.Pages.Groups.CreateModel
+@{
+    ViewData["Title"] = "Nový kurz";
+}
+
+<h1>Vytvoření</h1>
+
+<h2>Skupina</h2>
+<hr />
+<div class="row">
+    <div class="col">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Input.Name" class="control-label"></label>
+                <input asp-for="Input.Name" class="form-control" />
+                <span asp-validation-for="Input.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Description" class="control-label"></label>
+                <textarea asp-for="Input.Description" class="form-control" id="description"></textarea>
+                <span asp-validation-for="Input.Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.ActionId" class="control-label"></label>
+                <select asp-for="Input.ActionId" class="form-control" asp-items="Model.Actions">
+                    <option value="">-- Vyberte --</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Capacity" class="control-label"></label>
+                <input asp-for="Input.Capacity" class="form-control" />
+                <span asp-validation-for="Input.Capacity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.MinGrade" class="control-label"></label>
+                <select asp-for="Input.MinGrade" class="form-control" asp-items="@Html.GetEnumSelectList<SchoolGrade>()">
+                    <option>-- Vyberte --</option>
+                </select>
+                <span asp-validation-for="Input.MinGrade" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.Note" class="control-label"></label>
+                <textarea asp-for="Input.Note" class="form-control" id="note"></textarea>
+                <span asp-validation-for="Input.Note" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.LectorsNote" class="control-label"></label>
+                <textarea asp-for="Input.LectorsNote" class="form-control" id="lectors-note"></textarea>
+                <span asp-validation-for="Input.LectorsNote" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Input.ApplicationCountVisible" /> @Html.DisplayNameFor(model => model.Input.ApplicationCountVisible)
+                </label>
+            </div>
+            <div class="form-group">
+                <label asp-for="Input.PlannedOpening" class="control-label"></label>
+                <input asp-for="Input.PlannedOpening" class="form-control" />
+                <span asp-validation-for="Input.PlannedOpening" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
+                <input type="submit" value="Vytvořit" class="btn btn-primary" /> <a asp-page="Index" class="btn btn-secondary">Zpět na seznam</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
+    <script>
+        var descriptioninput = document.querySelector('#description');
+        ClassicEditor
+            .create(descriptioninput, {
+                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+            })
+            .then(editor => {
+                descriptioninput.form.addEventListener('submit', () => {
+                    descriptioninput.value = editor.getData();
+                });
+                editor.model.document.on('change', () => {
+
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        var noteinput = document.querySelector('#note');
+        ClassicEditor
+            .create(noteinput, {
+                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+            })
+            .then(editor => {
+                noteinput.form.addEventListener('submit', () => {
+                    noteinput.value = editor.getData();
+                });
+                editor.model.document.on('change', () => {
+
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+        var lectorsNote = document.querySelector('#lectors-note');
+        ClassicEditor
+            .create(lectorsNote, {
+                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote'],
+            })
+            .then(editor => {
+                lectorsNote.form.addEventListener('submit', () => {
+                    lectorsNote.value = editor.getData();
+                });
+                editor.model.document.on('change', () => {
+
+                });
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    </script>
+}

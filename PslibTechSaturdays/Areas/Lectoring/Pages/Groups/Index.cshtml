@@ -4,6 +4,10 @@
     ViewData["Title"] = "Moje kurzy";
 }
 <h1>Seznam mých kurzů</h1>
+<p>Zde vidíte seznam kurzů, ve kterých jste lektorem.</p>
+<div class="my-2">
+    <a class="btn btn-success" asp-page="Create">Vytvořit nový kurz</a>
+</div>
 @if(Model.Groups.Count == 0)
 {
     <div class="alert alert-info alert-dismissible fade show" role="alert">

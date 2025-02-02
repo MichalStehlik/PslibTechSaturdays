@@ -57,6 +57,12 @@ namespace PslibTechSaturdays.Areas.Admin.Pages.Groups
             {
                 try
                 {
+                    var enrollments = await _context.Enrollments.Where(e => e.GroupId == group.GroupId).ToListAsync();
+                    foreach (var enrollment in enrollments)
+                    {
+                        _context.Enrollments.Remove(enrollment);
+                    }
+                    await _context.SaveChangesAsync();
                     Group = group;
                     _context.Groups.Remove(Group);
                     await _context.SaveChangesAsync();

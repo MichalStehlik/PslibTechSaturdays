@@ -102,6 +102,7 @@
             <a asp-page-handler="OpenGroups" asp-route-id="@Model.Action.ActionId" class="btn btn-secondary">Otevřít neotevřené</a>
             <a asp-page-handler="CloseGroups" asp-route-id="@Model.Action.ActionId" class="btn btn-secondary">Zavřít nezavřené</a>
             <a asp-page-handler="ShowCountsGroups" asp-route-id="@Model.Action.ActionId" asp-route-value="@true" class="btn btn-secondary">Zobrazit počty</a>
+            <a asp-page-handler="DownloadEnrolledList" asp-route-id="@Model.Action.ActionId" class="btn btn-secondary">Seznam účastníků</a>
         </div>
     </div>
     <div class="col-12">
@@ -128,8 +129,8 @@
                         <th>Lektoři</th>
                         <th>Lidé</th>
                         <th>Otevřená</th>
-                        <th>Zavřená</th>
                         <th>Poslední přihláška</th>
+                        <th>Zavřená</th>
                         <th>Veřejný počet</th>
                     </tr>
                 </thead>
@@ -148,8 +149,8 @@
                             <td>@gr.Lectors!.Count</td>
                             <td>@(gr.Lectors!.Count + gr.ActiveEnrollmentCount)</td>
                             <td>@gr.OpenedAt</td>
-                            <td>@gr.ClosedAt</td>
                             <td>@gr.LastActiveEnrollment</td>
+                            <td>@gr.ClosedAt</td>
                             <td>@(gr.EnrollmentsCountVisible ? "Ano" : "Ne")</td>
                         </tr>
                     }   
