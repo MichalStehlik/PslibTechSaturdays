@@ -98,7 +98,17 @@
     }
     <footer class="bg-light text-dark text-center py-3 mt-auto">
         <div class="container">
-            <p>&copy; 2024 @conf["Application:Name"] - Střední průmyslová škola v Liberci</p>
+            <div class="row">
+                <div class="col-12 col-md-9">
+                    <p>&copy; 2024 @conf["Application:Name"] - Střední průmyslová škola v Liberci</p>
+                </div>
+                <div class="col-12 col-md-3">
+                    <a href="https://www.pslib.cz/" target="_blank" class="text-dark">
+                        <img src="~/logo/pslib-large-light.svg" alt="Logo školy" height="24px" />    
+                    </a>
+                </div>
+            </div>
+            
             <div class="row">
                 @foreach(var link in FooterLinksSection)
                 {

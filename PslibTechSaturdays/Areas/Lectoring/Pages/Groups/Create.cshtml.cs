@@ -6,6 +6,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using PslibTechSaturdays.Helpers;
+using System.Security.Claims;
 
 namespace PslibTechSaturdays.Areas.Lectoring.Pages.Groups
 {
@@ -71,6 +72,7 @@ namespace PslibTechSaturdays.Areas.Lectoring.Pages.Groups
                 Actions = new SelectList(_context.Actions, "ActionId", "Name");
                 return Page();
             }
+            var userId = User.Claims.Where(c => c.Type == ClaimTypes.NameIdentifier).FirstOrDefault()!.Value;
             var group = new Group
             {
                 Name = Input.Name,
@@ -81,10 +83,20 @@ namespace PslibTechSaturdays.Areas.Lectoring.Pages.Groups
                 Note = Input.Note,
                 LectorsNote = Input.LectorsNote,
                 EnrollmentsCountVisible = Input.ApplicationCountVisible,
-                PlannedOpening = Input.PlannedOpening
+                PlannedOpening = Input.PlannedOpening,
+                CreatedById = Guid.Parse(userId),
+                Created = DateTime.Now
             };
             _context.Groups.Add(group);
             await _context.SaveChangesAsync();
+            _logger.LogInformation("Group {0} created by {1}.", group.GroupId, userId);
+            group.Lectors = new List<ApplicationUser>();
+            var user = _context.Users.Find(Guid.Parse(userId));
+            if (user != null)
+            {
+                group.Lectors.Add(user);
+                await _context.SaveChangesAsync();
+            }       
             TempData.AddMessage(Constants.Messages.COOKIE_ID, TempDataExtension.MessageType.Success, "Skupina byla úspìšnì vytvoøena.");
 
             return RedirectToPage("./Index");
